@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Home/homepage.dart';
+import 'package:redefineerp/Screens/OnBoarding/onboarding_page.dart';
+import 'package:redefineerp/getx_bindings.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:redefineerp/themes/themes_services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
-  runApp(const MyApp());
+        [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]).then((_) =>runApp(const MyApp()) );
+  
 }
 
 class MyApp extends StatelessWidget {
@@ -22,9 +25,10 @@ class MyApp extends StatelessWidget {
       transitionDuration: const Duration(milliseconds: 800),
       theme: Themes.light,
       darkTheme: Themes.dark,
+      initialBinding: ControllerBindings(),
       themeMode: ThemeService().theme,
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const OnBoardingPage(),
     );
   }
 }
