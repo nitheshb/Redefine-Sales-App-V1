@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:redefineerp/Screens/Task/task_manager.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 Widget taskCheckBox(
@@ -10,21 +11,23 @@ Widget taskCheckBox(
     required int taskPriorityNum,
     required bool selected,
     required String assigner}) {
-  return CheckboxListTile(
+  return ListTile(
     contentPadding: const EdgeInsets.all(10),
-    controlAffinity: ListTileControlAffinity.leading,
-    checkboxShape:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    value: selected,
-    checkColor: Get.theme.kBlueColor,
-    activeColor: Get.theme.colorPrimary,
+    tileColor: selected ? Get.theme.curveBG : null,
     shape: Border(
       bottom: BorderSide(
         color: Get.theme.btnTextCol.withOpacity(0.2),
         width: 2,
       ),
     ),
-    secondary: Padding(
+    leading: Checkbox(
+      value: selected,
+      onChanged: (_) => {},
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      checkColor: Get.theme.successColor,
+      activeColor: Get.theme.colorPrimary,
+    ),
+    trailing: Padding(
       padding: const EdgeInsets.only(top: 30, right: 10),
       child: CircleAvatar(
         radius: 10,
@@ -44,10 +47,15 @@ Widget taskCheckBox(
               ),
       ),
     ),
-    onChanged: ((value) => {}),
+    onTap: () => {Get.to(() => const TaskManager())},
     title: Text(
       task,
-      style: Get.theme.kNormalStyle,
+      style: selected
+          ? Get.theme.kNormalStyle.copyWith(
+              decoration: TextDecoration.lineThrough,
+              color: Get.theme.btnTextCol.withOpacity(0.3),
+            )
+          : Get.theme.kNormalStyle,
     ),
     subtitle: Padding(
       padding: const EdgeInsets.only(top: 10),

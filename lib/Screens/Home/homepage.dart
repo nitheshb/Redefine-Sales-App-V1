@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
+import 'package:redefineerp/Screens/Task/create_task.dart';
+import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Widgets/checkboxlisttile.dart';
 import 'package:redefineerp/Widgets/datewidget.dart';
@@ -62,7 +64,7 @@ class HomePage extends GetView<HomePageController> {
                   physics: const BouncingScrollPhysics(),
                   indicatorColor: Get.theme.colorPrimaryDark,
                   labelColor: Get.theme.colorPrimaryDark,
-                  labelStyle: Get.theme.kNormalStyle,
+                  labelStyle: Get.theme.kTabTextLg,
                   unselectedLabelColor: Get.theme.btnTextCol.withOpacity(0.2),
                   tabs: [
                     Tab(
@@ -104,13 +106,18 @@ class HomePage extends GetView<HomePageController> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () => {},
-            backgroundColor: Get.theme.kBlueColor,
+            onPressed: () => {bottomSheetWidget(CreateTaskPage(),
+            // bottomStickyWidget: taskFooter()
+            ),
+            },
+            backgroundColor: Get.theme.colorPrimaryDark,
             child: const Icon(
               Icons.add,
               color: Colors.white,
             ),
           ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           body: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
               children: [
@@ -118,32 +125,36 @@ class HomePage extends GetView<HomePageController> {
                 secondTab(),
                 thirdTab(),
               ]),
-          bottomNavigationBar: Obx(
-            () => BottomNavigationBar(
-                elevation: 0,
-                type: BottomNavigationBarType.fixed,
-                onTap: controller.bottomBarOnTap,
-                currentIndex: controller.bottomBarIndex.value,
-                selectedItemColor: Get.theme.colorPrimaryDark,
-                unselectedItemColor: Get.theme.btnTextCol.withOpacity(0.3),
-                items: const [
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.check_circle_outlined),
-                      activeIcon: Icon(Icons.check_circle_rounded),
-                      label: 'Tasks'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.notifications_outlined),
-                      activeIcon: Icon(Icons.notifications_rounded),
-                      label: 'Inbox'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.search_outlined),
-                      activeIcon: Icon(Icons.search_rounded),
-                      label: 'Search'),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.person_outline_outlined),
-                      activeIcon: Icon(Icons.person_rounded),
-                      label: 'Account'),
-                ]),
+          bottomNavigationBar: BottomAppBar(
+            elevation: 20,
+            shape: const CircularNotchedRectangle(),
+            notchMargin: 5,
+            // onTap: controller.bottomBarOnTap,
+            // currentIndex: controller.bottomBarIndex.value,
+            // selectedItemColor: Get.theme.colorPrimaryDark,
+            // unselectedItemColor: Get.theme.btnTextCol.withOpacity(0.3),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                    onPressed: () => {},
+                    icon:
+                        Icon(Icons.menu_rounded, color: Get.theme.btnTextCol)),
+                Row(
+                  children: [
+                    IconButton(
+                        onPressed: () => {},
+                        icon: Icon(Icons.search_outlined,
+                            color: Get.theme.btnTextCol.withOpacity(0.3))),
+                    IconButton(
+                      onPressed: () => {},
+                      icon: Icon(Icons.notifications_outlined,
+                          color: Get.theme.btnTextCol.withOpacity(0.3)),
+                    ),
+                  ],
+                )
+              ],
+            ),
           )),
     );
   }

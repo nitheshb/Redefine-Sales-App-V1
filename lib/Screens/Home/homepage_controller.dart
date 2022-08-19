@@ -2,24 +2,25 @@ import 'package:get/get.dart';
 
 class HomePageController extends GetxController {
   var tabIndex = 0.obs;
-   var bottomBarIndex = 0.obs;
+  var bottomBarIndex = 0.obs;
+  var dummy = true.obs;
 
-   void bottomBarOnTap(int index) {
+  void bottomBarOnTap(int index) {
     bottomBarIndex.value = index;
     switch (index) {
       case 0:
         // TODO:
         break;
       case 1:
-                // TODO:
+        // TODO:
 
         break;
       case 2:
-                // TODO:
+        // TODO:
 
         break;
       case 3:
-                // TODO:
+        // TODO:
 
         break;
     }
