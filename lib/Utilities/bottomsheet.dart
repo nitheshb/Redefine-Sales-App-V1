@@ -26,35 +26,30 @@ bottomSheetWidget(
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(30),
                         topRight: Radius.circular(30))),
-                child: Column(
-                  children: [
-                    SingleChildScrollView(
-                      controller: scrollController,
-                      physics: const BouncingScrollPhysics(),
-                      child:
-                          // BackdropFilter(
-                          //   filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
-                          //   child:
-                          Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 5,
-                            width: 32,
-                            margin: const EdgeInsets.only(top: 15),
-                            padding: const EdgeInsets.all(10),
-                            decoration: const BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(14))),
-                          ),
-                          data
-                        ],
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  child:
+                      // BackdropFilter(
+                      //   filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
+                      //   child:
+                      Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 5,
+                        width: 32,
+                        margin: const EdgeInsets.only(top: 15),
+                        padding: const EdgeInsets.all(10),
+                        decoration: const BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14))),
                       ),
-                      // ),
-                    ),
-                    bottomStickyWidget ?? sizeBox(0, 0),
-                  ],
+                      data
+                    ],
+                  ),
+                  // ),
                 ),
               );
             },

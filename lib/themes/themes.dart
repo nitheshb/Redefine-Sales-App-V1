@@ -18,7 +18,8 @@ extension ThemeExtension on ThemeData {
   Color get kGreenLight2 => const Color.fromARGB(255, 233, 250, 235);
   Color get kGreenDark => const Color.fromARGB(255, 0, 128, 13);
   Color get kBadgeColor => const Color(0xFF7D8FB3);
-  Color get kBadgeColorBg => Color.fromARGB(255, 239, 243, 248);
+  Color get kBadgeColorBg => const Color.fromARGB(255, 239, 243, 248);
+  Color get kContactIconColor => Color.fromARGB(255, 16, 50, 117);
   Color get btnTextCol => brightness == Brightness.dark
       ? const Color(0xe8e9e9e9)
       : Color.fromARGB(255, 27, 27, 27);

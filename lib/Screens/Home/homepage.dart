@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
@@ -106,9 +107,14 @@ class HomePage extends GetView<HomePageController> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () => {bottomSheetWidget(CreateTaskPage(),
-            // bottomStickyWidget: taskFooter()
-            ),
+            onPressed: () => {
+              bottomSheetWidget(
+                  const CreateTaskPage(
+                    isEditTask: false,
+                  ),
+                  initialChild: 0.6
+                  // bottomStickyWidget: taskFooter()
+                  ),
             },
             backgroundColor: Get.theme.colorPrimaryDark,
             child: const Icon(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:redefineerp/Screens/Home/homepage.dart';
 import 'package:redefineerp/Screens/OnBoarding/onboarding_page.dart';
 import 'package:redefineerp/getx_bindings.dart';
@@ -10,8 +11,8 @@ import 'package:redefineerp/themes/themes_services.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]).then((_) =>runApp(const MyApp()) );
-  
+          [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp])
+      .then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -28,7 +29,9 @@ class MyApp extends StatelessWidget {
       initialBinding: ControllerBindings(),
       themeMode: ThemeService().theme,
       debugShowCheckedModeBanner: false,
-      home: const OnBoardingPage(),
+      home: GetStorage().read('opened') ?? true
+          ? const OnBoardingPage()
+          : const HomePage(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:redefineerp/Screens/Home/homepage.dart';
@@ -104,7 +105,7 @@ class OnBoardingPage extends StatelessWidget {
         showNextButton: false,
         showDoneButton: false,
         showSkipButton: true,
-        onSkip: () => {Get.off(() => const HomePage())},
+        onSkip: () => {saveOpenInfo(), Get.off(() => const HomePage())},
         skip: Text(
           "Skip",
           style: Get.theme.kNormalStyle
@@ -123,11 +124,18 @@ class OnBoardingPage extends StatelessWidget {
           style: TextButton.styleFrom(
               backgroundColor: Get.theme.colorPrimaryDark,
               fixedSize: Size(MediaQuery.of(context).size.width, 20)),
-          onPressed: () => {Get.off(() => const HomePage())},
+          onPressed: () => {saveOpenInfo(), Get.off(() => const HomePage())},
           child: Text(
             'Get Started',
             style: Get.theme.kNormalStyle.copyWith(color: Colors.white),
           )),
     );
+  }
+
+  void saveOpenInfo() {
+    if (GetStorage().read('opened') ?? true) {
+      GetStorage().write('opened', false);
+    }
+    debugPrint('Opened value: ${GetStorage().read('opened')}');
   }
 }

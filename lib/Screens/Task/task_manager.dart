@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
+import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
+import 'package:redefineerp/Widgets/headerbg.dart';
+import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class TaskManager extends StatelessWidget {
@@ -11,22 +15,49 @@ class TaskManager extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put<TaskController>(TaskController());
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: controller.taskType.value != 'mark'
-            ? Get.theme.kGreenLight
-            : Colors.transparent,
-        leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: Colors.black,
-            )),
+      appBar: PreferredSize(
+        preferredSize: Size(MediaQuery.of(context).size.width, 50),
+        child: Obx(
+          () => AppBar(
+            elevation: 0,
+            backgroundColor: controller.taskType.value != 'mark'
+                ? Get.theme.kGreenLight
+                : Colors.transparent,
+            leading: IconButton(
+                onPressed: () => Get.back(),
+                icon: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: Colors.black,
+                )),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Obx(
+                  () => controller.taskType.value == 'close'
+                      ? IconButton(
+                          onPressed: () => {
+                                bottomSheetWidget(const CreateTaskPage(isEditTask: true,),
+                                    initialChild: 0.6),
+                              },
+                          icon: const Icon(
+                            Icons.edit_rounded,
+                            color: Colors.black,
+                          ))
+                      : sizeBox(0, 0),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
+            Obx(() => controller.taskType.value != 'mark'
+                ? miniMessage(
+                    'Marked as done, pending for review by the assigner')
+                : sizeBox(0, 0)),
             Padding(
               padding: const EdgeInsets.all(22.0),
               child: Text(
