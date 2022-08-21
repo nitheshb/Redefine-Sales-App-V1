@@ -6,6 +6,7 @@ import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
+import 'package:redefineerp/Widgets/task_sheet_widget.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class TaskManager extends StatelessWidget {
@@ -36,8 +37,7 @@ class TaskManager extends StatelessWidget {
                   () => controller.taskType.value == 'close'
                       ? IconButton(
                           onPressed: () => {
-                                bottomSheetWidget(const CreateTaskPage(isEditTask: true,),
-                                    initialChild: 0.6),
+                                taskSheetWidget(isEditTask: true),
                               },
                           icon: const Icon(
                             Icons.edit_rounded,

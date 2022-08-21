@@ -10,6 +10,7 @@ extension ThemeExtension on ThemeData {
       : const Color(0xFFFFFFFF);
   Color get colorPrimaryDark => const Color(0xffFF7562);
   Color get colorAccent => const Color.fromRGBO(236, 163, 152, 1);
+  Color get overlayColor => Color(0xFFFFEDEB);
   Color get successColor => const Color.fromARGB(255, 41, 204, 57);
   Color get kBlueColor => const Color.fromARGB(255, 51, 99, 255);
   Color get kYellowColor => const Color(0xffFFCB33);
@@ -36,7 +37,7 @@ extension ThemeExtension on ThemeData {
   TextStyle get kNormalStyle =>
       GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700);
   TextStyle get kTabTextLg =>
-      GoogleFonts.inter(fontSize: 30, fontWeight: FontWeight.w700);
+      GoogleFonts.inter(fontSize: 25, fontWeight: FontWeight.w700);
 }
 
 class Themes {

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
+import 'package:redefineerp/Utilities/basicdialog.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
+import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/Widgets/checkboxlisttile.dart';
 import 'package:redefineerp/Widgets/datewidget.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
+import 'package:redefineerp/Widgets/task_sheet_widget.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class HomePage extends GetView<HomePageController> {
@@ -26,7 +30,10 @@ class HomePage extends GetView<HomePageController> {
                 Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: IconButton(
-                    onPressed: () => {},
+                    onPressed: () => {
+                      snackBarMsg('Task Done!', enableMsgBtn: true),
+                      // basicDialog('title', 'message')
+                    },
                     icon: Icon(
                       Icons.filter_list_rounded,
                       color: Get.theme.btnTextCol,
@@ -61,19 +68,19 @@ class HomePage extends GetView<HomePageController> {
                         controller.tabIndex.value = value,
                       },
                   isScrollable: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   physics: const BouncingScrollPhysics(),
-                  indicatorColor: Get.theme.colorPrimaryDark,
+                  indicatorColor: Colors.transparent,
                   labelColor: Get.theme.colorPrimaryDark,
                   labelStyle: Get.theme.kTabTextLg,
+                  unselectedLabelStyle: Get.theme.kNormalStyle,
                   unselectedLabelColor: Get.theme.btnTextCol.withOpacity(0.2),
                   tabs: [
                     Tab(
                         icon: Row(
                       children: [
-                        Text(
+                        const Text(
                           'Today',
-                          style: Get.theme.kNormalStyle,
                         ),
                         tabTaskIndicator(
                             taskNum: 10, index: 0, controller: controller),
@@ -82,9 +89,8 @@ class HomePage extends GetView<HomePageController> {
                     Tab(
                       icon: Row(
                         children: [
-                          Text(
+                          const Text(
                             'Upcoming',
-                            style: Get.theme.kNormalStyle,
                           ),
                           tabTaskIndicator(
                               taskNum: 2, index: 1, controller: controller),
@@ -94,9 +100,8 @@ class HomePage extends GetView<HomePageController> {
                     Tab(
                       icon: Row(
                         children: [
-                          Text(
+                          const Text(
                             'Created',
-                            style: Get.theme.kNormalStyle,
                           ),
                           tabTaskIndicator(
                               taskNum: 2, index: 2, controller: controller),
@@ -108,13 +113,7 @@ class HomePage extends GetView<HomePageController> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => {
-              bottomSheetWidget(
-                  const CreateTaskPage(
-                    isEditTask: false,
-                  ),
-                  initialChild: 0.6
-                  // bottomStickyWidget: taskFooter()
-                  ),
+              taskSheetWidget(initialChild: 0.5),
             },
             backgroundColor: Get.theme.colorPrimaryDark,
             child: const Icon(

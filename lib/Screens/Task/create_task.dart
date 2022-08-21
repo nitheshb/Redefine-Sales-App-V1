@@ -5,128 +5,148 @@ import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class CreateTaskPage extends StatelessWidget {
-  const CreateTaskPage({Key? key, required this.isEditTask}) : super(key: key);
+  CreateTaskPage({Key? key, required this.isEditTask, this.scrollController})
+      : super(key: key);
   final bool isEditTask;
+  ScrollController? scrollController;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Column(
-          children: [
-            sizeBox(20, 0),
-            Text(
-              isEditTask ? 'Edit Task' : 'Create Task',
-              style: Get.theme.kNormalStyle
-                  .copyWith(color: Get.theme.colorPrimaryDark),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Container(
+      decoration: BoxDecoration(
+          color: Get.theme.sheetColor,
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SingleChildScrollView(
+          controller: scrollController,
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              Container(
+                height: 5,
+                width: 32,
+                margin: const EdgeInsets.only(top: 15),
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.all(Radius.circular(14))),
+              ),
+              sizeBox(20, 0),
+              Text(
+                isEditTask ? 'Edit Task' : 'Create Task',
+                style: Get.theme.kNormalStyle
+                    .copyWith(color: Get.theme.colorPrimaryDark),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        'To',
+                        style: Get.theme.kSubTitle,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Get.to(const ContactListPage()),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ActionChip(
+                              elevation: 0,
+                              side: BorderSide(
+                                  color: Get.theme.btnTextCol.withOpacity(0.1)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              backgroundColor: Get.theme.kBadgeColorBg,
+                              label: Text(
+                                'Vivek Dhillon',
+                                style: Get.theme.kSubTitle
+                                    .copyWith(color: Get.theme.kBadgeColor),
+                              ),
+                              onPressed: () => {
+                                    Get.to(const ContactListPage()),
+                                  }),
+                        ],
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Icon(Icons.contacts_outlined),
+                    )
+                  ],
+                ),
+              ),
+              const TextField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Title',
+                ),
+              ),
+              Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.all(15.0),
                     child: Text(
-                      'To',
-                      style: Get.theme.kSubTitle,
+                      'Due Date',
+                      textAlign: TextAlign.start,
+                      style: Get.theme.kNormalStyle.copyWith(
+                        color: Get.theme.btnTextCol.withOpacity(0.5),
+                      ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () => Get.to(const ContactListPage()),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ActionChip(
-                            elevation: 0,
-                            side: BorderSide(
-                                color: Get.theme.btnTextCol.withOpacity(0.1)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            backgroundColor: Get.theme.kBadgeColorBg,
-                            label: Text(
-                              'Vivek Dhillon',
-                              style: Get.theme.kSubTitle
-                                  .copyWith(color: Get.theme.kBadgeColor),
-                            ),
-                            onPressed: () => {
-                              Get.to(const ContactListPage()),
-                            }),
-                      ],
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Icon(
+                      Icons.calendar_month_rounded,
+                      color: Get.theme.btnTextCol.withOpacity(0.3),
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Icon(Icons.contacts_outlined),
-                  )
-                ],
-              ),
-            ),
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Title',
-              ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                    'Due Date',
-                    textAlign: TextAlign.start,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Container(
+                      height: 50,
+                      width: 1,
+                      color: Get.theme.btnTextCol.withOpacity(0.3),
+                    ),
+                  ),
+                  Text(
+                    'Priority',
                     style: Get.theme.kNormalStyle.copyWith(
                       color: Get.theme.btnTextCol.withOpacity(0.5),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Icon(
-                    Icons.calendar_month_rounded,
-                    color: Get.theme.btnTextCol.withOpacity(0.3),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: CircleAvatar(
+                      radius: 10,
+                      backgroundColor: Get.theme.kRedColor,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Container(
-                    height: 50,
-                    width: 1,
-                    color: Get.theme.btnTextCol.withOpacity(0.3),
-                  ),
-                ),
-                Text(
-                  'Priority',
-                  style: Get.theme.kNormalStyle.copyWith(
-                    color: Get.theme.btnTextCol.withOpacity(0.5),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: CircleAvatar(
-                    radius: 10,
-                    backgroundColor: Get.theme.kRedColor,
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              height: 1,
-              width: MediaQuery.of(context).size.width,
-              color: Get.theme.btnTextCol.withOpacity(0.3),
-            ),
-            const TextField(
-              keyboardType: TextInputType.multiline,
-              minLines: 5,
-              maxLines: 8,
-              scrollPhysics: BouncingScrollPhysics(),
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: 'Description',
-                  contentPadding: EdgeInsets.all(15)),
-            ),
-          ],
+                ],
+              ),
+              Container(
+                height: 1,
+                width: MediaQuery.of(context).size.width,
+                color: Get.theme.btnTextCol.withOpacity(0.3),
+              ),
+              const TextField(
+                keyboardType: TextInputType.multiline,
+                minLines: 5,
+                maxLines: 8,
+                scrollPhysics: BouncingScrollPhysics(),
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Description',
+                    contentPadding: EdgeInsets.all(15)),
+              ),
+            ],
+          ),
         ),
-        Container(
+        bottomNavigationBar: Container(
           padding: const EdgeInsets.all(10),
           color: Get.theme.kBadgeColorBg,
           child: Row(
@@ -141,8 +161,8 @@ class CreateTaskPage extends StatelessWidget {
                       style: Get.theme.kSubTitle.copyWith(color: Colors.white)))
             ],
           ),
-        )
-      ],
+        ),
+      ),
     );
   }
 }

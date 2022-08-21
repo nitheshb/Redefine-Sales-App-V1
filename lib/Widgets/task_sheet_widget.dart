@@ -2,13 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/themes/themes.dart';
 
-bottomSheetWidget(
-  Widget data, {
+taskSheetWidget({
   bool dismissible = true,
   double initialChild = 0.75,
+  bool isEditTask = false,
 }) {
   Get.bottomSheet(
       SafeArea(
@@ -19,37 +20,9 @@ bottomSheetWidget(
             minChildSize: 0.2,
             initialChildSize: initialChild,
             builder: (BuildContext context, ScrollController scrollController) {
-              return Container(
-                decoration: BoxDecoration(
-                    color: Get.theme.sheetColor,
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30))),
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  physics: const BouncingScrollPhysics(),
-                  child:
-                      // BackdropFilter(
-                      //   filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
-                      //   child:
-                      Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 5,
-                        width: 32,
-                        margin: const EdgeInsets.only(top: 15),
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(14))),
-                      ),
-                      data
-                    ],
-                  ),
-                  // ),
-                ),
+              return CreateTaskPage(
+                isEditTask: isEditTask,
+                scrollController: scrollController,
               );
             },
           ),

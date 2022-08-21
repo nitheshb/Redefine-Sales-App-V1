@@ -94,6 +94,48 @@ class ContactListPage extends StatelessWidget {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: TextButton.icon(
+                      style: TextButton.styleFrom(),
+                      onPressed: () => {},
+                      icon: Icon(
+                        Icons.sort_by_alpha_outlined,
+                        size: 16,
+                        color: Get.theme.btnTextCol.withOpacity(0.3),
+                      ),
+                      label: Text('Employee Name',
+                          style: Get.theme.kSubTitle.copyWith(
+                            color: Get.theme.btnTextCol.withOpacity(0.3),
+                          )),
+                    ),
+                  ),
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: TextButton.icon(
+                      style: TextButton.styleFrom(),
+                      onPressed: () => {},
+                      icon: Icon(
+                        Icons.swap_vert_rounded,
+                        size: 16,
+                        color: Get.theme.btnTextCol.withOpacity(0.3),
+                      ),
+                      label: Text('Pending Task',
+                          style: Get.theme.kSubTitle.copyWith(
+                            color: Get.theme.btnTextCol.withOpacity(0.3),
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+                height: 2, width: Get.size.width, color: Get.theme.curveBG),
             ContactCard(
                 title: 'Indrajit Nigam',
                 jobTitle: 'Sales Executive',
