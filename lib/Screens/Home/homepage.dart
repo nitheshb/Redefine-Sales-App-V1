@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
+import 'package:redefineerp/Screens/Search/search_task.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Utilities/basicdialog.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
@@ -113,7 +115,7 @@ class HomePage extends GetView<HomePageController> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => {
-              taskSheetWidget(initialChild: 0.5),
+              bottomSheetWidget(const LoginPage(), initialChild: 0.5),
             },
             backgroundColor: Get.theme.colorPrimaryDark,
             child: const Icon(
@@ -148,7 +150,14 @@ class HomePage extends GetView<HomePageController> {
                 Row(
                   children: [
                     IconButton(
-                        onPressed: () => {},
+                        onPressed: () => {
+                              // BasicDialog(
+                              //     title: 'title',
+                              //     message: 'message',
+                              //     button1: 'button1',
+                              //     tapFeatures: () => {}),
+                              Get.to(SearchPage())
+                            },
                         icon: Icon(Icons.search_outlined,
                             color: Get.theme.btnTextCol.withOpacity(0.3))),
                     IconButton(

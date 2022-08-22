@@ -2,20 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/themes/themes.dart';
 
-basicDialog(
-  String title,
-  String message,
-) {
-  Get.dialog(Column(
-    children: [
-      Text(
-        title,
-        style: Get.theme.kTitleStyle,
+BasicDialog(
+    {required String title,
+    required String message,
+    required String confirmText,
+    required VoidCallback onTap}) {
+  Get.dialog(AlertDialog(
+    title: Text(
+      title,
+      style: Get.theme.kTitleStyle,
+    ),
+    content: Text(
+      message,
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => Get.back(),
+        style:
+            TextButton.styleFrom(primary: Get.theme.kLightGrayColor),
+        child: const Text('Close'),
       ),
-      Text(
-        message,
-        style: Get.theme.kNormalStyle.copyWith(color: Get.theme.btnTextCol),
-      ),
+      TextButton(
+          onPressed: () => onTap(),
+          style: TextButton.styleFrom(primary: Get.theme.colorPrimaryDark),
+          child: Text(confirmText))
     ],
   ));
 }
