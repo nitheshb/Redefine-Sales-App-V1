@@ -115,7 +115,7 @@ class HomePage extends GetView<HomePageController> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => {
-              bottomSheetWidget(const LoginPage(), initialChild: 0.5),
+              taskSheetWidget(initialChild: 0.8),
             },
             backgroundColor: Get.theme.colorPrimaryDark,
             child: const Icon(

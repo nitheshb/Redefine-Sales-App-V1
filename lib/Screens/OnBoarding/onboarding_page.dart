@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/Home/homepage.dart';
 import 'package:redefineerp/themes/themes.dart';
 
@@ -112,6 +113,8 @@ class OnBoardingPage extends StatelessWidget {
               .copyWith(color: Get.theme.colorPrimaryDark),
         ),
         skipOrBackFlex: 1,
+        dotsFlex: 3,
+        nextFlex: 1,
         controlsPosition: const Position(left: 0, right: 0, top: 5),
       ),
     );
@@ -124,7 +127,7 @@ class OnBoardingPage extends StatelessWidget {
           style: TextButton.styleFrom(
               backgroundColor: Get.theme.colorPrimaryDark,
               fixedSize: Size(MediaQuery.of(context).size.width, 20)),
-          onPressed: () => {saveOpenInfo(), Get.off(() => const HomePage())},
+          onPressed: () => {saveOpenInfo(), Get.off(() => const LoginPage())},
           child: Text(
             'Get Started',
             style: Get.theme.kNormalStyle.copyWith(color: Colors.white),

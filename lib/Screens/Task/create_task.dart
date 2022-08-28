@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
+import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/themes/themes.dart';
 
@@ -9,8 +10,10 @@ class CreateTaskPage extends StatelessWidget {
       : super(key: key);
   final bool isEditTask;
   ScrollController? scrollController;
+
   @override
   Widget build(BuildContext context) {
+    TaskController controller=Get.put<TaskController>(TaskController());
     return Container(
       decoration: BoxDecoration(
           color: Get.theme.sheetColor,
