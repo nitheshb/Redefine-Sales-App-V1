@@ -106,7 +106,7 @@ class OnBoardingPage extends StatelessWidget {
         showNextButton: false,
         showDoneButton: false,
         showSkipButton: true,
-        onSkip: () => {saveOpenInfo(), Get.off(() => const HomePage())},
+        onSkip: () => {saveOpenInfo(), Get.off(() => HomePage())},
         skip: Text(
           "Skip",
           style: Get.theme.kNormalStyle
@@ -127,7 +127,7 @@ class OnBoardingPage extends StatelessWidget {
           style: TextButton.styleFrom(
               backgroundColor: Get.theme.colorPrimaryDark,
               fixedSize: Size(MediaQuery.of(context).size.width, 20)),
-          onPressed: () => {saveOpenInfo(), Get.off(() => const LoginPage())},
+          onPressed: () => {saveOpenInfo(), Get.off(() => LoginPage())},
           child: Text(
             'Get Started',
             style: Get.theme.kNormalStyle.copyWith(color: Colors.white),

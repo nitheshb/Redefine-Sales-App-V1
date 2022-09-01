@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -16,10 +18,9 @@ import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:redefineerp/Widgets/task_sheet_widget.dart';
 import 'package:redefineerp/themes/themes.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends GetView<HomePageController> {
-  const HomePage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -128,7 +129,7 @@ class HomePage extends GetView<HomePageController> {
           body: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                firstTab(),
+                streamToday(),
                 secondTab(),
                 thirdTab(),
               ]),
@@ -202,151 +203,301 @@ class HomePage extends GetView<HomePageController> {
     );
   }
 
-  Widget firstTab() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        children: [
-          taskCheckBox(
-              taskPriority: 1,
-              taskPriorityNum: 2,
-              selected: false,
-              task:
-                  'Collect insurance documents from Mr.Rajesh Sales Plan for New Product',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-          taskCheckBox(
-              taskPriority: 2,
-              taskPriorityNum: 2,
-              selected: false,
-              task: 'Sales Plan for New Product',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-          taskCheckBox(
-              taskPriority: 3,
-              taskPriorityNum: 0,
-              selected: false,
-              task: 'Check Screens for Todo',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-          taskCheckBox(
-              taskPriority: 3,
-              taskPriorityNum: 0,
-              selected: false,
-              task: 'Check Screens for Todo',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-          taskCheckBox(
-              taskPriority: 3,
-              taskPriorityNum: 0,
-              selected: false,
-              task: 'Check Screens for Todo',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-          taskCheckBox(
-              taskPriority: 3,
-              taskPriorityNum: 0,
-              selected: false,
-              task: 'Check Screens for Todo',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-        ],
-      ),
-    );
-  }
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Widget secondTab() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        children: [
-          DateWidget('Tommorow'),
-          taskCheckBox(
-              taskPriority: 1,
-              taskPriorityNum: 4,
-              selected: true,
-              task: 'Preparing the images that will be used in the email A',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-          DateWidget('14 Aug'),
-          taskCheckBox(
-              taskPriority: 3,
-              taskPriorityNum: 0,
-              selected: false,
-              task: 'Make sure the product is working',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-          taskCheckBox(
-              taskPriority: 1,
-              taskPriorityNum: 4,
-              selected: false,
-              task: 'Writing a description for the blog post A',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-          taskCheckBox(
-              taskPriority: 3,
-              taskPriorityNum: 0,
-              selected: false,
-              task: 'Preparing the email structure',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-          DateWidget('15 Aug'),
-          taskCheckBox(
-              taskPriority: 3,
-              taskPriorityNum: 0,
-              selected: false,
-              task: 'Finding the winner of the test',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-        ],
-      ),
-    );
+  Widget streamToday() {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('spark_assignedTasks')
+            // .where("due_date",
+            //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
+            // .where("status", isEqualTo: "InProgress")
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: Column(
+                children: const [
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  SizedBox(height: 50),
+                  Center(
+                    child: Text("Tasks Loading..."),
+                  )
+                ],
+              ),
+            );
+          } else {
+            print('no of todo is ${snapshot.data?.docs.length}');
+            return Column(
+              children: [
+                Expanded(
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: ListView.builder(
+                          itemCount: snapshot.data?.docs.length,
+                          itemBuilder: (context, index) {
+                            late QueryDocumentSnapshot<Object?>? taskData =
+                                snapshot.data?.docs[index];
+                            print("qwdqwdw ${taskData?.id}");
+                            // print(
+                            //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
+                            // print("due date is ${taskData!.get('due data')}");
+                            // return Text("hello");
+                            return taskCheckBox(
+                                taskPriority: taskData!['priority'] == "Basic"
+                                    ? 3
+                                    : taskData['priority'] == "Medium"
+                                        ? 2
+                                        : taskData['priority'] == "High"
+                                            ? 1
+                                            : 4,
+                                taskPriorityNum: taskData['priority'] == "Basic"
+                                    ? 3
+                                    : taskData['priority'] == "Medium"
+                                        ? 2
+                                        : taskData['priority'] == "High"
+                                            ? 1
+                                            : 4,
+                                selected: false,
+                                task: taskData["task_title"],
+                                createdOn:
+                                    'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
+                                assigner: 'Assigner: ${taskData['by_name']}');
+                          }),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+        });
   }
+}
 
-  Widget thirdTab() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        children: [
-          headerBg(
-              title: 'Gif Design for page loading',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              taskPriority: 1,
-              taskPriorityNum: 2),
-          miniMessage('Marked as done, pending for review'),
-          DateWidget('Due Tommorow'),
-          taskCheckBox(
-              taskPriority: 2,
-              taskPriorityNum: 4,
-              selected: false,
-              task: 'Completing the post in the new product page',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assigner: Mr. Tejesh'),
-          DateWidget('14 Aug'),
-          taskCheckBox(
-              taskPriority: 1,
-              taskPriorityNum: 2,
-              selected: false,
-              task: 'Going throuh bug report list',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assignee: Mr. Anshu'),
-          taskCheckBox(
-              taskPriority: 3,
-              taskPriorityNum: 4,
-              selected: false,
-              task: 'Updating & Testing the colour selection',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assignee: Mr. Tejesh'),
-          DateWidget('15 Aug'),
-          taskCheckBox(
-              taskPriority: 3,
-              taskPriorityNum: 0,
-              selected: false,
-              task: 'Presentation Regarding',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              assigner: 'Assignee: Mr. Tejesh'),
-        ],
-      ),
-    );
-  }
+Widget streambycuser() {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('spark_assignedTasks')
+          // .where("due_date",
+          //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
+          .where("by_uid", isEqualTo: _auth.currentUser!.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: Column(
+              children: const [
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+                SizedBox(height: 50),
+                Center(
+                  child: Text("Tasks Loading..."),
+                )
+              ],
+            ),
+          );
+        } else {
+          print('no of todo is ${snapshot.data?.docs.length}');
+          return Column(
+            children: [
+              Expanded(
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: ListView.builder(
+                        itemCount: snapshot.data?.docs.length,
+                        itemBuilder: (context, index) {
+                          late QueryDocumentSnapshot<Object?>? taskData =
+                              snapshot.data?.docs[index];
+                          print("qwdqwdw ${taskData?.id}");
+                          // print(
+                          //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
+                          // print("due date is ${taskData!.get('due data')}");
+                          // return Text("hello");
+                          return taskCheckBox(
+                              taskPriority: taskData!['priority'] == "Basic"
+                                  ? 3
+                                  : taskData['priority'] == "Medium"
+                                      ? 2
+                                      : taskData['priority'] == "High"
+                                          ? 1
+                                          : 4,
+                              taskPriorityNum: taskData['priority'] == "Basic"
+                                  ? 3
+                                  : taskData['priority'] == "Medium"
+                                      ? 2
+                                      : taskData['priority'] == "High"
+                                          ? 1
+                                          : 4,
+                              selected: false,
+                              task: taskData["task_title"],
+                              createdOn:
+                                  'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
+                              assigner: 'Assigner: ${taskData['by_name']}');
+                        }),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+      });
+}
+
+Widget firstTab() {
+  return SingleChildScrollView(
+    physics: const BouncingScrollPhysics(),
+    child: Column(
+      children: [
+        taskCheckBox(
+            taskPriority: 1,
+            taskPriorityNum: 2,
+            selected: false,
+            task:
+                'Collect insurance documents from Mr.Rajesh Sales Plan for New Product',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+        taskCheckBox(
+            taskPriority: 2,
+            taskPriorityNum: 2,
+            selected: false,
+            task: 'Sales Plan for New Product',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+        taskCheckBox(
+            taskPriority: 3,
+            taskPriorityNum: 0,
+            selected: false,
+            task: 'Check Screens for Todo',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+        taskCheckBox(
+            taskPriority: 3,
+            taskPriorityNum: 0,
+            selected: false,
+            task: 'Check Screens for Todo',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+        taskCheckBox(
+            taskPriority: 3,
+            taskPriorityNum: 0,
+            selected: false,
+            task: 'Check Screens for Todo',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+        taskCheckBox(
+            taskPriority: 3,
+            taskPriorityNum: 0,
+            selected: false,
+            task: 'Check Screens for Todo',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+      ],
+    ),
+  );
+}
+
+Widget secondTab() {
+  return SingleChildScrollView(
+    physics: const BouncingScrollPhysics(),
+    child: Column(
+      children: [
+        DateWidget('Tommorow'),
+        taskCheckBox(
+            taskPriority: 1,
+            taskPriorityNum: 4,
+            selected: true,
+            task: 'Preparing the images that will be used in the email A',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+        DateWidget('14 Aug'),
+        taskCheckBox(
+            taskPriority: 3,
+            taskPriorityNum: 0,
+            selected: false,
+            task: 'Make sure the product is working',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+        taskCheckBox(
+            taskPriority: 1,
+            taskPriorityNum: 4,
+            selected: false,
+            task: 'Writing a description for the blog post A',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+        taskCheckBox(
+            taskPriority: 3,
+            taskPriorityNum: 0,
+            selected: false,
+            task: 'Preparing the email structure',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+        DateWidget('15 Aug'),
+        taskCheckBox(
+            taskPriority: 3,
+            taskPriorityNum: 0,
+            selected: false,
+            task: 'Finding the winner of the test',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+      ],
+    ),
+  );
+}
+
+Widget thirdTab() {
+  return SingleChildScrollView(
+    physics: const BouncingScrollPhysics(),
+    child: Column(
+      children: [
+        headerBg(
+            title: 'Gif Design for page loading',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            taskPriority: 1,
+            taskPriorityNum: 2),
+        miniMessage('Marked as done, pending for review'),
+        DateWidget('Due Tommorow'),
+        taskCheckBox(
+            taskPriority: 2,
+            taskPriorityNum: 4,
+            selected: false,
+            task: 'Completing the post in the new product page',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assigner: Mr. Tejesh'),
+        DateWidget('14 Aug'),
+        taskCheckBox(
+            taskPriority: 1,
+            taskPriorityNum: 2,
+            selected: false,
+            task: 'Going throuh bug report list',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assignee: Mr. Anshu'),
+        taskCheckBox(
+            taskPriority: 3,
+            taskPriorityNum: 4,
+            selected: false,
+            task: 'Updating & Testing the colour selection',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assignee: Mr. Tejesh'),
+        DateWidget('15 Aug'),
+        taskCheckBox(
+            taskPriority: 3,
+            taskPriorityNum: 0,
+            selected: false,
+            task: 'Presentation Regarding',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            assigner: 'Assignee: Mr. Tejesh'),
+      ],
+    ),
+  );
 }
