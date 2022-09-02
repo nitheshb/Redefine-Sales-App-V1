@@ -45,7 +45,7 @@ class HomePage extends GetView<HomePageController> {
                 )
               ],
               elevation: 0,
-              backgroundColor: Colors.transparent,
+              backgroundColor: Colors.white,
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -60,9 +60,13 @@ class HomePage extends GetView<HomePageController> {
                   Padding(
                     padding:
                         const EdgeInsets.only(left: 20, top: 2, bottom: 20),
-                    child: Text('10/10 Tasks pending',
+                    child: Obx(
+                      () => Text(
+                        '${controller.donecount.value}/${controller.notdone.value + controller.donecount.value} Tasks pending',
                         style: Get.theme.kSubTitle
-                            .copyWith(color: Get.theme.colorAccent)),
+                            .copyWith(color: Get.theme.colorAccent),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -239,6 +243,7 @@ class HomePage extends GetView<HomePageController> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
                           itemCount: snapshot.data?.docs.length,
                           itemBuilder: (context, index) {
                             late QueryDocumentSnapshot<Object?>? taskData =
