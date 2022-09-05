@@ -134,7 +134,7 @@ class HomePage extends GetView<HomePageController> {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 streamToday(),
-                secondTab(),
+                streamUpdates(),
                 thirdTab(),
               ]),
           bottomNavigationBar: BottomAppBar(
@@ -218,21 +218,11 @@ class HomePage extends GetView<HomePageController> {
             // .where("status", isEqualTo: "InProgress")
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: Column(
-                children: const [
-                  Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  SizedBox(height: 50),
-                  Center(
-                    child: Text("Tasks Loading..."),
-                  )
-                ],
-              ),
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text("Something went wrong! 😣..."),
             );
-          } else {
+          } else if (snapshot.hasData) {
             print('no of todo is ${snapshot.data?.docs.length}');
             return Column(
               children: [
@@ -271,7 +261,7 @@ class HomePage extends GetView<HomePageController> {
                                 selected: false,
                                 task: taskData["task_title"],
                                 createdOn:
-                                    'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
+                                    'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
                                 assigner: 'Assigner: ${taskData['by_name']}');
                           }),
                     ),
@@ -279,12 +269,26 @@ class HomePage extends GetView<HomePageController> {
                 ),
               ],
             );
+          } else {
+            return Center(
+              child: Column(
+                children: const [
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  SizedBox(height: 50),
+                  Center(
+                    child: Text("Tasks Loading..."),
+                  )
+                ],
+              ),
+            );
           }
         });
   }
 }
 
-Widget streambycuser() {
+Widget streamUpdates() {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   return StreamBuilder<QuerySnapshot>(
@@ -295,7 +299,81 @@ Widget streambycuser() {
           .where("by_uid", isEqualTo: _auth.currentUser!.uid)
           .snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        if (snapshot.hasError) {
+          return const Center(
+            child: Text("Something went wrong! 😣..."),
+          );
+        } else if (snapshot.hasData) {
+          // List<String>? dueDates;
+          // for (int i = 0; i <= snapshot.data!.docs.length; i++) {
+          //   late QueryDocumentSnapshot<Object?>? taskData =
+          //       snapshot.data!.docs[i];
+          //   dueDates?.add(DateFormat('yyyy-MM-dd')
+          //       .format(DateTime.fromMillisecondsSinceEpoch(
+          //           taskData.get('due_date') * 1000))
+          //       .toString());
+          //   debugPrint("DATES EXPIRY: ${dueDates?[i]}");
+          // }
+          // dueDates.sort(
+          //   (a, b) {
+          //     return DateTime.parse(a).compareTo(DateTime.parse(b));
+          //   },
+          // );
+          // print('dueDates ${dueDates}');
+          return Column(
+            children: [
+              Expanded(
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: snapshot.data?.docs.length,
+                        itemBuilder: (context, index) {
+                          late QueryDocumentSnapshot<Object?>? taskData =
+                              snapshot.data?.docs[index];
+                          print("qwdqwdw ${taskData?.id}");
+
+                          // print(
+                          //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
+                          // print("due date is ${taskData!.get('due data')}");
+                          // return Text("hello");
+                          return Column(
+                            children: [
+                              DateWidget(
+                                  ' ${DateFormat('dd MMMM').format(DateTime.fromMillisecondsSinceEpoch(taskData!.get('due_date') * 1000))}'),
+                              taskCheckBox(
+                                  taskPriority: taskData!['priority'] == "Basic"
+                                      ? 3
+                                      : taskData['priority'] == "Medium"
+                                          ? 2
+                                          : taskData['priority'] == "High"
+                                              ? 1
+                                              : 4,
+                                  taskPriorityNum:
+                                      taskData['priority'] == "Basic"
+                                          ? 3
+                                          : taskData['priority'] == "Medium"
+                                              ? 2
+                                              : taskData['priority'] == "High"
+                                                  ? 1
+                                                  : 4,
+                                  selected: false,
+                                  task: taskData["task_title"],
+                                  createdOn:
+                                      'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
+                                  assigner: 'Assigner: ${taskData['by_name']}'),
+                            ],
+                          );
+                        }),
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else {
           return Center(
             child: Column(
               children: const [
@@ -308,52 +386,6 @@ Widget streambycuser() {
                 )
               ],
             ),
-          );
-        } else {
-          print('no of todo is ${snapshot.data?.docs.length}');
-          return Column(
-            children: [
-              Expanded(
-                child: MediaQuery.removePadding(
-                  context: context,
-                  removeTop: true,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: ListView.builder(
-                        itemCount: snapshot.data?.docs.length,
-                        itemBuilder: (context, index) {
-                          late QueryDocumentSnapshot<Object?>? taskData =
-                              snapshot.data?.docs[index];
-                          print("qwdqwdw ${taskData?.id}");
-                          // print(
-                          //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
-                          // print("due date is ${taskData!.get('due data')}");
-                          // return Text("hello");
-                          return taskCheckBox(
-                              taskPriority: taskData!['priority'] == "Basic"
-                                  ? 3
-                                  : taskData['priority'] == "Medium"
-                                      ? 2
-                                      : taskData['priority'] == "High"
-                                          ? 1
-                                          : 4,
-                              taskPriorityNum: taskData['priority'] == "Basic"
-                                  ? 3
-                                  : taskData['priority'] == "Medium"
-                                      ? 2
-                                      : taskData['priority'] == "High"
-                                          ? 1
-                                          : 4,
-                              selected: false,
-                              task: taskData["task_title"],
-                              createdOn:
-                                  'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
-                              assigner: 'Assigner: ${taskData['by_name']}');
-                        }),
-                  ),
-                ),
-              ),
-            ],
           );
         }
       });

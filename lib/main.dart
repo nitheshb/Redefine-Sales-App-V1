@@ -9,6 +9,7 @@ import 'package:redefineerp/Screens/OnBoarding/onboarding_page.dart';
 import 'package:redefineerp/getx_bindings.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:redefineerp/themes/themes_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final User? currentUser = FirebaseAuth.instance.currentUser;
     return GetMaterialApp(
       defaultTransition: Transition.circularReveal,
       transitionDuration: const Duration(milliseconds: 800),
@@ -39,7 +41,7 @@ class MyApp extends StatelessWidget {
       initialBinding: ControllerBindings(),
       themeMode: ThemeService().theme,
       debugShowCheckedModeBanner: false,
-      home: GetStorage().read('opened') ?? true
+      home: currentUser==null
           ? const OnBoardingPage()
           : HomePage(),
     );
