@@ -297,6 +297,7 @@ Widget streamUpdates() {
           // .where("due_date",
           //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
           .where("by_uid", isEqualTo: _auth.currentUser!.uid)
+          .orderBy("due_timestamp")
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -372,6 +373,73 @@ Widget streamUpdates() {
                 ),
               ),
             ],
+          );
+        } else {
+          return Center(
+            child: Column(
+              children: const [
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+                SizedBox(height: 50),
+                Center(
+                  child: Text("Tasks Loading..."),
+                )
+              ],
+            ),
+          );
+        }
+      });
+}
+
+
+
+Widget streamUpcoming() {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+
+  return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('spark_assignedTasks')
+          // .where("due_date",
+          //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
+          .where("by_uid", isEqualTo: _auth.currentUser!.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Center(
+            child: Text("Something went wrong! 😣..."),
+          );
+        } else if (snapshot.hasData) {
+          // List<String>? dueDates;
+          // for (int i = 0; i <= snapshot.data!.docs.length; i++) {
+          //   late QueryDocumentSnapshot<Object?>? taskData =
+          //       snapshot.data!.docs[i];
+          //   dueDates?.add(DateFormat('yyyy-MM-dd')
+          //       .format(DateTime.fromMillisecondsSinceEpoch(
+          //           taskData.get('due_date') * 1000))
+          //       .toString());
+          //   debugPrint("DATES EXPIRY: ${dueDates?[i]}");
+          // }
+          // dueDates.sort(
+          //   (a, b) {
+          //     return DateTime.parse(a).compareTo(DateTime.parse(b));
+          //   },
+          // );
+          // print('dueDates ${dueDates}');
+
+          return Expanded(
+            child: MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Column(
+                  children: [
+                    //List of tasks and due dates
+                  ],
+                )
+              ),
+            ),
           );
         } else {
           return Center(
