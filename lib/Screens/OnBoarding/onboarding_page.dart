@@ -106,7 +106,7 @@ class OnBoardingPage extends StatelessWidget {
         showNextButton: false,
         showDoneButton: false,
         showSkipButton: true,
-        onSkip: () => {saveOpenInfo(), Get.off(() => HomePage())},
+        onSkip: () => {saveOpenInfo(), Get.off(() => LoginPage())},
         skip: Text(
           "Skip",
           style: Get.theme.kNormalStyle

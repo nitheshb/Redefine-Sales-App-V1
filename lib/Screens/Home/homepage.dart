@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
+import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Search/search_task.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Utilities/basicdialog.dart';
@@ -166,7 +167,7 @@ class HomePage extends GetView<HomePageController> {
                         icon: Icon(Icons.search_outlined,
                             color: Get.theme.btnTextCol.withOpacity(0.3))),
                     IconButton(
-                      onPressed: () => {},
+                      onPressed: () => {Get.to(() => const NotificationPage())},
                       icon: Icon(Icons.notifications_outlined,
                           color: Get.theme.btnTextCol.withOpacity(0.3)),
                     ),
@@ -346,7 +347,7 @@ Widget streamUpdates() {
                               DateWidget(
                                   ' ${DateFormat('dd MMMM').format(DateTime.fromMillisecondsSinceEpoch(taskData!.get('due_date') * 1000))}'),
                               taskCheckBox(
-                                  taskPriority: taskData!['priority'] == "Basic"
+                                  taskPriority: taskData['priority'] == "Basic"
                                       ? 3
                                       : taskData['priority'] == "Medium"
                                           ? 2
@@ -392,8 +393,6 @@ Widget streamUpdates() {
       });
 }
 
-
-
 Widget streamUpcoming() {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -432,13 +431,12 @@ Widget streamUpcoming() {
               context: context,
               removeTop: true,
               child: Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Column(
-                  children: [
-                    //List of tasks and due dates
-                  ],
-                )
-              ),
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Column(
+                    children: [
+                      //List of tasks and due dates
+                    ],
+                  )),
             ),
           );
         } else {
