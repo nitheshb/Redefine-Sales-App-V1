@@ -39,6 +39,9 @@ dependencies:
   cloud_firestore: ^3.1.10
   firebase_auth: ^3.7.0
   firebase_messaging: ^13.0.0
+  flutter_custom_clippers: ^2.0.0
+  sliding_up_panel: ^2.0.0+1
+  percent_indicator: ^4.0.1
 
 
 dev_dependencies:
