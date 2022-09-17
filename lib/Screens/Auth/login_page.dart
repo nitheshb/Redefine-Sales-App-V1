@@ -12,45 +12,8 @@ import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/methods/methods.dart';
 import 'package:redefineerp/themes/themes.dart';
 
-class LoginPage extends StatefulWidget {
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final User? currentUser = FirebaseAuth.instance.currentUser;
-  final TextEditingController _email = TextEditingController();
-  final TextEditingController _password = TextEditingController();
-  bool isLoading = false;
-
-  bool _passwordVisible = false;
-
-  String? localFcmToken = "";
-
-  String? loggedInFcmToken = "";
-
-  var userDetails = [];
-
-  void getToken() async {
-    await FirebaseMessaging.instance.getToken().then((token) {
-      setState(() {
-        localFcmToken = token;
-        print("Local fcm token is $token");
-      });
-    });
-  }
-
-  void getLoggedInUserDetails() async {
-    var x = await DbQuery.instanace.getLoggedInUserDetails(currentUser?.uid);
-    print("ewfwfe ${x.data()}");
-  }
-
-  @override
-  void initState() {
-    _passwordVisible = false;
-    getToken();
-    getLoggedInUserDetails();
-  }
+class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Form(
                   key: controller.formKey,
                   child: TextFormField(
-                    controller: _email,
+                    controller: controller.email,
                     validator: (value) {
                       if (!GetUtils.isEmail(value!)) {
                         return 'Please enter a valid email ID.';
@@ -86,6 +49,9 @@ class _LoginPageState extends State<LoginPage> {
                     decoration: InputDecoration(
                       suffixIcon: const Icon(Icons.check),
                       labelText: 'Email',
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Get.theme.colorPrimaryDark)),
                       border: const OutlineInputBorder(),
                       errorStyle: TextStyle(color: Get.theme.kRedColor),
                       errorBorder: const OutlineInputBorder(
@@ -103,10 +69,13 @@ class _LoginPageState extends State<LoginPage> {
                   () => TextField(
                     maxLines: 1,
                     obscureText: controller.showPass.value,
-                    controller: _password,
+                    controller: controller.password,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       hintText: '***********',
+                      focusedBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Get.theme.colorPrimaryDark)),
                       border: const OutlineInputBorder(),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -177,53 +146,21 @@ class _LoginPageState extends State<LoginPage> {
 
               GestureDetector(
                 onTap: () {
-                  if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
-                    setState(() {
-                      isLoading = true;
-                    });
-                    logIn(_email.text, _password.text).then((user) {
-                      if (user != null && localFcmToken != null) {
-                        print("Login Sucessfull");
-                        setState(() {
-                          isLoading = false;
-                        });
-                        var currentUser = FirebaseAuth.instance.currentUser;
-
-                        FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(currentUser?.uid)
-                            .update({"user_fcmtoken": localFcmToken}).then((_) {
-                          print("success!");
-                        });
-                        Navigator.pushReplacement(
-                            (context),
-                            MaterialPageRoute(
-                                builder: (context) => HomePage()));
-                      } else {
-                        print("Login Failed");
-                        setState(() {
-                          isLoading = false;
-                        });
-                      }
-                    });
-                  } else {
-                    print("Please fill form correctly");
-                  }
+                  controller.loginUser();
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Container(
                       height: 48,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(10),
                         color: Get.theme.colorPrimaryDark,
                       ),
                       alignment: Alignment.center,
-                      child: Text(
-                        "Sign in",
-                        // style: kButtonFont,
-                      )),
+                      child: Text("Login",
+                          style: Get.theme.kNormalStyle
+                              .copyWith(color: Colors.white))),
                 ),
               )
             ],

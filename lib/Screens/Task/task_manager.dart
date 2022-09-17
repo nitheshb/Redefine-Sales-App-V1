@@ -37,8 +37,7 @@ class TaskManager extends StatelessWidget {
                   () => controller.taskType.value == 'close'
                       ? IconButton(
                           onPressed: () => {
-                                taskSheetWidget(
-                                    isEditTask: true, initialChild: 0.8),
+                                Get.to(() => CreateTaskPage(isEditTask: true)),
                               },
                           icon: const Icon(
                             Icons.edit_rounded,

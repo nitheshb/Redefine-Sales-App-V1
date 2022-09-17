@@ -11,6 +11,9 @@ class HomePageController extends GetxController {
   var index = 0.obs;
   var notdone = 0.obs;
   final User? currentUser = FirebaseAuth.instance.currentUser;
+  int tempDate = 0;
+  int dateIndex = 0;
+  List<int> dueDateList = [];
 
   void bottomBarOnTap(int index) {
     bottomBarIndex.value = index;
@@ -33,7 +36,7 @@ class HomePageController extends GetxController {
     }
   }
 
-  Future<void> fetchdata() async{
+  Future<void> fetchdata() async {
     FirebaseFirestore.instance
         .collection('spark_assignedTasks')
         .where("to_email", isEqualTo: currentUser?.email)
@@ -50,7 +53,7 @@ class HomePageController extends GetxController {
   }
 
   @override
-  void onInit() async{
+  void onInit() async {
     await fetchdata();
     super.onInit();
   }

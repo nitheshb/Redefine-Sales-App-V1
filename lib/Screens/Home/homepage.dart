@@ -30,6 +30,17 @@ class HomePage extends GetView<HomePageController> {
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(120),
             child: AppBar(
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 10, top: 5, bottom: 10),
+                child: IconButton(
+                  onPressed: () => {},
+                  icon: Icon(
+                    Icons.account_circle,
+                    size: 42,
+                    color: Get.theme.btnTextCol.withOpacity(0.2),
+                  ),
+                ),
+              ),
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -51,7 +62,7 @@ class HomePage extends GetView<HomePageController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 35),
+                    padding: const EdgeInsets.only(top: 35),
                     child: Text(
                       'Morning, Nitesh',
                       style: Get.theme.kTitleStyle
@@ -59,8 +70,7 @@ class HomePage extends GetView<HomePageController> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.only(left: 20, top: 2, bottom: 20),
+                    padding: const EdgeInsets.only(top: 2, bottom: 20),
                     child: Obx(
                       () => Text(
                         '${controller.donecount.value}/${controller.notdone.value + controller.donecount.value} Tasks pending',
@@ -121,7 +131,7 @@ class HomePage extends GetView<HomePageController> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => {
-              taskSheetWidget(initialChild: 0.8),
+              Get.to(() => CreateTaskPage(isEditTask: false)),
             },
             backgroundColor: Get.theme.colorPrimaryDark,
             child: const Icon(
@@ -135,7 +145,7 @@ class HomePage extends GetView<HomePageController> {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 streamToday(),
-                streamUpdates(),
+                streamUpdates(controller),
                 thirdTab(),
               ]),
           bottomNavigationBar: BottomAppBar(
@@ -162,7 +172,7 @@ class HomePage extends GetView<HomePageController> {
                               //     message: 'message',
                               //     button1: 'button1',
                               //     tapFeatures: () => {}),
-                              Get.to(SearchPage())
+                              Get.to(() => const SearchPage())
                             },
                         icon: Icon(Icons.search_outlined,
                             color: Get.theme.btnTextCol.withOpacity(0.3))),
@@ -289,7 +299,7 @@ class HomePage extends GetView<HomePageController> {
   }
 }
 
-Widget streamUpdates() {
+Widget streamUpdates(HomePageController controller) {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   return StreamBuilder<QuerySnapshot>(
@@ -298,7 +308,7 @@ Widget streamUpdates() {
           // .where("due_date",
           //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
           .where("by_uid", isEqualTo: _auth.currentUser!.uid)
-          .orderBy("due_timestamp")
+          .orderBy("due_date")
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -306,137 +316,54 @@ Widget streamUpdates() {
             child: Text("Something went wrong! 😣..."),
           );
         } else if (snapshot.hasData) {
-          // List<String>? dueDates;
-          // for (int i = 0; i <= snapshot.data!.docs.length; i++) {
-          //   late QueryDocumentSnapshot<Object?>? taskData =
-          //       snapshot.data!.docs[i];
-          //   dueDates?.add(DateFormat('yyyy-MM-dd')
-          //       .format(DateTime.fromMillisecondsSinceEpoch(
-          //           taskData.get('due_date') * 1000))
-          //       .toString());
-          //   debugPrint("DATES EXPIRY: ${dueDates?[i]}");
-          // }
-          // dueDates.sort(
-          //   (a, b) {
-          //     return DateTime.parse(a).compareTo(DateTime.parse(b));
-          //   },
-          // );
-          // print('dueDates ${dueDates}');
-          return Column(
-            children: [
-              Expanded(
-                child: MediaQuery.removePadding(
-                  context: context,
-                  removeTop: true,
-                  child: Padding(
+          List<int> dueDates = [];
+          for (int i = 0; i < snapshot.data!.docs.length; i++) {
+            late QueryDocumentSnapshot<Object?>? taskData =
+                snapshot.data!.docs[i];
+            dueDates.add(taskData.get('due_date'));
+          }
+          controller.dueDateList = dueDates.toSet().toList();
+          controller.tempDate = controller.dueDateList[0];
+          List<QueryDocumentSnapshot<Object?>>? taskData = snapshot.data?.docs;
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Expanded(
+              child: MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: Padding(
                     padding: const EdgeInsets.only(top: 10.0),
-                    child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: snapshot.data?.docs.length,
-                        itemBuilder: (context, index) {
-                          late QueryDocumentSnapshot<Object?>? taskData =
-                              snapshot.data?.docs[index];
-                          print("qwdqwdw ${taskData?.id}");
-
-                          // print(
-                          //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
-                          // print("due date is ${taskData!.get('due data')}");
-                          // return Text("hello");
-                          return Column(
-                            children: [
-                              DateWidget(
-                                  ' ${DateFormat('dd MMMM').format(DateTime.fromMillisecondsSinceEpoch(taskData!.get('due_date') * 1000))}'),
-                              taskCheckBox(
-                                  taskPriority: taskData['priority'] == "Basic"
-                                      ? 3
-                                      : taskData['priority'] == "Medium"
-                                          ? 2
-                                          : taskData['priority'] == "High"
-                                              ? 1
-                                              : 4,
-                                  taskPriorityNum:
-                                      taskData['priority'] == "Basic"
-                                          ? 3
-                                          : taskData['priority'] == "Medium"
-                                              ? 2
-                                              : taskData['priority'] == "High"
-                                                  ? 1
-                                                  : 4,
-                                  selected: false,
-                                  task: taskData["task_title"],
-                                  createdOn:
-                                      'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
-                                  assigner: 'Assigner: ${taskData['by_name']}'),
-                            ],
-                          );
-                        }),
-                  ),
-                ),
+                    child: Column(
+                      children: [
+                        ...taskData!.map((e) => Column(
+                              children: [
+                                dateBoxForUpcomingSection(controller,
+                                    dateL: e.get('due_date')),
+                                taskCheckBox(
+                                    taskPriority: e['priority'] == "Basic"
+                                        ? 3
+                                        : e['priority'] == "Medium"
+                                            ? 2
+                                            : e['priority'] == "High"
+                                                ? 1
+                                                : 4,
+                                    taskPriorityNum: e['priority'] == "Basic"
+                                        ? 3
+                                        : e['priority'] == "Medium"
+                                            ? 2
+                                            : e['priority'] == "High"
+                                                ? 1
+                                                : 4,
+                                    selected: false,
+                                    task: e["task_title"],
+                                    createdOn:
+                                        'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}',
+                                    assigner: 'Assigner: ${e['by_name']}'),
+                              ],
+                            )),
+                      ],
+                    )),
               ),
-            ],
-          );
-        } else {
-          return Center(
-            child: Column(
-              children: const [
-                Center(
-                  child: CircularProgressIndicator(),
-                ),
-                SizedBox(height: 50),
-                Center(
-                  child: Text("Tasks Loading..."),
-                )
-              ],
-            ),
-          );
-        }
-      });
-}
-
-Widget streamUpcoming() {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-
-  return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('spark_assignedTasks')
-          // .where("due_date",
-          //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
-          .where("by_uid", isEqualTo: _auth.currentUser!.uid)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Center(
-            child: Text("Something went wrong! 😣..."),
-          );
-        } else if (snapshot.hasData) {
-          // List<String>? dueDates;
-          // for (int i = 0; i <= snapshot.data!.docs.length; i++) {
-          //   late QueryDocumentSnapshot<Object?>? taskData =
-          //       snapshot.data!.docs[i];
-          //   dueDates?.add(DateFormat('yyyy-MM-dd')
-          //       .format(DateTime.fromMillisecondsSinceEpoch(
-          //           taskData.get('due_date') * 1000))
-          //       .toString());
-          //   debugPrint("DATES EXPIRY: ${dueDates?[i]}");
-          // }
-          // dueDates.sort(
-          //   (a, b) {
-          //     return DateTime.parse(a).compareTo(DateTime.parse(b));
-          //   },
-          // );
-          // print('dueDates ${dueDates}');
-
-          return Expanded(
-            child: MediaQuery.removePadding(
-              context: context,
-              removeTop: true,
-              child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Column(
-                    children: [
-                      //List of tasks and due dates
-                    ],
-                  )),
             ),
           );
         } else {
@@ -603,4 +530,20 @@ Widget thirdTab() {
       ],
     ),
   );
+}
+
+Widget dateBoxForUpcomingSection(HomePageController controller,
+    {required int dateL}) {
+  if (dateL == controller.tempDate) {
+    if (controller.dateIndex < controller.dueDateList.length - 1) {
+      controller.dateIndex += 1;
+      debugPrint(
+          "DATES DATA INDEX: ${controller.dateIndex} DATE LENGTH: ${controller.dueDateList.length}");
+    }
+    controller.tempDate = controller.dueDateList[controller.dateIndex];
+    return DateWidget(
+        ' ${DateFormat('dd MMMM').format(DateTime.fromMillisecondsSinceEpoch(dateL * 1000))}');
+  } else {
+    return sizeBox(0, 0);
+  }
 }

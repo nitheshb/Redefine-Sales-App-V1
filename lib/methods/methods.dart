@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
 
 Future<User?> logIn(String email, String password) async {
@@ -25,13 +26,12 @@ Future<User?> logIn(String email, String password) async {
   }
 }
 
-Future logOut(BuildContext context) async {
+Future logOut() async {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   try {
     await _auth.signOut().then((value) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (_) => LoginPage()));
+      Get.to(() => const LoginPage());
     });
   } catch (e) {
     print("error");
