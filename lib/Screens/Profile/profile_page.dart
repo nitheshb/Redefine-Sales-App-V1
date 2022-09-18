@@ -47,14 +47,14 @@ class ProfilePage extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
-            Text(
+            Obx(()=>Text(
               controller.homePageController.userName.value,
               style: Get.theme.kNormalStyle.copyWith(fontSize: 16),
-            ),
-            Text(
+            ),),
+            Obx(()=>Text(
               controller.homePageController.userEmail.value,
               style: Get.theme.kNormalStyle,
-            ),
+            ),),
             Padding(
               padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.01),

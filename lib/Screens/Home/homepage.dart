@@ -75,11 +75,11 @@ class HomePage extends GetView<HomePageController> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 35),
-                    child: Text(
-                      'Morning, Nitesh',
+                    child: Obx(()=>Text(
+                      'Morning, ${controller.userName}',
                       style: Get.theme.kTitleStyle
                           .copyWith(color: Get.theme.btnTextCol),
-                    ),
+                    ),),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 2, bottom: 20),

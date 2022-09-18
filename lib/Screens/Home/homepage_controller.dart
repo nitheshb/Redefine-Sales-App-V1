@@ -12,15 +12,15 @@ class HomePageController extends GetxController {
   var notdone = 0.obs;
   final User? currentUser = FirebaseAuth.instance.currentUser;
 
-  var userName = 'Nithesh'.obs;
-  var userEmail = 'nithe.nithesh@gmail.com'.obs;
+  var userName = ''.obs;
+  var userEmail = ''.obs;
 
   int tempDate = 0;
   int dateIndex = 0;
   List<int> dueDateList = [];
 
   Future<void> fetchdata() async {
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('spark_assignedTasks')
         .where("to_email", isEqualTo: currentUser?.email)
         .get()
@@ -32,6 +32,16 @@ class HomePageController extends GetxController {
           notdone.value = notdone.value + 1;
         }
       }
+    });
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: currentUser?.uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      final doc = querySnapshot.docs[0];
+      userName.value = doc['name'];
+      userEmail.value = doc['email'];
     });
   }
 
