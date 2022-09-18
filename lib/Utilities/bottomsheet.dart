@@ -9,6 +9,7 @@ bottomSheetWidget(
   Widget data, {
   bool dismissible = true,
   double initialChild = 0.75,
+  bool transparentBg = false,
 }) {
   Get.bottomSheet(
       SafeArea(
@@ -35,16 +36,17 @@ bottomSheetWidget(
                       Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        height: 5,
-                        width: 32,
-                        margin: const EdgeInsets.only(top: 15),
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(14))),
-                      ),
+                      if (!transparentBg)
+                        Container(
+                          height: 5,
+                          width: 32,
+                          margin: const EdgeInsets.only(top: 15),
+                          padding: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(14))),
+                        ),
                       data
                     ],
                   ),

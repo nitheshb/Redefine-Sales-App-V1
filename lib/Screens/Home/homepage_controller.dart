@@ -11,30 +11,13 @@ class HomePageController extends GetxController {
   var index = 0.obs;
   var notdone = 0.obs;
   final User? currentUser = FirebaseAuth.instance.currentUser;
+
+  var userName = 'Nithesh'.obs;
+  var userEmail = 'nithe.nithesh@gmail.com'.obs;
+
   int tempDate = 0;
   int dateIndex = 0;
   List<int> dueDateList = [];
-
-  void bottomBarOnTap(int index) {
-    bottomBarIndex.value = index;
-    switch (index) {
-      case 0:
-        // TODO:
-        break;
-      case 1:
-        // TODO:
-
-        break;
-      case 2:
-        // TODO:
-
-        break;
-      case 3:
-        // TODO:
-
-        break;
-    }
-  }
 
   Future<void> fetchdata() async {
     FirebaseFirestore.instance

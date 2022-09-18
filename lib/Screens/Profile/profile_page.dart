@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Profile/profile_controller.dart';
 import 'package:redefineerp/themes/themes.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-  var userName = 'nitesh';
-  var userEMail = 'nithe.nithesh@gmail.com';
-  @override
   Widget build(BuildContext context) {
+    final controller =
+        Get.put<ProfileController>(ProfileController());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -47,11 +43,11 @@ class _ProfilePageState extends State<ProfilePage> {
               height: MediaQuery.of(context).size.height * 0.02,
             ),
             Text(
-              'Nithesh',
+              controller.homePageController.userName.value,
               style: Get.theme.kNormalStyle.copyWith(fontSize: 16),
             ),
             Text(
-              'nithe.nithesh@gmail.com',
+              controller.homePageController.userEmail.value,
               style: Get.theme.kNormalStyle,
             ),
             Padding(

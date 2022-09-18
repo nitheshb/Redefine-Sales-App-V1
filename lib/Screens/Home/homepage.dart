@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Notification/notification_pages.dart';
+import 'package:redefineerp/Screens/Profile/profile_page.dart';
+import 'package:redefineerp/Screens/Report/report_page.dart';
 import 'package:redefineerp/Screens/Search/search_task.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Utilities/basicdialog.dart';
@@ -33,7 +35,7 @@ class HomePage extends GetView<HomePageController> {
               leading: Padding(
                 padding: const EdgeInsets.only(left: 10, top: 5, bottom: 10),
                 child: IconButton(
-                  onPressed: () => {},
+                  onPressed: () => {Get.to(() => const ProfilePage())},
                   icon: Icon(
                     Icons.account_circle,
                     size: 42,
@@ -131,7 +133,7 @@ class HomePage extends GetView<HomePageController> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => {
-              Get.to(() => CreateTaskPage(isEditTask: false)),
+              Get.to(() => const CreateTaskPage(isEditTask: false)),
             },
             backgroundColor: Get.theme.colorPrimaryDark,
             child: const Icon(
@@ -160,7 +162,9 @@ class HomePage extends GetView<HomePageController> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                    onPressed: () => {},
+                    onPressed: () => {
+                          bottomSheetWidget(ReportPage(), transparentBg: true),
+                        },
                     icon:
                         Icon(Icons.menu_rounded, color: Get.theme.btnTextCol)),
                 Row(
