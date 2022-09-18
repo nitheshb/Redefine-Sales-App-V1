@@ -1,14 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/themes/themes.dart';
+import 'package:intl/intl.dart';
 
-class CreateTaskPage extends StatelessWidget {
+class CreateTaskPage extends StatefulWidget {
   CreateTaskPage({Key? key, required this.isEditTask}) : super(key: key);
   final bool isEditTask;
 
+  @override
+  State<CreateTaskPage> createState() => _CreateTaskPageState();
+}
+
+class _CreateTaskPageState extends State<CreateTaskPage> {
+  late DateTime selectedDateTime = DateTime.now();
+  var datedone;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  TextEditingController _taskTitle = TextEditingController();
+  TextEditingController _taskDescription = TextEditingController();
+  TextEditingController dateinput = TextEditingController();
+  final collection =
+      FirebaseFirestore.instance.collection('spark_assignedTasks');
   @override
   Widget build(BuildContext context) {
     TaskController controller = Get.put<TaskController>(TaskController());
@@ -28,7 +46,7 @@ class CreateTaskPage extends StatelessWidget {
             ),
             sizeBox(20, 0),
             Text(
-              isEditTask ? 'Edit Task' : 'Create Task',
+              widget.isEditTask ? 'Edit Task' : 'Create Task',
               style: Get.theme.kNormalStyle
                   .copyWith(color: Get.theme.colorPrimaryDark),
             ),
@@ -75,6 +93,7 @@ class CreateTaskPage extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: _taskTitle,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 focusedBorder: OutlineInputBorder(
@@ -84,23 +103,66 @@ class CreateTaskPage extends StatelessWidget {
             ),
             Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Text(
-                    'Due Date',
-                    textAlign: TextAlign.start,
-                    style: Get.theme.kNormalStyle.copyWith(
-                      color: Get.theme.btnTextCol.withOpacity(0.5),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            'Due Date',
+                            textAlign: TextAlign.start,
+                            style: Get.theme.kNormalStyle.copyWith(
+                              color: Get.theme.btnTextCol.withOpacity(0.5),
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              // pressed = true;
+                              DatePicker.showDateTimePicker(context,
+                                  showTitleActions: true, onChanged: (date) {
+                                // datedone == 1;
+
+                                print(
+                                    'change ${date.millisecondsSinceEpoch} ${date} in time zone ' +
+                                        date.timeZoneOffset.inHours.toString());
+                              }, onConfirm: (date) {
+                                // datedone == 1;
+
+                                setState(() {
+                                  // datedone == 1;
+
+                                  selectedDateTime = date;
+                                });
+                              }, currentTime: DateTime.now());
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Icon(
+                              Icons.calendar_month_rounded,
+                              color: Get.theme.btnTextCol.withOpacity(0.3),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                    Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "${DateFormat('dd-MMMM-yyyy  kk:mm').format(selectedDateTime)}",
+                      ),
+                    )),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Icon(
-                    Icons.calendar_month_rounded,
-                    color: Get.theme.btnTextCol.withOpacity(0.3),
-                  ),
-                ),
+                // datedone != 1
+                //     ?
+
+                // : Text(selectedDateTime.toString()),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Container(
@@ -129,10 +191,18 @@ class CreateTaskPage extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               color: Get.theme.btnTextCol.withOpacity(0.3),
             ),
-            const TextField(
+            TextFormField(
               keyboardType: TextInputType.multiline,
               minLines: 5,
+              controller: _taskDescription,
               maxLines: 8,
+              validator: (value) {
+                if (value!.length < 4) {
+                  return 'Enter at least 20 characters';
+                } else {
+                  return null;
+                }
+              },
               scrollPhysics: BouncingScrollPhysics(),
               decoration: InputDecoration(
                   border: InputBorder.none,
@@ -152,7 +222,27 @@ class CreateTaskPage extends StatelessWidget {
             TextButton(
                 style: TextButton.styleFrom(
                     backgroundColor: Get.theme.colorPrimaryDark),
-                onPressed: () => {},
+                onPressed: () => {
+                      collection
+                          .add({
+                            'task_title': _taskTitle.text,
+                            'task_desc': _taskDescription.text,
+                            'created_on': DateTime.now().millisecondsSinceEpoch,
+                            'due_date': selectedDateTime.microsecondsSinceEpoch,
+                            'by_email': _auth.currentUser?.email,
+                            'by_name': _auth.currentUser?.displayName,
+                            'by_uid': _auth.currentUser?.uid,
+                            'to_name': "assignedToName",
+                            'to_uid': "assignedToUid",
+                            'priority': "_tas",
+                            'to_email': "assignedToEmail",
+                            'dept': "assignedToDept",
+                            'status': "statusValue",
+                          })
+                          .then((value) => print("Task Created ${value}"))
+                          .catchError(
+                              (error) => print("Failed to create task: $error"))
+                    },
                 child: Text('Save',
                     style: Get.theme.kSubTitle.copyWith(color: Colors.white)))
           ],
