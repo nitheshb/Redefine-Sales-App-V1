@@ -40,7 +40,6 @@ dependencies:
   firebase_auth: ^3.7.0
   firebase_messaging: ^13.0.0
   flutter_custom_clippers: ^2.0.0
-  sliding_up_panel: ^2.0.0+1
   percent_indicator: ^4.0.1
   flutter_datetime_picker: ^1.5.1
 
