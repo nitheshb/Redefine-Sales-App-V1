@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
@@ -136,54 +137,62 @@ class ContactListPage extends StatelessWidget {
             ),
             Container(
                 height: 2, width: Get.size.width, color: Get.theme.curveBG),
-            ContactCard(
-                title: 'Indrajit Nigam',
-                jobTitle: 'Sales Executive',
-                onTap: () => {}),
-            ContactCard(
-                title: 'Mahendra Mangal',
-                jobTitle: 'Sales Manager',
-                onTap: () => {}),
-            ContactCard(
-                title: 'Kalini Gaba',
-                jobTitle: 'Sales Manager',
-                onTap: () => {}),
-            ContactCard(
-                title: 'Ravi Prabhakar',
-                jobTitle: 'Project Manager',
-                onTap: () => {}),
-            ContactCard(
-                title: 'Lochan Solanki',
-                jobTitle: 'Sales Manager',
-                onTap: () => {}),
-            ContactCard(
-                title: 'Vivek Dhillon',
-                jobTitle: 'Sales Manager',
-                onTap: () => {}),
-            ContactCard(
-                title: 'Vivek Dhillon',
-                jobTitle: 'Sales Manager',
-                onTap: () => {}),
-            ContactCard(
-                title: 'Vivek Dhillon',
-                jobTitle: 'Sales Manager',
-                onTap: () => {}),
-            ContactCard(
-                title: 'Vivek Dhillon',
-                jobTitle: 'Sales Manager',
-                onTap: () => {}),
-            ContactCard(
-                title: 'Vivek Dhillon',
-                jobTitle: 'Sales Manager',
-                onTap: () => {}),
-            ContactCard(
-                title: 'Vivek Dhillon',
-                jobTitle: 'Sales Manager',
-                onTap: () => {}),
+            _streamUsersContacts(controller),
           ],
         ),
       ),
     );
+  }
+
+  Widget _streamUsersContacts(
+      ContactController controller) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: controller.collection.where('roles', isNull: false).snapshots(),
+        builder: (con, snapshot) {
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text("Something went wrong! 😣..."),
+            );
+          } else if (snapshot.hasData) {
+            return ListView.builder(
+                primary: false,
+                physics: const BouncingScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshot.data?.docs.length,
+                itemBuilder: (c, i) {
+                  QueryDocumentSnapshot<Object?>? taskData =
+                      snapshot.data?.docs[i];
+                  return ContactCard(
+                      title: '${taskData!["name"]}',
+                      jobTitle: '${taskData["roles"][0]}',
+                      onTap: () => {
+                            controller.taskController.assignedUserName.value =
+                                taskData["name"],
+                            controller.taskController.assignedUserDepartment
+                                .value = taskData["department"][0],
+                            controller.taskController.assignedUserEmail.value =
+                                taskData["email"],
+                            controller.taskController.assignedUserUid.value =
+                                taskData["uid"],
+                            Get.back()
+                          });
+                });
+          } else {
+            return Center(
+              child: Column(
+                children: const [
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  SizedBox(height: 50),
+                  Center(
+                    child: Text("Users Loading..."),
+                  )
+                ],
+              ),
+            );
+          }
+        });
   }
 
   Widget _contactFilterChip(int index,

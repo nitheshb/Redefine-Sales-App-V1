@@ -1,32 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
+import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/themes/themes.dart';
-import 'package:intl/intl.dart';
 
-class CreateTaskPage extends StatefulWidget {
-  CreateTaskPage({Key? key, required this.isEditTask}) : super(key: key);
+class CreateTaskPage extends StatelessWidget {
+  const CreateTaskPage({Key? key, required this.isEditTask}) : super(key: key);
   final bool isEditTask;
-
-  @override
-  State<CreateTaskPage> createState() => _CreateTaskPageState();
-}
-
-class _CreateTaskPageState extends State<CreateTaskPage> {
-  late DateTime selectedDateTime = DateTime.now();
-  var datedone;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  TextEditingController _taskTitle = TextEditingController();
-  TextEditingController _taskDescription = TextEditingController();
-  TextEditingController dateinput = TextEditingController();
-  final collection =
-      FirebaseFirestore.instance.collection('spark_assignedTasks');
   @override
   Widget build(BuildContext context) {
     TaskController controller = Get.put<TaskController>(TaskController());
@@ -46,7 +29,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
             ),
             sizeBox(20, 0),
             Text(
-              widget.isEditTask ? 'Edit Task' : 'Create Task',
+              isEditTask ? 'Edit Task' : 'Create Task',
               style: Get.theme.kNormalStyle
                   .copyWith(color: Get.theme.colorPrimaryDark),
             ),
@@ -64,25 +47,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                   ),
                   GestureDetector(
                     onTap: () => Get.to(const ContactListPage()),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ActionChip(
-                            elevation: 0,
-                            side: BorderSide(
-                                color: Get.theme.btnTextCol.withOpacity(0.1)),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            backgroundColor: Get.theme.kBadgeColorBg,
-                            label: Text(
-                              'Vivek Dhillon',
-                              style: Get.theme.kSubTitle
-                                  .copyWith(color: Get.theme.kBadgeColor),
-                            ),
-                            onPressed: () => {
-                                  Get.to(const ContactListPage()),
-                                }),
-                      ],
+                    child: Obx(
+                      () => userAssignChip(
+                          name: controller.assignedUserName.value),
                     ),
                   ),
                   const Padding(
@@ -93,9 +60,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
               ),
             ),
             TextField(
-              controller: _taskTitle,
+              controller: controller.taskTitle,
               decoration: InputDecoration(
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Get.theme.colorPrimaryDark)),
                 hintText: 'Title',
@@ -120,25 +87,14 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            setState(() {
-                              // pressed = true;
-                              DatePicker.showDateTimePicker(context,
-                                  showTitleActions: true, onChanged: (date) {
-                                // datedone == 1;
-
-                                print(
-                                    'change ${date.millisecondsSinceEpoch} ${date} in time zone ' +
-                                        date.timeZoneOffset.inHours.toString());
-                              }, onConfirm: (date) {
-                                // datedone == 1;
-
-                                setState(() {
-                                  // datedone == 1;
-
-                                  selectedDateTime = date;
-                                });
-                              }, currentTime: DateTime.now());
-                            });
+                            DatePicker.showDateTimePicker(context,
+                                showTitleActions: true, onChanged: (date) {
+                              print(
+                                  'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                            }, onConfirm: (date) {
+                              controller.dateSelected = date;
+                              controller.updateSelectedDate();
+                            }, currentTime: DateTime.now());
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -153,8 +109,10 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                     Center(
                         child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "${DateFormat('dd-MMMM-yyyy  kk:mm').format(selectedDateTime)}",
+                      child: Obx(
+                        () => Text(
+                          controller.selectedDateTime.value,
+                        ),
                       ),
                     )),
                   ],
@@ -171,17 +129,86 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                     color: Get.theme.btnTextCol.withOpacity(0.3),
                   ),
                 ),
-                Text(
-                  'Priority',
-                  style: Get.theme.kNormalStyle.copyWith(
-                    color: Get.theme.btnTextCol.withOpacity(0.5),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: CircleAvatar(
-                    radius: 10,
-                    backgroundColor: Get.theme.kRedColor,
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: TextButton.icon(
+                    onPressed: () => {
+                      bottomSheetWidget(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              sizeBox(20, 0),
+                              Text(
+                                'Set Priority',
+                                style: Get.theme.kTitleStyle,
+                              ),
+                              sizeBox(20, 0),
+                              TextButton.icon(
+                                onPressed: () => {
+                                  controller.taskPriority.value = 'Basic',
+                                  Get.back()
+                                },
+                                icon: CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor: Get.theme.successColor,
+                                ),
+                                label: Text(
+                                  'Basic',
+                                  style: Get.theme.kTitleStyle
+                                      .copyWith(color: Get.theme.btnTextCol),
+                                ),
+                              ),
+                              TextButton.icon(
+                                onPressed: () => {
+                                  controller.taskPriority.value = 'Medium',
+                                  Get.back()
+                                },
+                                icon: CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor: Get.theme.kYellowColor,
+                                ),
+                                label: Text(
+                                  'Medium',
+                                  style: Get.theme.kTitleStyle
+                                      .copyWith(color: Get.theme.btnTextCol),
+                                ),
+                              ),
+                              TextButton.icon(
+                                onPressed: () => {
+                                  controller.taskPriority.value = 'High',
+                                  Get.back()
+                                },
+                                icon: CircleAvatar(
+                                  radius: 12,
+                                  backgroundColor: Get.theme.kRedColor,
+                                ),
+                                label: Text(
+                                  'High',
+                                  style: Get.theme.kTitleStyle
+                                      .copyWith(color: Get.theme.btnTextCol),
+                                ),
+                              ),
+                            ],
+                          ),
+                          initialChild: 0.5)
+                    },
+                    icon: Obx(
+                      () => CircleAvatar(
+                        radius: 10,
+                        backgroundColor:
+                            controller.taskPriority.value == 'Basic'
+                                ? Get.theme.successColor
+                                : controller.taskPriority.value == 'Medium'
+                                    ? Get.theme.kYellowColor
+                                    : Get.theme.kRedColor,
+                      ),
+                    ),
+                    label: Text(
+                      'Priority',
+                      style: Get.theme.kNormalStyle.copyWith(
+                        color: Get.theme.btnTextCol.withOpacity(0.5),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -194,7 +221,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
             TextFormField(
               keyboardType: TextInputType.multiline,
               minLines: 5,
-              controller: _taskDescription,
+              controller: controller.taskDescription,
               maxLines: 8,
               validator: (value) {
                 if (value!.length < 4) {
@@ -203,8 +230,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                   return null;
                 }
               },
-              scrollPhysics: BouncingScrollPhysics(),
-              decoration: InputDecoration(
+              scrollPhysics: const BouncingScrollPhysics(),
+              decoration: const InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Description',
                   contentPadding: EdgeInsets.all(15)),
@@ -222,32 +249,27 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
             TextButton(
                 style: TextButton.styleFrom(
                     backgroundColor: Get.theme.colorPrimaryDark),
-                onPressed: () => {
-                      collection
-                          .add({
-                            'task_title': _taskTitle.text,
-                            'task_desc': _taskDescription.text,
-                            'created_on': DateTime.now().millisecondsSinceEpoch,
-                            'due_date': selectedDateTime.microsecondsSinceEpoch,
-                            'by_email': _auth.currentUser?.email,
-                            'by_name': _auth.currentUser?.displayName,
-                            'by_uid': _auth.currentUser?.uid,
-                            'to_name': "assignedToName",
-                            'to_uid': "assignedToUid",
-                            'priority': "_tas",
-                            'to_email': "assignedToEmail",
-                            'dept': "assignedToDept",
-                            'status': "statusValue",
-                          })
-                          .then((value) => print("Task Created ${value}"))
-                          .catchError(
-                              (error) => print("Failed to create task: $error"))
-                    },
+                onPressed: () => {controller.createNewTask()},
                 child: Text('Save',
                     style: Get.theme.kSubTitle.copyWith(color: Colors.white)))
           ],
         ),
       ),
     );
+  }
+
+  Widget userAssignChip({required String name}) {
+    return ActionChip(
+        elevation: 0,
+        side: BorderSide(color: Get.theme.btnTextCol.withOpacity(0.1)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: Get.theme.kBadgeColorBg,
+        label: Text(
+          name,
+          style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
+        ),
+        onPressed: () => {
+              Get.to(() => const ContactListPage()),
+            });
   }
 }
