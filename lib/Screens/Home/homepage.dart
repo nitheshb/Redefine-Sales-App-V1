@@ -33,13 +33,23 @@ class HomePage extends GetView<HomePageController> {
             preferredSize: const Size.fromHeight(120),
             child: AppBar(
               leading: Padding(
-                padding: const EdgeInsets.only(left: 10, top: 5, bottom: 10),
+                padding: const EdgeInsets.only(left: 10, top: 10),
                 child: IconButton(
                   onPressed: () => {Get.to(() => const ProfilePage())},
-                  icon: Icon(
-                    Icons.account_circle,
-                    size: 42,
-                    color: Get.theme.btnTextCol.withOpacity(0.2),
+                  icon: Hero(
+                    tag: 'profile',
+                    child: Material(
+                            type: MaterialType.transparency,
+                      child: CircleAvatar(
+                        backgroundColor: Get.theme.colorPrimaryDark,
+                        radius: 30,
+                        child: Icon(
+                          Icons.person,
+                          color: Get.theme.colorPrimary,
+                          size: 20,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

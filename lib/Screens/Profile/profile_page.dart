@@ -8,8 +8,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        Get.put<ProfileController>(ProfileController());
+    final controller = Get.put<ProfileController>(ProfileController());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -30,13 +29,19 @@ class ProfilePage extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
-            CircleAvatar(
-              backgroundColor: Get.theme.colorPrimaryDark,
-              radius: 40,
-              child: Icon(
-                Icons.person,
-                color: Get.theme.colorPrimary,
-                size: 60,
+            Hero(
+              tag: 'profile',
+              child: Material(
+                type: MaterialType.transparency,
+                child: CircleAvatar(
+                  backgroundColor: Get.theme.colorPrimaryDark,
+                  radius: 40,
+                  child: Icon(
+                    Icons.person,
+                    color: Get.theme.colorPrimary,
+                    size: 60,
+                  ),
+                ),
               ),
             ),
             SizedBox(
