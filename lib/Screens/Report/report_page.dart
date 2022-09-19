@@ -5,7 +5,6 @@ import 'package:redefineerp/Screens/Report/team_stats.dart';
 import 'package:redefineerp/Screens/Report/my_stats.dart';
 import 'package:redefineerp/Utilities/basicdialog.dart';
 import 'package:redefineerp/themes/themes.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ReportPage extends StatefulWidget {

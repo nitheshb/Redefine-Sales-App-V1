@@ -29,16 +29,20 @@ class DbQuery {
     }
   }
 
-  getEmployeesByDept(cName, deptName) {
+  getEmployeesByDept(deptName, {String sortEmployees = 'ZA'}) {
     print('sel dept ${deptName}');
     if (deptName == "All") {
       return FirebaseFirestore.instance
           .collection('users')
+          .where('roles', isNull: false)
+          // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
           // .where("department", arrayContainsAny: [deptName.toString().toLowerCase()])
           .snapshots();
     } else {
       return FirebaseFirestore.instance.collection('users').where("department",
-          arrayContainsAny: [deptName.toString().toLowerCase()]).snapshots();
+          arrayContainsAny: [deptName.toString().toLowerCase()])
+          // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
+          .snapshots();
     }
   }
 

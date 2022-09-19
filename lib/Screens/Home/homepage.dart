@@ -39,7 +39,7 @@ class HomePage extends GetView<HomePageController> {
                   icon: Hero(
                     tag: 'profile',
                     child: Material(
-                            type: MaterialType.transparency,
+                      type: MaterialType.transparency,
                       child: CircleAvatar(
                         backgroundColor: Get.theme.colorPrimaryDark,
                         radius: 30,
@@ -75,11 +75,13 @@ class HomePage extends GetView<HomePageController> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 35),
-                    child: Obx(()=>Text(
-                      'Morning, ${controller.userName}',
-                      style: Get.theme.kTitleStyle
-                          .copyWith(color: Get.theme.btnTextCol),
-                    ),),
+                    child: Obx(
+                      () => Text(
+                        'Morning, ${controller.userName}',
+                        style: Get.theme.kTitleStyle
+                            .copyWith(color: Get.theme.btnTextCol),
+                      ),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 2, bottom: 20),
@@ -551,6 +553,10 @@ Widget dateBoxForUpcomingSection(HomePageController controller,
   if (dateL == controller.tempDate) {
     if (controller.dateIndex < controller.dueDateList.length - 1) {
       controller.dateIndex += 1;
+      if (controller.dateIndex == controller.dueDateList.length - 1) {
+        controller.dateIndex = 0;
+        controller.tempDate = controller.dueDateList[0];
+      }
       debugPrint(
           "DATES DATA INDEX: ${controller.dateIndex} DATE LENGTH: ${controller.dueDateList.length}");
     }

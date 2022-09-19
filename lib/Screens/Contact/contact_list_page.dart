@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Widgets/contact_card.dart';
+import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class ContactListPage extends StatelessWidget {
@@ -54,45 +55,31 @@ class ContactListPage extends StatelessWidget {
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _contactFilterChip(0,
-                      title: 'All',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 0,
-                          }),
-                  _contactFilterChip(1,
-                      title: 'CRM',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 1,
-                          }),
-                  _contactFilterChip(2,
-                      title: 'Legal',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 2,
-                          }),
-                  _contactFilterChip(3,
-                      title: 'HR',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 3,
-                          }),
-                  _contactFilterChip(4,
-                      title: 'Sales',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 4,
-                          }),
-                  _contactFilterChip(5,
-                      title: 'Admin',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 5,
-                          }),
-                ],
+              child: Obx(
+                () => Row(
+                  children: [
+                    _contactFilterChip(0,
+                        title: 'All',
+                        controller: controller,
+                        onTap: () => {
+                              controller.selectedIndex.value = 0,
+                                controller.filterValue.value='All',
+                            }),
+                    ...controller.deptFilterList.map((e) {
+                      int id = controller.deptFilterList.indexOf(e) + 1;
+                      if (e == 'a' || e == 'c' || e == 'f' || e == 'p') {
+                        return sizeBox(0, 0);
+                      }
+                      return _contactFilterChip(id,
+                          title: e,
+                          controller: controller,
+                          onTap: () => {
+                                controller.selectedIndex.value = id,
+                                controller.filterValue.value=e,
+                              });
+                    }),
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -104,7 +91,11 @@ class ContactListPage extends StatelessWidget {
                     textDirection: TextDirection.rtl,
                     child: TextButton.icon(
                       style: TextButton.styleFrom(),
-                      onPressed: () => {},
+                      onPressed: () => {
+                        if(controller.filterByEmployeeValue.value=='ZA'){
+                          controller.filterByEmployeeValue.value='AZ'
+                        }else controller.filterByEmployeeValue.value='ZA',
+                      },
                       icon: Icon(
                         Icons.sort_by_alpha_outlined,
                         size: 16,
@@ -144,10 +135,9 @@ class ContactListPage extends StatelessWidget {
     );
   }
 
-  Widget _streamUsersContacts(
-      ContactController controller) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: controller.collection.where('roles', isNull: false).snapshots(),
+  Widget _streamUsersContacts(ContactController controller) {
+    return Obx(()=>StreamBuilder<QuerySnapshot>(
+        stream: DbQuery.instanace.getEmployeesByDept(controller.filterValue.value,sortEmployees: controller.filterByEmployeeValue.value),
         builder: (con, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -192,7 +182,7 @@ class ContactListPage extends StatelessWidget {
               ),
             );
           }
-        });
+        }));
   }
 
   Widget _contactFilterChip(int index,
