@@ -4,7 +4,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
-import 'package:redefineerp/Screens/Home/homepage.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class OnBoardingPage extends StatelessWidget {

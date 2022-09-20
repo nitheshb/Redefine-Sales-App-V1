@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Filter/filter_screen.dart';
 import 'package:redefineerp/Screens/Search/search_controller.dart';
+import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/themes/themes.dart';
 
@@ -46,7 +48,8 @@ class SearchPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => {},
+            onPressed: () =>
+                {bottomSheetWidget(FilterScreen(), transparentBg: true)},
             icon: Icon(
               Icons.calendar_month_outlined,
               color: Get.theme.kLightGrayColor,
