@@ -114,8 +114,12 @@ class HomePage extends GetView<HomePageController> {
                         const Text(
                           'Today',
                         ),
-                        tabTaskIndicator(
-                            taskNum: 10, index: 0, controller: controller),
+                        Obx(
+                          () => tabTaskIndicator(
+                              taskNum: controller.numOfTodayTasks.value,
+                              index: 0,
+                              controller: controller),
+                        )
                       ],
                     )),
                     Tab(
@@ -124,8 +128,12 @@ class HomePage extends GetView<HomePageController> {
                           const Text(
                             'Upcoming',
                           ),
-                          tabTaskIndicator(
-                              taskNum: 2, index: 1, controller: controller),
+                          Obx(
+                            () => tabTaskIndicator(
+                                taskNum: controller.numOfUpcomingTasks.value,
+                                index: 1,
+                                controller: controller),
+                          ),
                         ],
                       ),
                     ),
@@ -135,8 +143,12 @@ class HomePage extends GetView<HomePageController> {
                           const Text(
                             'Created',
                           ),
-                          tabTaskIndicator(
-                              taskNum: 2, index: 2, controller: controller),
+                          Obx(
+                            () => tabTaskIndicator(
+                                taskNum: controller.numOfCreatedTasks.value,
+                                index: 2,
+                                controller: controller),
+                          ),
                         ],
                       ),
                     ),
@@ -158,9 +170,9 @@ class HomePage extends GetView<HomePageController> {
           body: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                streamToday(),
-                streamUpdates(controller),
-                thirdTab(),
+                controller.streamToday(),
+                controller.streamUpdates(),
+                controller.streamCreated(),
               ]),
           bottomNavigationBar: BottomAppBar(
             elevation: 20,
@@ -233,171 +245,6 @@ class HomePage extends GetView<HomePageController> {
       ),
     );
   }
-
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Widget streamToday() {
-    return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('spark_assignedTasks')
-            // .where("due_date",
-            //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
-            // .where("status", isEqualTo: "InProgress")
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text("Something went wrong! 😣..."),
-            );
-          } else if (snapshot.hasData) {
-            print('no of todo is ${snapshot.data?.docs.length}');
-            return Column(
-              children: [
-                Expanded(
-                  child: MediaQuery.removePadding(
-                    context: context,
-                    removeTop: true,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: ListView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: snapshot.data?.docs.length,
-                          itemBuilder: (context, index) {
-                            late QueryDocumentSnapshot<Object?>? taskData =
-                                snapshot.data?.docs[index];
-                            print("qwdqwdw ${taskData?.id}");
-                            // print(
-                            //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
-                            // print("due date is ${taskData!.get('due data')}");
-                            // return Text("hello");
-                            return taskCheckBox(
-                                taskPriority: taskData!['priority'] == "Basic"
-                                    ? 3
-                                    : taskData['priority'] == "Medium"
-                                        ? 2
-                                        : taskData['priority'] == "High"
-                                            ? 1
-                                            : 4,
-                                taskPriorityNum: taskData['priority'] == "Basic"
-                                    ? 3
-                                    : taskData['priority'] == "Medium"
-                                        ? 2
-                                        : taskData['priority'] == "High"
-                                            ? 1
-                                            : 4,
-                                selected: false,
-                                task: taskData["task_title"],
-                                createdOn:
-                                    'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
-                                assigner: 'Assigner: ${taskData['by_name']}');
-                          }),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          } else {
-            return Center(
-              child: Column(
-                children: const [
-                  Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  SizedBox(height: 50),
-                  Center(
-                    child: Text("Tasks Loading..."),
-                  )
-                ],
-              ),
-            );
-          }
-        });
-  }
-}
-
-Widget streamUpdates(HomePageController controller) {
-  FirebaseAuth _auth = FirebaseAuth.instance;
-
-  return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('spark_assignedTasks')
-          // .where("due_date",
-          //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
-          .where("by_uid", isEqualTo: _auth.currentUser!.uid)
-          .orderBy("due_date")
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return const Center(
-            child: Text("Something went wrong! 😣..."),
-          );
-        } else if (snapshot.hasData) {
-          List<int> dueDates = [];
-          for (int i = 0; i < snapshot.data!.docs.length; i++) {
-            late QueryDocumentSnapshot<Object?>? taskData =
-                snapshot.data!.docs[i];
-            dueDates.add(taskData.get('due_date'));
-          }
-          controller.dueDateList = dueDates.toSet().toList();
-          controller.tempDate = controller.dueDateList[0];
-          List<QueryDocumentSnapshot<Object?>>? taskData = snapshot.data?.docs;
-          return SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Expanded(
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
-                    child: Column(
-                      children: [
-                        ...taskData!.map((e) => Column(
-                              children: [
-                                dateBoxForUpcomingSection(controller,
-                                    dateL: e.get('due_date')),
-                                taskCheckBox(
-                                    taskPriority: e['priority'] == "Basic"
-                                        ? 3
-                                        : e['priority'] == "Medium"
-                                            ? 2
-                                            : e['priority'] == "High"
-                                                ? 1
-                                                : 4,
-                                    taskPriorityNum: e['priority'] == "Basic"
-                                        ? 3
-                                        : e['priority'] == "Medium"
-                                            ? 2
-                                            : e['priority'] == "High"
-                                                ? 1
-                                                : 4,
-                                    selected: false,
-                                    task: e["task_title"],
-                                    createdOn:
-                                        'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}',
-                                    assigner: 'Assigner: ${e['by_name']}'),
-                              ],
-                            )),
-                      ],
-                    )),
-              ),
-            ),
-          );
-        } else {
-          return Center(
-            child: Column(
-              children: const [
-                Center(
-                  child: CircularProgressIndicator(),
-                ),
-                SizedBox(height: 50),
-                Center(
-                  child: Text("Tasks Loading..."),
-                )
-              ],
-            ),
-          );
-        }
-      });
 }
 
 Widget firstTab() {
@@ -546,24 +393,4 @@ Widget thirdTab() {
       ],
     ),
   );
-}
-
-Widget dateBoxForUpcomingSection(HomePageController controller,
-    {required int dateL}) {
-  if (dateL == controller.tempDate) {
-    if (controller.dateIndex < controller.dueDateList.length - 1) {
-      controller.dateIndex += 1;
-      if (controller.dateIndex == controller.dueDateList.length - 1) {
-        controller.dateIndex = 0;
-        controller.tempDate = controller.dueDateList[0];
-      }
-      debugPrint(
-          "DATES DATA INDEX: ${controller.dateIndex} DATE LENGTH: ${controller.dueDateList.length}");
-    }
-    controller.tempDate = controller.dueDateList[controller.dateIndex];
-    return DateWidget(
-        ' ${DateFormat('dd MMMM').format(DateTime.fromMillisecondsSinceEpoch(dateL * 1000))}');
-  } else {
-    return sizeBox(0, 0);
-  }
 }

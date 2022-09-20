@@ -25,6 +25,10 @@ class SearchPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(20)),
           child: Center(
             child: TextField(
+              onChanged: (v) {
+                controller.searchResultsWidget.value =
+                    controller.searchResults(v);
+              },
               decoration: InputDecoration(
                   prefix: sizeBox(20, 20),
                   suffixIcon: IconButton(
@@ -50,58 +54,59 @@ class SearchPage extends StatelessWidget {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  _filterChip(0,
-                      title: 'All',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 0,
-                          }),
-                  _filterChip(1,
-                      title: 'Done',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 1,
-                          }),
-                  _filterChip(2,
-                      title: 'Pending',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 2,
-                          }),
-                  _filterChip(3,
-                      title: 'Created',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 3,
-                          }),
-                  _filterChip(4,
-                      title: 'Today',
-                      controller: controller,
-                      onTap: () => {
-                            controller.selectedIndex.value = 4,
-                          }),
-                ],
-              ),
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _filterChip(0,
+                    title: 'All',
+                    controller: controller,
+                    onTap: () => {
+                          controller.selectedIndex.value = 0,
+                        }),
+                _filterChip(1,
+                    title: 'Done',
+                    controller: controller,
+                    onTap: () => {
+                          controller.selectedIndex.value = 1,
+                        }),
+                _filterChip(2,
+                    title: 'Pending',
+                    controller: controller,
+                    onTap: () => {
+                          controller.selectedIndex.value = 2,
+                        }),
+                _filterChip(3,
+                    title: 'Created',
+                    controller: controller,
+                    onTap: () => {
+                          controller.selectedIndex.value = 3,
+                        }),
+                _filterChip(4,
+                    title: 'Today',
+                    controller: controller,
+                    onTap: () => {
+                          controller.selectedIndex.value = 4,
+                        }),
+              ],
             ),
-            sizeBox(20, 0),
-            Center(child: SvgPicture.asset('assets/images/Search.svg')),
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Text(
-                'Begin Search',
-                style: Get.theme.kNormalStyle
-                    .copyWith(color: Get.theme.kLightGrayColor),
-              ),
-            ),
-          ],
-        ),
+          ),
+          sizeBox(20, 0),
+          // Center(child: SvgPicture.asset('assets/images/Search.svg')),
+          Expanded(
+            child: Obx(() => controller.searchResultsWidget.value),
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(30.0),
+          //   child: Text(
+          //     'Begin Search',
+          //     style: Get.theme.kNormalStyle
+          //         .copyWith(color: Get.theme.kLightGrayColor),
+          //   ),
+          // ),
+        ],
       ),
     );
   }
