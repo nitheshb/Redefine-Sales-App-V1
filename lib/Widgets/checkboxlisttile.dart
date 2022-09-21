@@ -8,6 +8,7 @@ Widget taskCheckBox(
     {required String task,
     required String createdOn,
     required int taskPriority,
+    required String due,
     required int taskPriorityNum,
     required bool selected,
     required String assigner}) {
@@ -47,7 +48,16 @@ Widget taskCheckBox(
               ),
       ),
     ),
-    onTap: () => {Get.to(() => const TaskManager())},
+    onTap: () => {
+      Get.to(() => TaskManager(
+          task: task,
+          due: due,
+          createdOn: createdOn,
+          taskPriority: taskPriority,
+          selected: selected,
+          assigner: assigner,
+          taskPriorityNum: taskPriorityNum))
+    },
     title: Text(
       task,
       style: selected

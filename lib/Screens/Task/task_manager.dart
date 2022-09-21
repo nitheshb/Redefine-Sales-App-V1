@@ -10,8 +10,21 @@ import 'package:redefineerp/Widgets/task_sheet_widget.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class TaskManager extends StatelessWidget {
-  const TaskManager({Key? key}) : super(key: key);
-
+  TaskManager(
+      {this.task,
+      this.createdOn,
+      this.taskPriority,
+      this.selected,
+      this.assigner,
+      this.taskPriorityNum,
+      this.due});
+  final task;
+  final createdOn;
+  final taskPriority;
+  final selected;
+  final assigner;
+  final taskPriorityNum;
+  final due;
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<TaskController>(TaskController());
@@ -60,9 +73,7 @@ class TaskManager extends StatelessWidget {
                 : sizeBox(0, 0)),
             Padding(
               padding: const EdgeInsets.all(22.0),
-              child: Text(
-                  'Collect insurance documents from Mr.Rajesh Sales Plan for New Product',
-                  style: Get.theme.kTitleStyle),
+              child: Text(task, style: Get.theme.kTitleStyle),
             ),
             sizeBox(20, 0),
             Row(
@@ -169,7 +180,7 @@ class TaskManager extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Text(
-                        'Vivek Dhillon',
+                        assigner,
                         textAlign: TextAlign.start,
                         style: Get.theme.kSubTitle,
                       ),
@@ -179,7 +190,7 @@ class TaskManager extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           child: Text(
-                            'High',
+                            taskPriority,
                             textAlign: TextAlign.start,
                             style: Get.theme.kSubTitle,
                           ),
@@ -194,7 +205,7 @@ class TaskManager extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Text(
-                        'March 1, 2022  2:30 PM',
+                        "h",
                         textAlign: TextAlign.start,
                         style: Get.theme.kSubTitle,
                       ),

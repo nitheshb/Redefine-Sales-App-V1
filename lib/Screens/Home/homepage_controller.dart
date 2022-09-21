@@ -118,6 +118,9 @@ class HomePageController extends GetxController {
                                             ? 1
                                             : 4,
                                 selected: false,
+                                due:
+                                    "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date') * 1000))}.toString()"
+                                        .toString(),
                                 task: taskData["task_title"],
                                 createdOn:
                                     'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
@@ -185,6 +188,8 @@ class HomePageController extends GetxController {
                               dateBoxForUpcomingSection(
                                   dateL: e.get('due_date')),
                               taskCheckBox(
+                                  due:
+                                      "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date') * 1000))}",
                                   taskPriority: e['priority'] == "Basic"
                                       ? 3
                                       : e['priority'] == "Medium"
@@ -286,6 +291,8 @@ class HomePageController extends GetxController {
                               dateBoxForCreatedSection(
                                   dateL: e.get('created_on')),
                               taskCheckBox(
+                                  due:
+                                      "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date') * 1000))}",
                                   taskPriority: e['priority'] == "Basic"
                                       ? 3
                                       : e['priority'] == "Medium"

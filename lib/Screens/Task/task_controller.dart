@@ -28,7 +28,7 @@ class TaskController extends GetxController {
           'task_title': taskTitle.text,
           'task_desc': taskDescription.text,
           'created_on': DateTime.now().millisecondsSinceEpoch,
-          'due_date': dateSelected.microsecondsSinceEpoch,
+          'due_date': dateSelected.millisecondsSinceEpoch,
           'by_email': auth.currentUser?.email,
           'by_name': auth.currentUser?.displayName,
           'by_uid': auth.currentUser?.uid,

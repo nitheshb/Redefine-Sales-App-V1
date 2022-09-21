@@ -73,6 +73,9 @@ class SearchController extends GetxController {
                                         : taskData['priority'] == "High"
                                             ? 1
                                             : 4,
+                                due:
+                                    "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date') * 1000))}"
+                                        .toString(),
                                 taskPriorityNum: taskData['priority'] == "Basic"
                                     ? 3
                                     : taskData['priority'] == "Medium"
