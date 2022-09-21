@@ -10,6 +10,7 @@ Widget taskCheckBox(
     required int taskPriority,
     required String due,
     required int taskPriorityNum,
+    required VoidCallback onTap,
     required bool selected,
     required String assigner}) {
   return ListTile(
@@ -48,16 +49,7 @@ Widget taskCheckBox(
               ),
       ),
     ),
-    onTap: () => {
-      Get.to(() => TaskManager(
-          task: task,
-          due: due,
-          createdOn: createdOn,
-          taskPriority: taskPriority,
-          selected: selected,
-          assigner: assigner,
-          taskPriorityNum: taskPriorityNum))
-    },
+    onTap: onTap,
     title: Text(
       task,
       style: selected

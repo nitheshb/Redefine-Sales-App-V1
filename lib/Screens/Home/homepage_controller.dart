@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:redefineerp/Screens/Task/task_manager.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Widgets/checkboxlisttile.dart';
 import 'package:intl/intl.dart';
@@ -124,7 +125,19 @@ class HomePageController extends GetxController {
                                 task: taskData["task_title"],
                                 createdOn:
                                     'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
-                                assigner: 'Assigner: ${taskData['by_name']}');
+                                assigner: 'Assigner: ${taskData['by_name']}',
+                                onTap: () => {
+                                      Get.to(() => TaskManager(
+                                          task: taskData["task_title"],
+                                          due: "${DateFormat('MMMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date') * 1000))}.toString()"
+                                        .toString(),
+                                          createdOn: "${DateFormat('MMMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}.toString()"
+                                        .toString(),
+                                          taskPriority: taskData['priority'],
+                                          selected: false,
+                                          assigner: taskData['by_name'],
+                                          ))
+                                    });
                           }),
                     ),
                   ),
@@ -208,7 +221,20 @@ class HomePageController extends GetxController {
                                   task: e["task_title"],
                                   createdOn:
                                       'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}',
-                                  assigner: 'Assigner: ${e['by_name']}'),
+                                  assigner: 'Assigner: ${e['by_name']}',
+                                   onTap: () => {
+                                      Get.to(() => TaskManager(
+                                          task: e["task_title"],
+                                          due: "${DateFormat('MMMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date') * 1000))}.toString()"
+                                        .toString(),
+                                          createdOn: "${DateFormat('MMMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}.toString()"
+                                        .toString(),
+                                          taskPriority: e['priority'],
+                                          selected: false,
+                                          assigner: e['by_name'],
+                                          ))
+                                    }),
+                                  
                             ],
                           )),
                     ],
@@ -311,7 +337,19 @@ class HomePageController extends GetxController {
                                   task: e["task_title"],
                                   createdOn:
                                       'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}',
-                                  assigner: 'Assigner: ${e['by_name']}'),
+                                  assigner: 'Assigner: ${e['by_name']}',
+                                   onTap: () => {
+                                      Get.to(() => TaskManager(
+                                          task: e["task_title"],
+                                          due: "${DateFormat('MMMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date') * 1000))}.toString()"
+                                        .toString(),
+                                          createdOn: "${DateFormat('MMMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}.toString()"
+                                        .toString(),
+                                          taskPriority: e['priority'],
+                                          selected: false,
+                                          assigner: e['by_name'],
+                                          ))
+                                    }),
                             ],
                           )),
                     ],

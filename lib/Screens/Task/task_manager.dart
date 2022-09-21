@@ -16,14 +16,12 @@ class TaskManager extends StatelessWidget {
       this.taskPriority,
       this.selected,
       this.assigner,
-      this.taskPriorityNum,
       this.due});
   final task;
   final createdOn;
   final taskPriority;
   final selected;
   final assigner;
-  final taskPriorityNum;
   final due;
   @override
   Widget build(BuildContext context) {
@@ -198,14 +196,18 @@ class TaskManager extends StatelessWidget {
                         sizeBox(0, 10),
                         CircleAvatar(
                           radius: 8,
-                          backgroundColor: Get.theme.kRedColor,
+                          backgroundColor: taskPriority == 1
+            ? Get.theme.kRedColor
+            : taskPriority == 2
+                ? Get.theme.kYellowColor
+                : Get.theme.successColor,
                         ),
                       ],
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       child: Text(
-                        "h",
+                        createdOn,
                         textAlign: TextAlign.start,
                         style: Get.theme.kSubTitle,
                       ),
@@ -213,7 +215,7 @@ class TaskManager extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 15, bottom: 5),
                       child: Text(
-                        'March 18, 2022',
+                        due,
                         textAlign: TextAlign.start,
                         style: Get.theme.kSubTitle,
                       ),
@@ -231,7 +233,7 @@ class TaskManager extends StatelessWidget {
           padding: const EdgeInsets.all(15.0),
           child: Obx(() => TextButton(
                 style: TextButton.styleFrom(
-                  primary: controller.taskType.value == 'reopen'
+                  foregroundColor: controller.taskType.value == 'reopen'
                       ? Colors.black
                       : Get.theme.colorPrimary,
                   backgroundColor: controller.taskType.value == 'mark'
