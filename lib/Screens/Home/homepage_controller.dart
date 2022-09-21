@@ -120,22 +120,23 @@ class HomePageController extends GetxController {
                                             : 4,
                                 selected: false,
                                 due:
-                                    "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date') * 1000))}.toString()"
-                                        .toString(),
+                                    "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}",
                                 task: taskData["task_title"],
                                 createdOn:
-                                    'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
+                                    'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
                                 assigner: 'Assigner: ${taskData['by_name']}',
                                 onTap: () => {
                                       Get.to(() => TaskManager(
-                                          task: taskData["task_title"],
-                                          due: "${DateFormat('MMMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date') * 1000))}.toString()"
-                                        .toString(),
-                                          createdOn: "${DateFormat('MMMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}.toString()"
-                                        .toString(),
-                                          taskPriority: taskData['priority'],
-                                          selected: false,
-                                          assigner: taskData['by_name'],
+                                            task: taskData["task_title"],
+                                            due:
+                                                "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
+                                                    .toString(),
+                                            createdOn:
+                                                "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}"
+                                                    .toString(),
+                                            taskPriority: taskData['priority'],
+                                            selected: false,
+                                            assigner: taskData['by_name'],
                                           ))
                                     });
                           }),
@@ -202,7 +203,7 @@ class HomePageController extends GetxController {
                                   dateL: e.get('due_date')),
                               taskCheckBox(
                                   due:
-                                      "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date') * 1000))}",
+                                      "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}",
                                   taskPriority: e['priority'] == "Basic"
                                       ? 3
                                       : e['priority'] == "Medium"
@@ -220,21 +221,22 @@ class HomePageController extends GetxController {
                                   selected: false,
                                   task: e["task_title"],
                                   createdOn:
-                                      'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}',
+                                      'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}',
                                   assigner: 'Assigner: ${e['by_name']}',
-                                   onTap: () => {
+                                  onTap: () => {
                                       Get.to(() => TaskManager(
-                                          task: e["task_title"],
-                                          due: "${DateFormat('MMMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date') * 1000))}.toString()"
-                                        .toString(),
-                                          createdOn: "${DateFormat('MMMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}.toString()"
-                                        .toString(),
-                                          taskPriority: e['priority'],
-                                          selected: false,
-                                          assigner: e['by_name'],
+                                            task: e["task_title"],
+                                            due:
+                                                "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
+                                                    .toString(),
+                                            createdOn:
+                                                "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}"
+                                                    .toString(),
+                                            taskPriority: e['priority'],
+                                            selected: false,
+                                            assigner: e['by_name'],
                                           ))
                                     }),
-                                  
                             ],
                           )),
                     ],
@@ -338,16 +340,18 @@ class HomePageController extends GetxController {
                                   createdOn:
                                       'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}',
                                   assigner: 'Assigner: ${e['by_name']}',
-                                   onTap: () => {
+                                  onTap: () => {
                                       Get.to(() => TaskManager(
-                                          task: e["task_title"],
-                                          due: "${DateFormat('MMMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date') * 1000))}.toString()"
-                                        .toString(),
-                                          createdOn: "${DateFormat('MMMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}.toString()"
-                                        .toString(),
-                                          taskPriority: e['priority'],
-                                          selected: false,
-                                          assigner: e['by_name'],
+                                            task: e["task_title"],
+                                            due:
+                                                "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
+                                                    .toString(),
+                                            createdOn:
+                                                "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}"
+                                                    .toString(),
+                                            taskPriority: e['priority'],
+                                            selected: false,
+                                            assigner: e['by_name'],
                                           ))
                                     }),
                             ],

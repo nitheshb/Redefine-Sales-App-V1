@@ -196,11 +196,11 @@ class TaskManager extends StatelessWidget {
                         sizeBox(0, 10),
                         CircleAvatar(
                           radius: 8,
-                          backgroundColor: taskPriority == 1
-            ? Get.theme.kRedColor
-            : taskPriority == 2
-                ? Get.theme.kYellowColor
-                : Get.theme.successColor,
+                          backgroundColor: taskPriority == 'High'
+                              ? Get.theme.kRedColor
+                              : taskPriority == 'Medium'
+                                  ? Get.theme.kYellowColor
+                                  : Get.theme.successColor,
                         ),
                       ],
                     ),
@@ -233,7 +233,7 @@ class TaskManager extends StatelessWidget {
           padding: const EdgeInsets.all(15.0),
           child: Obx(() => TextButton(
                 style: TextButton.styleFrom(
-                  foregroundColor: controller.taskType.value == 'reopen'
+                  primary: controller.taskType.value == 'reopen'
                       ? Colors.black
                       : Get.theme.colorPrimary,
                   backgroundColor: controller.taskType.value == 'mark'

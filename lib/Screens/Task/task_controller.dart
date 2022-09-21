@@ -37,7 +37,7 @@ class TaskController extends GetxController {
           'priority': taskPriority.value,
           'to_email': assignedUserEmail.value,
           'dept': assignedUserDepartment.value,
-          'status': "statusValue",
+          'status': "InProgress",
         })
         .then((value) => print("Task Created ${value}"))
         .catchError((error) => print("Failed to create task: $error"));

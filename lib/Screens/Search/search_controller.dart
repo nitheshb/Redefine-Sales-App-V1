@@ -75,7 +75,7 @@ class SearchController extends GetxController {
                                             ? 1
                                             : 4,
                                 due:
-                                    "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date') * 1000))}"
+                                    "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
                                         .toString(),
                                 taskPriorityNum: taskData['priority'] == "Basic"
                                     ? 3
@@ -91,14 +91,16 @@ class SearchController extends GetxController {
                                 assigner: 'Assigner: ${taskData['by_name']}',
                                  onTap: () => {
                                       Get.to(() => TaskManager(
-                                          task: taskData["task_title"],
-                                          due: "${DateFormat('MMMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date') * 1000))}.toString()"
-                                        .toString(),
-                                          createdOn: "${DateFormat('MMMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}.toString()"
-                                        .toString(),
-                                          taskPriority: taskData['priority'],
-                                          selected: false,
-                                          assigner: taskData['by_name'],
+                                            task: taskData["task_title"],
+                                            due:
+                                                "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
+                                                    .toString(),
+                                            createdOn:
+                                                "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}"
+                                                    .toString(),
+                                            taskPriority: taskData['priority'],
+                                            selected: false,
+                                            assigner: taskData['by_name'],
                                           ))
                                     });
                           }),
