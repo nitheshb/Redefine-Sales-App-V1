@@ -164,6 +164,8 @@ class ContactListPage extends StatelessWidget {
                                 taskData["email"],
                             controller.taskController.assignedUserUid.value =
                                 taskData["uid"],
+                            controller.taskController.assignedUserFcmToken.value =
+                                taskData["user_fcmtoken"],
                             Get.back()
                           });
                 });

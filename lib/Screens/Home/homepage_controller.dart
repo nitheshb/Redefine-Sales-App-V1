@@ -9,6 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:redefineerp/Widgets/datewidget.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:redefineerp/main.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class HomePageController extends GetxController {
   var tabIndex = 0.obs;
@@ -224,19 +227,19 @@ class HomePageController extends GetxController {
                                       'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}',
                                   assigner: 'Assigner: ${e['by_name']}',
                                   onTap: () => {
-                                      Get.to(() => TaskManager(
-                                            task: e["task_title"],
-                                            due:
-                                                "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
-                                                    .toString(),
-                                            createdOn:
-                                                "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}"
-                                                    .toString(),
-                                            taskPriority: e['priority'],
-                                            selected: false,
-                                            assigner: e['by_name'],
-                                          ))
-                                    }),
+                                        Get.to(() => TaskManager(
+                                              task: e["task_title"],
+                                              due:
+                                                  "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
+                                                      .toString(),
+                                              createdOn:
+                                                  "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}"
+                                                      .toString(),
+                                              taskPriority: e['priority'],
+                                              selected: false,
+                                              assigner: e['by_name'],
+                                            ))
+                                      }),
                             ],
                           )),
                     ],
@@ -273,7 +276,7 @@ class HomePageController extends GetxController {
       }
       tempDueDate = dueDateList[dueDateIndex];
       return DateWidget(
-          ' ${DateFormat('dd MMMM').format(DateTime.fromMillisecondsSinceEpoch(dateL * 1000))}');
+          ' ${DateFormat('dd MMMM').format(DateTime.fromMillisecondsSinceEpoch(dateL))}');
     } else {
       return sizeBox(0, 0);
     }
@@ -320,7 +323,7 @@ class HomePageController extends GetxController {
                                   dateL: e.get('created_on')),
                               taskCheckBox(
                                   due:
-                                      "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date') * 1000))}",
+                                      "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}",
                                   taskPriority: e['priority'] == "Basic"
                                       ? 3
                                       : e['priority'] == "Medium"
@@ -338,22 +341,22 @@ class HomePageController extends GetxController {
                                   selected: false,
                                   task: e["task_title"],
                                   createdOn:
-                                      'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on') * 1000))}',
+                                      'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}',
                                   assigner: 'Assigner: ${e['by_name']}',
                                   onTap: () => {
-                                      Get.to(() => TaskManager(
-                                            task: e["task_title"],
-                                            due:
-                                                "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
-                                                    .toString(),
-                                            createdOn:
-                                                "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}"
-                                                    .toString(),
-                                            taskPriority: e['priority'],
-                                            selected: false,
-                                            assigner: e['by_name'],
-                                          ))
-                                    }),
+                                        Get.to(() => TaskManager(
+                                              task: e["task_title"],
+                                              due:
+                                                  "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
+                                                      .toString(),
+                                              createdOn:
+                                                  "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}"
+                                                      .toString(),
+                                              taskPriority: e['priority'],
+                                              selected: false,
+                                              assigner: e['by_name'],
+                                            ))
+                                      }),
                             ],
                           )),
                     ],
@@ -390,7 +393,7 @@ class HomePageController extends GetxController {
       }
       tempCreatedDate = createDateList[createdDateIndex];
       return DateWidget(
-          ' ${DateFormat('dd MMMM').format(DateTime.fromMillisecondsSinceEpoch(dateL * 1000))}');
+          ' ${DateFormat('dd MMMM').format(DateTime.fromMillisecondsSinceEpoch(dateL))}');
     } else {
       return sizeBox(0, 0);
     }
@@ -444,7 +447,7 @@ class HomePageController extends GetxController {
                             headerBg(
                               title: taskData!['task_title'],
                               createdOn:
-                                  "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}",
+                                  "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}",
                               taskPriority: taskData['priority'] == "Basic"
                                   ? 3
                                   : taskData['priority'] == "Medium"
@@ -487,7 +490,70 @@ class HomePageController extends GetxController {
 
   @override
   void onInit() async {
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage? message) {
+      if (message != null) {
+        debugPrint('A new initialmessage event was published!');
+        RemoteNotification? notification = message.notification;
+        AndroidNotification? android = message.notification?.android;
+
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification?.title,
+          notification?.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: 'launch_background',
+            ),
+          ),
+        );
+      }
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification?.title,
+          notification?.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: 'launch_background',
+            ),
+          ),
+        );
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      // ignore: unnecessary_null_comparison
+      if (message != null) {
+        RemoteNotification? notification = message.notification;
+        AndroidNotification? android = message.notification?.android;
+
+        if (notification != null && android != null) {}
+      }
+    });
+    // getToken();
     await fetchdata();
     super.onInit();
+  }
+
+  void getToken() async {
+    await FirebaseMessaging.instance.getToken().then((token) {
+      print('FCM TOKEN: $token');
+    });
   }
 }

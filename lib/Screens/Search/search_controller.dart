@@ -87,7 +87,7 @@ class SearchController extends GetxController {
                                 selected: false,
                                 task: taskData["task_title"],
                                 createdOn:
-                                    'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on') * 1000))}',
+                                    'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
                                 assigner: 'Assigner: ${taskData['by_name']}',
                                  onTap: () => {
                                       Get.to(() => TaskManager(

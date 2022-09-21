@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class TaskController extends GetxController {
   var taskType = 'mark'.obs;
@@ -14,6 +17,7 @@ class TaskController extends GetxController {
   var assignedUserDepartment = ''.obs;
   var assignedUserUid = ''.obs;
   var assignedUserEmail = ''.obs;
+  var assignedUserFcmToken = ''.obs;
   var taskPriority = 'Basic'.obs;
 
   TextEditingController taskTitle = TextEditingController();
@@ -39,8 +43,40 @@ class TaskController extends GetxController {
           'dept': assignedUserDepartment.value,
           'status': "InProgress",
         })
-        .then((value) => print("Task Created ${value}"))
+        .then((value) => {print("Task Created ${value}"),
+        sendPushMessage('Task Assigned for you:', taskTitle.text, assignedUserFcmToken.value)
+        })
         .catchError((error) => print("Failed to create task: $error"));
+  }
+
+  void sendPushMessage(String body, String title, String token) async {
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=AAAAu40SEOU:APA91bGOizFLorP1WdQSJSDotrKCpdCOPsJNa_N350JSpc07MeBdhl7vM8XJqBnX2lU0paRww1jILVxaArXjEyjDBpqbX--oR9Mo7NZwJY7TxaUy6OdWtrPHc0DO0EdEXBp3fCX4boZB',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body': body,
+              'title': title,
+            },
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'TASK_ASSIGN_NOTIF',
+              'id': '1',
+              'status': 'done'
+            },
+            "to": token,
+          },
+        ),
+      );
+      print('done');
+    } catch (e) {
+      print("error push notification");
+    }
   }
 
   @override
