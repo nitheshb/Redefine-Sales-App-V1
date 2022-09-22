@@ -522,8 +522,8 @@ class HomePageController extends GetxController {
       if (notification != null && android != null) {
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
-          notification?.title,
-          notification?.body,
+          notification.title,
+          notification.body,
           NotificationDetails(
             android: AndroidNotificationDetails(
               channel.id,
@@ -546,7 +546,7 @@ class HomePageController extends GetxController {
         if (notification != null && android != null) {}
       }
     });
-    // getToken();
+    getToken();
     await fetchdata();
     super.onInit();
   }
