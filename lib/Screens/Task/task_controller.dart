@@ -43,9 +43,11 @@ class TaskController extends GetxController {
           'dept': assignedUserDepartment.value,
           'status': "InProgress",
         })
-        .then((value) => {print("Task Created ${value}"),
-        sendPushMessage('Task Assigned for you:', taskTitle.text, assignedUserFcmToken.value)
-        })
+        .then((value) => {
+              print("Task Created ${value}"),
+              sendPushMessage('Task Assigned for you:', taskTitle.text,
+                  assignedUserFcmToken.value)
+            })
         .catchError((error) => print("Failed to create task: $error"));
   }
 
@@ -55,7 +57,8 @@ class TaskController extends GetxController {
         Uri.parse('https://fcm.googleapis.com/fcm/send'),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Authorization': 'key=AAAAu40SEOU:APA91bGOizFLorP1WdQSJSDotrKCpdCOPsJNa_N350JSpc07MeBdhl7vM8XJqBnX2lU0paRww1jILVxaArXjEyjDBpqbX--oR9Mo7NZwJY7TxaUy6OdWtrPHc0DO0EdEXBp3fCX4boZB',
+          'Authorization':
+              'key=AAAAu40SEOU:APA91bGOizFLorP1WdQSJSDotrKCpdCOPsJNa_N350JSpc07MeBdhl7vM8XJqBnX2lU0paRww1jILVxaArXjEyjDBpqbX--oR9Mo7NZwJY7TxaUy6OdWtrPHc0DO0EdEXBp3fCX4boZB',
         },
         body: jsonEncode(
           <String, dynamic>{
@@ -88,6 +91,15 @@ class TaskController extends GetxController {
   void updateSelectedDate() {
     selectedDateTime.value =
         DateFormat('dd-MM-yyyy kk:mm').format(dateSelected);
+  }
+
+  void setTaskType(String task) {
+    if (task == 'Done') {
+      taskType.value = 'reopen';
+    } else if (task == 'InProgress') {
+      taskType.value = 'close';
+    } else
+      taskType.value == 'mark';
   }
 
   @override

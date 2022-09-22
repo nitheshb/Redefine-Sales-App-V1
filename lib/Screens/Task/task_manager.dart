@@ -11,21 +11,27 @@ import 'package:redefineerp/themes/themes.dart';
 
 class TaskManager extends StatelessWidget {
   TaskManager(
-      {this.task,
-      this.createdOn,
-      this.taskPriority,
-      this.selected,
-      this.assigner,
-      this.due});
-  final task;
-  final createdOn;
-  final taskPriority;
-  final selected;
-  final assigner;
-  final due;
+      {required this.task,
+      required this.createdOn,
+      required this.taskPriority,
+      required this.selected,
+      required this.assigner,
+      required this.docId,
+      required this.due,
+      required this.status});
+  final String task;
+  final String createdOn;
+  final String taskPriority;
+  final bool selected;
+  final String assigner;
+  final String docId;
+  final String status;
+  final String due;
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<TaskController>(TaskController());
+    controller.setTaskType(status);
+    debugPrint('DOC ID $docId');
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size(MediaQuery.of(context).size.width, 50),

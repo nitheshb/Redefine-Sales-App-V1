@@ -92,6 +92,8 @@ class SearchController extends GetxController {
                                  onTap: () => {
                                       Get.to(() => TaskManager(
                                             task: taskData["task_title"],
+                                            status: taskData['status'],
+                                            docId: taskData.reference.id,
                                             due:
                                                 "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
                                                     .toString(),

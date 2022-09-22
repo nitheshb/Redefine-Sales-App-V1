@@ -125,12 +125,15 @@ class HomePageController extends GetxController {
                                 due:
                                     "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}",
                                 task: taskData["task_title"],
+                                
                                 createdOn:
                                     'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
                                 assigner: 'Assigner: ${taskData['by_name']}',
                                 onTap: () => {
                                       Get.to(() => TaskManager(
                                             task: taskData["task_title"],
+                                            status: taskData['status'],
+                                            docId: taskData.reference.id,
                                             due:
                                                 "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
                                                     .toString(),
@@ -229,6 +232,8 @@ class HomePageController extends GetxController {
                                   onTap: () => {
                                         Get.to(() => TaskManager(
                                               task: e["task_title"],
+                                            status: e['status'],
+                                            docId: e.reference.id,
                                               due:
                                                   "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
                                                       .toString(),
@@ -346,6 +351,8 @@ class HomePageController extends GetxController {
                                   onTap: () => {
                                         Get.to(() => TaskManager(
                                               task: e["task_title"],
+                                            status: e['status'],
+                                            docId: e.reference.id,
                                               due:
                                                   "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
                                                       .toString(),
