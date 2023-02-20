@@ -11,9 +11,12 @@ import 'package:redefineerp/themes/themes.dart';
 import 'package:redefineerp/themes/themes_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'firebase_options.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+   await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   print('Handling a background message ${message.messageId}');
 }
 late AndroidNotificationChannel channel;
