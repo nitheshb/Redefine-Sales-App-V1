@@ -8,6 +8,7 @@ class ContactController extends GetxController {
   var selectedIndex = 0.obs;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  final searchController = TextEditingController();
   final collection = FirebaseFirestore.instance.collection('users');
 
   TaskController taskController = Get.find();
@@ -15,6 +16,7 @@ class ContactController extends GetxController {
   var deptFilterList = <String>[].obs;
   var filterValue = 'All'.obs;
   var filterByEmployeeValue = 'ZA'.obs;
+  var searchResult = ''.obs;
 
   Future<void> getDeptFilterData() async {
     await collection
@@ -33,5 +35,11 @@ class ContactController extends GetxController {
   void onInit() {
     getDeptFilterData();
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    searchController.dispose();
+    super.onClose();
   }
 }

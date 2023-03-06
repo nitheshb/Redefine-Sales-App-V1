@@ -29,19 +29,31 @@ class DbQuery {
     }
   }
 
-  getEmployeesByDept(deptName, {String sortEmployees = 'ZA'}) {
-    print('sel dept ${deptName}');
-    if (deptName == "All") {
-      return FirebaseFirestore.instance
-          .collection('users')
-          .where('roles', isNull: false)
-          // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
-          // .where("department", arrayContainsAny: [deptName.toString().toLowerCase()])
-          .snapshots();
+  getEmployees(
+      {required String sortByDeptName,
+      String sortEmployees = 'ZA',
+      required String sortByName}) {
+    print('sel dept ${sortByDeptName}');
+    if (sortByName.isEmpty) {
+      if (sortByDeptName == "All") {
+        return FirebaseFirestore.instance
+            .collection('users')
+            .where('roles', isNull: false)
+            // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
+            // .where("department", arrayContainsAny: [deptName.toString().toLowerCase()])
+            .snapshots();
+      } else {
+        return FirebaseFirestore.instance.collection('users').where(
+                "department",
+                arrayContainsAny: [sortByDeptName.toString().toLowerCase()])
+            // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
+            .snapshots();
+      }
     } else {
-      return FirebaseFirestore.instance.collection('users').where("department",
-          arrayContainsAny: [deptName.toString().toLowerCase()])
-          // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
+      return FirebaseFirestore.instance
+          .collection("users")
+          .where('name', isGreaterThanOrEqualTo: sortByName)
+          .where('name', isLessThanOrEqualTo: '$sortByName~')
           .snapshots();
     }
   }

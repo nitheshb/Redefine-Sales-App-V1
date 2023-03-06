@@ -32,12 +32,20 @@ class ContactListPage extends StatelessWidget {
               borderRadius: BorderRadius.circular(20)),
           child: Center(
             child: TextField(
+              controller: controller.searchController,
+              // onChanged: (v) {
+              //   controller.searchResult.value = v;
+              // },
+              onSubmitted: (v) {
+                controller.searchResult.value = v;
+              },
               decoration: InputDecoration(
                   prefix: sizeBox(20, 20),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.search_rounded),
                     onPressed: () {
-                      /* Clear the search field */
+                      controller.searchResult.value =
+                          controller.searchController.text;
                     },
                   ),
                   hintText: 'Search',
@@ -63,7 +71,7 @@ class ContactListPage extends StatelessWidget {
                         controller: controller,
                         onTap: () => {
                               controller.selectedIndex.value = 0,
-                                controller.filterValue.value='All',
+                              controller.filterValue.value = 'All',
                             }),
                     ...controller.deptFilterList.map((e) {
                       int id = controller.deptFilterList.indexOf(e) + 1;
@@ -75,7 +83,7 @@ class ContactListPage extends StatelessWidget {
                           controller: controller,
                           onTap: () => {
                                 controller.selectedIndex.value = id,
-                                controller.filterValue.value=e,
+                                controller.filterValue.value = e,
                               });
                     }),
                   ],
@@ -92,9 +100,10 @@ class ContactListPage extends StatelessWidget {
                     child: TextButton.icon(
                       style: TextButton.styleFrom(),
                       onPressed: () => {
-                        if(controller.filterByEmployeeValue.value=='ZA'){
-                          controller.filterByEmployeeValue.value='AZ'
-                        }else controller.filterByEmployeeValue.value='ZA',
+                        if (controller.filterByEmployeeValue.value == 'ZA')
+                          {controller.filterByEmployeeValue.value = 'AZ'}
+                        else
+                          controller.filterByEmployeeValue.value = 'ZA',
                       },
                       icon: Icon(
                         Icons.sort_by_alpha_outlined,
@@ -136,8 +145,11 @@ class ContactListPage extends StatelessWidget {
   }
 
   Widget _streamUsersContacts(ContactController controller) {
-    return Obx(()=>StreamBuilder<QuerySnapshot>(
-        stream: DbQuery.instanace.getEmployeesByDept(controller.filterValue.value,sortEmployees: controller.filterByEmployeeValue.value),
+    return Obx(() => StreamBuilder<QuerySnapshot>(
+        stream: DbQuery.instanace.getEmployees(
+            sortByDeptName: controller.filterValue.value,
+            sortEmployees: controller.filterByEmployeeValue.value,
+            sortByName: controller.searchResult.value),
         builder: (con, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -164,8 +176,8 @@ class ContactListPage extends StatelessWidget {
                                 taskData["email"],
                             controller.taskController.assignedUserUid.value =
                                 taskData["uid"],
-                            controller.taskController.assignedUserFcmToken.value =
-                                taskData["user_fcmtoken"],
+                            controller.taskController.assignedUserFcmToken
+                                .value = taskData["user_fcmtoken"],
                             Get.back()
                           });
                 });

@@ -31,7 +31,6 @@ class AuthController extends GetxController {
 
   void getLoggedInUserDetails() async {
     var x = await DbQuery.instanace.getLoggedInUserDetails(currentUser?.uid);
-    debugPrint("ewfwfe ${x.data()}");
   }
 
   @override
