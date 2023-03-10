@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -157,7 +158,362 @@ class HomePage extends GetView<HomePageController> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => {
-              Get.to(() => const CreateTaskPage(isEditTask: false)),
+              // Get.to(() => const CreateTaskPage(isEditTask: false)),
+      //              showModalBottomSheet(
+      //                 context: context,
+      //                 builder: (context) {
+      //                   // return CreateTaskPage(isEditTask: false);
+      //                   return Container(
+      //                     width: MediaQuery.of(context).size.width,
+                    
+      //                     padding: EdgeInsets.only(
+      //                         bottom: MediaQuery.of(context).viewInsets.bottom),
+      //                     margin: EdgeInsets.symmetric(horizontal: 16),
+      //                     // child:  
+                          
+      //                       //   Column(
+      //                       //     children: [
+      //                       //       TextField(
+      //                       //         decoration: InputDecoration(
+      //                       //             border: InputBorder.none,
+      //                       //             hintText: 'Enter task name'),
+      //                       //         onSubmitted: (value) {
+      //                       //           Navigator.pop(context);
+      //                       //           var currentDate = DateTime.now();
+      //                       //       DatePicker.showTimePicker(context,
+      //                       //       showSecondsColumn: false,
+      //                       //         showTitleActions: true,
+      //                       //          onChanged: (date) {
+      //                       // }, onConfirm: (date) {
+      //                       //       if(value.isNotEmpty){
+      //                       //         print('value is ${value} data is ${date}');
+      //                       //       //  var task = Task.create(name: value, createdAt: date);
+      //                       //       // base.dataStore.addTask(task: task);
+      //                       //       }
+                                  
+      //                       // }, currentTime: DateTime.now());
+      //                       //         },
+      //                       //         autofocus: true,
+      //                       //       ),
+      //                       //     ],
+      //                       //   ),
+      //                     child: Column(
+      //                       children: [
+      //                             TextField(
+      //                               decoration: InputDecoration(
+      //                                   border: InputBorder.none,
+      //                                   hintText: 'Task name'),
+      //                                   style: TextStyle(fontSize: 21, fontWeight: FontWeight.w500),
+      //                               onSubmitted: (value) {
+      //                                 Navigator.pop(context);
+      //                                 var currentDate = DateTime.now();
+      //                             DatePicker.showTimePicker(context,
+      //                             showSecondsColumn: false,
+      //                               showTitleActions: true,
+      //                                onChanged: (date) {
+      //                           }, onConfirm: (date) {
+      //                             if(value.isNotEmpty){
+      //                               print('value is ${value} data is ${date}');
+      //                             //  var task = Task.create(name: value, createdAt: date);
+      //                             // base.dataStore.addTask(task: task);
+      //                             }
+                                  
+      //                           }, currentTime: DateTime.now());
+      //                               },
+      //                               autofocus: true,
+      //                             ),
+      //                              TextField(
+      //                               decoration: InputDecoration(
+      //                                   border: InputBorder.none,
+      //                                   hintText: 'Description'),
+      //                                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+      //                               onSubmitted: (value) {
+      //                                 Navigator.pop(context);
+      //                                 var currentDate = DateTime.now();
+      //                             DatePicker.showTimePicker(context,
+      //                             showSecondsColumn: false,
+      //                               showTitleActions: true,
+      //                                onChanged: (date) {
+      //                           }, onConfirm: (date) {
+      //                             if(value.isNotEmpty){
+      //                               print('value is ${value} data is ${date}');
+      //                             //  var task = Task.create(name: value, createdAt: date);
+      //                             // base.dataStore.addTask(task: task);
+      //                             }
+                                  
+      //                           }, currentTime: DateTime.now());
+      //                               },
+      //                               autofocus: true,
+                                  
+      //                            ),
+      //                           //  Container(
+      //                           //   height: 
+      //                           //  child: null),
+      //                             SingleChildScrollView(
+      //       scrollDirection: Axis.horizontal,
+      //       child: Row(
+      //         children: [
+      //           Container(
+      //     child:  Row(
+      //       children: [
+      //         IconButton(
+      //       onPressed: () =>
+      //           {
+      //             // bottomSheetWidget(FilterScreen(), transparentBg: true)
+      //                                         DatePicker.showDateTimePicker(context,
+      //                           showTitleActions: true, onChanged: (date) {
+      //                         print(
+      //                             'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+      //                       }, onConfirm: (date) {
+      //                         // controller.dateSelected = date;
+      //                         // controller.updateSelectedDate();
+      //                       }, currentTime: DateTime.now())
+      //             },
+      //       icon: Icon(
+      //         Icons.people_rounded,
+      //         color: Get.theme.kLightGrayColor,
+      //       ),
+      //     ),
+      //         Text(
+      //             "To",
+      //             style: Get.theme.kSubTitle.copyWith(
+      //               color: Get.theme.kBadgeColor
+                     
+      //             ),
+      //         ),
+      //       ],
+      //     )
+      //   ),
+      //  Padding(
+      //    padding: const EdgeInsets.all(8.0),
+      //    child: Container(
+      //       child:  Row(
+      //          mainAxisAlignment: MainAxisAlignment.start,
+      //         children: [
+      //           IconButton(
+      //         onPressed: () =>
+      //             {
+      //               // bottomSheetWidget(FilterScreen(), transparentBg: true)
+      //                                           DatePicker.showDateTimePicker(context,
+      //                             showTitleActions: true, onChanged: (date) {
+      //                           print(
+      //                               'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+      //                         }, onConfirm: (date) {
+      //                           // controller.dateSelected = date;
+      //                           // controller.updateSelectedDate();
+      //                         }, currentTime: DateTime.now())
+      //               },
+      //         icon: Icon(
+      //           Icons.calendar_month_outlined,
+      //           color: Get.theme.kLightGrayColor,
+      //         ),
+      //       ),
+      //           Text(
+      //               "Today",
+      //               style: Get.theme.kSubTitle.copyWith(
+      //                 color: Get.theme.kBadgeColor
+                       
+      //               ),
+      //           ),
+      //         ],
+      //       )
+      //     ),
+      //  ),
+      //    Padding(
+      //      padding: const EdgeInsets.all(8.0),
+      //      child: Container(
+      //       child:  Row(
+      //         children: [
+      //            Icon(
+      //                       Icons.flag_outlined,
+      //                       color: Get.theme.btnTextCol.withOpacity(0.3),
+      //                     ),
+      //           Text(
+      //               "Priority",
+      //               style: Get.theme.kSubTitle.copyWith(
+      //                 color: Get.theme.kBadgeColor
+                       
+      //               ),
+      //           ),
+      //         ],
+      //       )
+      //            ),
+      //    )
+      //         ],
+      //       ),
+      //     ),
+
+
+      //                       ],
+      //                     ),
+      //                   );
+      //                 })
+          
+      //       },
+
+      showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(1.0))),
+        backgroundColor: Colors.white,
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Padding(
+          padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                        left: 12.0,
+                        right:12.0),
+          child: Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                            children: [
+                                  TextField(
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Task name'),
+                                        style: TextStyle(fontSize: 21, fontWeight: FontWeight.w500),
+                                    onSubmitted: (value) {
+                                      Navigator.pop(context);
+                                      var currentDate = DateTime.now();
+                                  DatePicker.showTimePicker(context,
+                                  showSecondsColumn: false,
+                                    showTitleActions: true,
+                                     onChanged: (date) {
+                                }, onConfirm: (date) {
+                                  if(value.isNotEmpty){
+                                    print('value is ${value} data is ${date}');
+                                  //  var task = Task.create(name: value, createdAt: date);
+                                  // base.dataStore.addTask(task: task);
+                                  }
+                                  
+                                }, currentTime: DateTime.now());
+                                    },
+                                    autofocus: true,
+                                  ),
+                                   TextField(
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Description'),
+                                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+                                    onSubmitted: (value) {
+                                      Navigator.pop(context);
+                                      var currentDate = DateTime.now();
+                                  DatePicker.showTimePicker(context,
+                                  showSecondsColumn: false,
+                                    showTitleActions: true,
+                                     onChanged: (date) {
+                                }, onConfirm: (date) {
+                                  if(value.isNotEmpty){
+                                    print('value is ${value} data is ${date}');
+                                  //  var task = Task.create(name: value, createdAt: date);
+                                  // base.dataStore.addTask(task: task);
+                                  }
+                                  
+                                }, currentTime: DateTime.now());
+                                    },
+                                    autofocus: true,
+                                  
+                                 ),
+                                //  Container(
+                                //   height: 
+                                //  child: null),
+                                  SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Container(
+          child:  Row(
+            children: [
+              IconButton(
+            onPressed: () =>
+                {
+                  // bottomSheetWidget(FilterScreen(), transparentBg: true)
+                                              DatePicker.showDateTimePicker(context,
+                                showTitleActions: true, onChanged: (date) {
+                              print(
+                                  'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                            }, onConfirm: (date) {
+                              // controller.dateSelected = date;
+                              // controller.updateSelectedDate();
+                            }, currentTime: DateTime.now())
+                  },
+            icon: Icon(
+              Icons.people_rounded,
+              color: Get.theme.kLightGrayColor,
+            ),
+          ),
+              Text(
+                  "To",
+                  style: Get.theme.kSubTitle.copyWith(
+                    color: Get.theme.kBadgeColor
+                     
+                  ),
+              ),
+            ],
+          )
+        ),
+       Padding(
+         padding: const EdgeInsets.all(8.0),
+         child: Container(
+            child:  Row(
+               mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+              onPressed: () =>
+                  {
+                    // bottomSheetWidget(FilterScreen(), transparentBg: true)
+                                                DatePicker.showDateTimePicker(context,
+                                  showTitleActions: true, onChanged: (date) {
+                                print(
+                                    'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                              }, onConfirm: (date) {
+                                // controller.dateSelected = date;
+                                // controller.updateSelectedDate();
+                              }, currentTime: DateTime.now())
+                    },
+              icon: Icon(
+                Icons.calendar_month_outlined,
+                color: Get.theme.kLightGrayColor,
+              ),
+            ),
+                Text(
+                    "Today",
+                    style: Get.theme.kSubTitle.copyWith(
+                      color: Get.theme.kBadgeColor
+                       
+                    ),
+                ),
+              ],
+            )
+          ),
+       ),
+         Padding(
+           padding: const EdgeInsets.all(8.0),
+           child: Container(
+            child:  Row(
+              children: [
+                 Icon(
+                            Icons.flag_outlined,
+                            color: Get.theme.btnTextCol.withOpacity(0.3),
+                          ),
+                Text(
+                    "Priority",
+                    style: Get.theme.kSubTitle.copyWith(
+                      color: Get.theme.kBadgeColor
+                       
+                    ),
+                ),
+              ],
+            )
+                 ),
+         )
+              ],
+            ),
+          ),
+
+
+                            ],
+                          )
+        ))
             },
             backgroundColor: Get.theme.colorPrimaryDark,
             child: const Icon(
