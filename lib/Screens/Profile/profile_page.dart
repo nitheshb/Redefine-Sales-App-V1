@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/OnBoarding/onboarding_page.dart';
 import 'package:redefineerp/Screens/Profile/profile_controller.dart';
 import 'package:redefineerp/themes/themes.dart';
 
@@ -172,7 +174,11 @@ class ProfilePage extends StatelessWidget {
               child: const Divider(color: Colors.grey, thickness: 0.2),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+                Get.to(() => const OnBoardingPage());
+
+              },
               child: Text(
                 'Log Out',
                 style: Get.theme.kNormalStyle
