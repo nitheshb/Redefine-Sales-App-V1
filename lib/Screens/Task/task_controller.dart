@@ -27,6 +27,8 @@ class TaskController extends GetxController {
       FirebaseFirestore.instance.collection('spark_assignedTasks');
 
   void createNewTask() {
+
+    
     _collection
         .add({
           'task_title': taskTitle.text,

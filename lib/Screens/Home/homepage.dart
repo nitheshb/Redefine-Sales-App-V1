@@ -6,12 +6,15 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
+import 'package:redefineerp/Screens/Contact/contact_list_dialog.dart';
+import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Profile/profile_page.dart';
 import 'package:redefineerp/Screens/Report/report_page.dart';
 import 'package:redefineerp/Screens/Search/search_task.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
+import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Utilities/basicdialog.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
@@ -27,6 +30,8 @@ import 'package:intl/intl.dart';
 class HomePage extends GetView<HomePageController> {
   @override
   Widget build(BuildContext context) {
+    TaskController controller1 = Get.put<TaskController>(TaskController());
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -351,42 +356,46 @@ class HomePage extends GetView<HomePageController> {
           
       //       },
 
+  
+
+        // showModalBottomSheet(
+        // shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.vertical(top: Radius.circular(9.0))),
+        // backgroundColor: Colors.white,
+        // context: context,
+        // isScrollControlled: true,
+        // builder: (context) => Padding(
+        //   padding: EdgeInsets.only(
+        //                 bottom: MediaQuery.of(context).viewInsets.bottom,
+        //                 left: 14.0,
+        //                 right:14.0,
+        //                 top: 10.0),
+        //   child:     ContactListDialogPage())),
+          
+
       showModalBottomSheet(
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(1.0))),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(9.0))),
         backgroundColor: Colors.white,
         context: context,
         isScrollControlled: true,
         builder: (context) => Padding(
           padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom,
-                        left: 12.0,
-                        right:12.0),
+                        left: 14.0,
+                        right:14.0,
+                        top: 10.0),
           child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                             children: [
                                   TextField(
+                                    controller: controller1.taskTitle,
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: 'Task name'),
-                                        style: TextStyle(fontSize: 21, fontWeight: FontWeight.w500),
-                                    onSubmitted: (value) {
-                                      Navigator.pop(context);
-                                      var currentDate = DateTime.now();
-                                  DatePicker.showTimePicker(context,
-                                  showSecondsColumn: false,
-                                    showTitleActions: true,
-                                     onChanged: (date) {
-                                }, onConfirm: (date) {
-                                  if(value.isNotEmpty){
-                                    print('value is ${value} data is ${date}');
-                                  //  var task = Task.create(name: value, createdAt: date);
-                                  // base.dataStore.addTask(task: task);
-                                  }
-                                  
-                                }, currentTime: DateTime.now());
-                                    },
+                                        hintText: 'Task name...'),
+                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                              
                                     autofocus: true,
                                   ),
                                    TextField(
@@ -403,7 +412,7 @@ class HomePage extends GetView<HomePageController> {
                                      onChanged: (date) {
                                 }, onConfirm: (date) {
                                   if(value.isNotEmpty){
-                                    print('value is ${value} data is ${date}');
+                                    print('value iss ${value} data is ${date}');
                                   //  var task = Task.create(name: value, createdAt: date);
                                   // base.dataStore.addTask(task: task);
                                   }
@@ -416,100 +425,207 @@ class HomePage extends GetView<HomePageController> {
                                 //  Container(
                                 //   height: 
                                 //  child: null),
-                                  SingleChildScrollView(
+
+                                Row(
+                                  children: [
+
+                                    // assign to
+                   
+                InkWell(
+                  onTap: ()=>{
+       showDialog(
+                      context: context,
+                      builder: (BuildContext context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child:  ContactListPage()))
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                                      Icons.person_2_outlined,
+                                      color: Get.theme.kLightGrayColor,
+                                    ),
+                                    Obx(
+                      () => ActionChip(
+        elevation: 0,
+        side: BorderSide(color: Get.theme.btnTextCol.withOpacity(0.1)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: Get.theme.kBadgeColorBg,
+        label: Text(
+          controller1.assignedUserName.value,
+          style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
+        ),
+        onPressed: () => {
+              // Get.to(() => const ContactListPage()),
+               showDialog(
+                      context: context,
+                      builder: (BuildContext context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child:  ContactListPage()))
+            }
+            )
+                          
+                    ),
+                    ],
+                  ),
+                ),
+
+
+// Due Date
+                        InkWell(
+                  onTap: ()=>{
+                              DatePicker.showDateTimePicker(context,
+                                showTitleActions: true, onChanged: (date) {
+                              print(
+                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                            }, onConfirm: (date) {
+                              controller1.dateSelected = date;
+                              controller1.updateSelectedDate();
+                            }, currentTime: DateTime.now())
+
+
+                            
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                                  Icons.calendar_month_outlined,
+                                  color: Get.theme.kLightGrayColor,
+                                ),
+                                   Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Obx(
+                        () => Text(
+                          controller1.selectedDateTime.value,
+                        ),
+                      ),
+                    )),
+                    ],
+                  ),
+                ),
+                                  ],
+                                ),
+
+
+
+                
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [  
+                                                                  
+                                      SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                Container(
-          child:  Row(
-            children: [
-              IconButton(
-            onPressed: () =>
-                {
-                  // bottomSheetWidget(FilterScreen(), transparentBg: true)
-                                              DatePicker.showDateTimePicker(context,
+                InkWell(
+                  onTap: ()=>{
+       showDialog(
+                      context: context,
+                      builder: (BuildContext context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child:  ContactListPage()))
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                                  Icons.person_2_outlined,
+                                  color: Get.theme.kLightGrayColor,
+                                ),
+                             
+                    ],
+                  ),
+                ),
+                  SizedBox(width: 20.0,),
+                         InkWell(
+                  onTap: ()=>{
+        DatePicker.showDateTimePicker(context,
                                 showTitleActions: true, onChanged: (date) {
                               print(
-                                  'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
                             }, onConfirm: (date) {
                               // controller.dateSelected = date;
                               // controller.updateSelectedDate();
                             }, currentTime: DateTime.now())
                   },
-            icon: Icon(
-              Icons.people_rounded,
-              color: Get.theme.kLightGrayColor,
-            ),
-          ),
-              Text(
-                  "To",
-                  style: Get.theme.kSubTitle.copyWith(
-                    color: Get.theme.kBadgeColor
-                     
-                  ),
-              ),
-            ],
-          )
-        ),
-       Padding(
-         padding: const EdgeInsets.all(8.0),
-         child: Container(
-            child:  Row(
-               mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-              onPressed: () =>
-                  {
-                    // bottomSheetWidget(FilterScreen(), transparentBg: true)
-                                                DatePicker.showDateTimePicker(context,
-                                  showTitleActions: true, onChanged: (date) {
-                                print(
-                                    'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                              }, onConfirm: (date) {
-                                // controller.dateSelected = date;
-                                // controller.updateSelectedDate();
-                              }, currentTime: DateTime.now())
-                    },
-              icon: Icon(
-                Icons.calendar_month_outlined,
-                color: Get.theme.kLightGrayColor,
-              ),
-            ),
-                Text(
-                    "Today",
-                    style: Get.theme.kSubTitle.copyWith(
-                      color: Get.theme.kBadgeColor
-                       
-                    ),
+                  child: Icon(
+                              Icons.people_alt_outlined,
+                              color: Get.theme.kLightGrayColor,
+                            ),
                 ),
-              ],
-            )
-          ),
-       ),
-         Padding(
-           padding: const EdgeInsets.all(8.0),
-           child: Container(
-            child:  Row(
-              children: [
-                 Icon(
-                            Icons.flag_outlined,
-                            color: Get.theme.btnTextCol.withOpacity(0.3),
-                          ),
-                Text(
-                    "Priority",
-                    style: Get.theme.kSubTitle.copyWith(
-                      color: Get.theme.kBadgeColor
-                       
-                    ),
+                  SizedBox(width: 20.0,),
+                         InkWell(
+                  onTap: ()=>{
+                              DatePicker.showDateTimePicker(context,
+                                showTitleActions: true, onChanged: (date) {
+                              print(
+                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                            }, onConfirm: (date) {
+                              controller1.dateSelected = date;
+                              controller1.updateSelectedDate();
+                            }, currentTime: DateTime.now())
+
+
+                            
+                  },
+                  child: Icon(
+                              Icons.calendar_month_outlined,
+                              color: Get.theme.kLightGrayColor,
+                            ),
                 ),
-              ],
-            )
-                 ),
-         )
+                SizedBox(width: 20.0,),
+                         InkWell(
+                  onTap: ()=>{
+        DatePicker.showDateTimePicker(context,
+                                showTitleActions: true, onChanged: (date) {
+                              print(
+                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                            }, onConfirm: (date) {
+                              // controller.dateSelected = date;
+                              // controller.updateSelectedDate();
+                            }, currentTime: DateTime.now())
+                  },
+                  child: Icon(
+                              Icons.attach_file,
+                              color: Get.theme.kLightGrayColor,
+                            ),
+                ),
+SizedBox(width: 20.0,),
+                         InkWell(
+                  onTap: ()=>{
+        DatePicker.showDateTimePicker(context,
+                                showTitleActions: true, onChanged: (date) {
+                              print(
+                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                            }, onConfirm: (date) {
+                              // controller.dateSelected = date;
+                              // controller.updateSelectedDate();
+                            }, currentTime: DateTime.now())
+                  },
+                  child: Icon(
+                              Icons.flag_outlined,
+                              color: Get.theme.kLightGrayColor,
+                            ),
+                ),
+
+         
               ],
             ),
           ),
 
+          InkWell(
+                          onTap: () => {controller1.createNewTask()},
+
+            child: Text('Create'))
+                                    ],
+                                  ),
+SizedBox(height: 16,)
 
                             ],
                           )
@@ -703,6 +819,27 @@ Widget secondTab() {
     ),
   );
 }
+  Widget _bottomSheet(ScrollController controller) {
+    return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
+      controller: controller,
+      child: Container(
+        color: Colors.transparent,
+        child: Column(
+          children: <Widget>[
+          headerBg(
+            title: 'Gif Design for page loading',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            taskPriority: 1,
+            taskPriorityNum: 2),
+        miniMessage('Marked as done, pending for review'),
+        DateWidget('Due Tommorow'),
+   
+          ],
+        ),
+      ),
+    );
+  }
 
 Widget thirdTab() {
   return SingleChildScrollView(
