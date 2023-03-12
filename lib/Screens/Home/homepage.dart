@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -64,11 +65,11 @@ class HomePage extends GetView<HomePageController> {
                   padding: const EdgeInsets.all(10.0),
                   child: IconButton(
                     onPressed: () => {
-                      snackBarMsg('Task Done!', enableMsgBtn: true),
+                      Get.to(() => const NotificationPage())
                       // basicDialog('title', 'message')
                     },
                     icon: Icon(
-                      Icons.filter_list_rounded,
+                      Icons.notifications_outlined,
                       color: Get.theme.btnTextCol,
                     ),
                   ),
@@ -425,95 +426,188 @@ class HomePage extends GetView<HomePageController> {
                                 //  Container(
                                 //   height: 
                                 //  child: null),
+                  Visibility(
+                    visible: !(controller1.assignedUserName.value == "Assign someone"),
+                    child: 
+                                                  Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
 
-                                Row(
-                                  children: [
-
-                                    // assign to
-                   
-                InkWell(
-                  onTap: ()=>{
-       showDialog(
-                      context: context,
-                      builder: (BuildContext context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child:  ContactListPage()))
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                                      Icons.person_2_outlined,
-                                      color: Get.theme.kLightGrayColor,
+                                                      // assign to
+                                    
+                                  InkWell(
+                                    onTap: ()=>{
+                        showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) => Dialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child:  const ContactListPage()))
+                                    },
+                                    child: Row(
+                                    
+                                      children: [
+                                        SizedBox(
+                                          child: Material(
+                                                              type: MaterialType.transparency,
+                                                              child: CircleAvatar(
+                                                                backgroundColor: Get.theme.colorPrimaryDark,
+                                                                radius: 17,
+                                                                child: Text('${controller1.assignedUserName.value.substring(0,2)}',  style:TextStyle(color: Colors.white)),
+                                                              ),
+                                                            ),
+                                        ),
+                                                      Obx(
+                                                        ()=> Padding(
+                                                          padding: const EdgeInsets.only(left:8.0 , bottom : 4),
+                                                          child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 16,
+                                                                child: Text('Assigned to',
+                                                                                      style: Get.theme.kSubTitle.copyWith(color: Get.theme.kLightGrayColor),),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 22,
+                                                                child: Text(controller1.assignedUserName.value,
+                                                                                      style: Get.theme.kPrimaryTxtStyle.copyWith(color: Get.theme.kBadgeColor),),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                          //               () => ActionChip(
+                          // elevation: 0,
+                          // side: BorderSide(color: Get.theme.btnTextCol.withOpacity(0.1)),
+                          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          // backgroundColor: Get.theme.kBadgeColorBg,
+                          // label: Text(
+                          //   controller1.assignedUserName.value,
+                          //   style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
+                          // ),
+                          // onPressed: () => {
+                          //       // Get.to(() => const ContactListPage()),
+                          //       showDialog(
+                          //               context: context,
+                          //               builder: (BuildContext context) => Dialog(
+                          // shape: RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(8),
+                          // ),
+                          // child:  ContactListPage()))
+                          //     }
+                          //     )
+                                            
+                                      ),
+                                      ],
                                     ),
-                                    Obx(
-                      () => ActionChip(
-        elevation: 0,
-        side: BorderSide(color: Get.theme.btnTextCol.withOpacity(0.1)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        backgroundColor: Get.theme.kBadgeColorBg,
-        label: Text(
-          controller1.assignedUserName.value,
-          style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
-        ),
-        onPressed: () => {
-              // Get.to(() => const ContactListPage()),
-               showDialog(
-                      context: context,
-                      builder: (BuildContext context) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child:  ContactListPage()))
-            }
-            )
-                          
-                    ),
-                    ],
+                                  ),
+
+
+                  // Due Date
+
+                   InkWell(
+                                    onTap: ()=>{
+                       DatePicker.showDateTimePicker(context,
+                                                  showTitleActions: true, onChanged: (date) {
+                                                print(
+                                                        'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                              }, onConfirm: (date) {
+                                                controller1.dateSelected = date;
+                                                controller1.updateSelectedDate();
+                                              }, currentTime: DateTime.now())
+                                    },
+                                    child: Row(
+                                    
+                                      children: [
+                                        SizedBox(
+                                          child: Material(
+                                                              type: MaterialType.transparency,
+                                                            child:  DottedBorder(
+                                                              borderType: BorderType.Circle,
+  color: Get.theme.kLightGrayColor,
+radius: Radius.circular(27.0),
+dashPattern: [3,3],
+  strokeWidth: 1,
+  child: Padding(
+    padding: const EdgeInsets.all(6.0),
+    child: Icon(
+                                                                                                                    Icons.calendar_month_outlined,
+                                                                                                                    size: 18,
+                                                                                                                    color: Get.theme.kLightGrayColor,
+                                                                                                                  ),
+  ),
+)
+                                                              // child: CircleAvatar(
+                                                              //   radius: 19,
+                                                              //     backgroundColor: Get.theme.colorPrimaryDark,
+                                                              //   child: CircleAvatar(
+                                                              //     backgroundColor: Colors.white,
+                                                              //     radius: 18,
+                                                              //     child:   Icon(
+                                                              //                                                     Icons.calendar_month_outlined,
+                                                              //                                                     size: 18,
+                                                              //                                                     color: Get.theme.kLightGrayColor,
+                                                              //                                                   ),
+                                                              //   ),
+                                                              // ),
+                                                            ),
+                                        ),
+                                                      Obx(
+                                                        ()=> Padding(
+                                                          padding: const EdgeInsets.only(left:8.0 , bottom : 4),
+                                                          child: Column(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 16,
+                                                                child: Text('Due Date',
+                                                                                      style: Get.theme.kSubTitle.copyWith(color: Get.theme.kLightGrayColor),),
+                                                              ),
+                                                              SizedBox(
+                                                                height: 22,
+                                                                child: 
+                                          Text(
+                                            controller1.selectedDateTime.value,
+                                          style: Get.theme.kNormalStyle.copyWith(color: Get.theme.kBadgeColor)
+                                        ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                          //               () => ActionChip(
+                          // elevation: 0,
+                          // side: BorderSide(color: Get.theme.btnTextCol.withOpacity(0.1)),
+                          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          // backgroundColor: Get.theme.kBadgeColorBg,
+                          // label: Text(
+                          //   controller1.assignedUserName.value,
+                          //   style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
+                          // ),
+                          // onPressed: () => {
+                          //       // Get.to(() => const ContactListPage()),
+                          //       showDialog(
+                          //               context: context,
+                          //               builder: (BuildContext context) => Dialog(
+                          // shape: RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(8),
+                          // ),
+                          // child:  ContactListPage()))
+                          //     }
+                          //     )
+                                      ),
+                                      ],
+                                    ),
+                                  ),
+                                                    ],
+                                                  ),
+
                   ),
-                ),
 
 
-// Due Date
-                        InkWell(
-                  onTap: ()=>{
-                              DatePicker.showDateTimePicker(context,
-                                showTitleActions: true, onChanged: (date) {
-                              print(
-                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                            }, onConfirm: (date) {
-                              controller1.dateSelected = date;
-                              controller1.updateSelectedDate();
-                            }, currentTime: DateTime.now())
-
-
-                            
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                                  Icons.calendar_month_outlined,
-                                  color: Get.theme.kLightGrayColor,
-                                ),
-                                   Center(
-                        child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Obx(
-                        () => Text(
-                          controller1.selectedDateTime.value,
-                        ),
-                      ),
-                    )),
-                    ],
-                  ),
-                ),
-                                  ],
-                                ),
-
-
-
-                
+                SizedBox(height: 15),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [  
@@ -522,44 +616,32 @@ class HomePage extends GetView<HomePageController> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                InkWell(
-                  onTap: ()=>{
+               
+                       Visibility(
+                    visible: (controller1.assignedUserName.value == "Assign someone"),
+               child: Row(
+                  children: [
+                    InkWell(
+                      onTap: ()=>{
        showDialog(
-                      context: context,
-                      builder: (BuildContext context) => Dialog(
+                          context: context,
+                          builder: (BuildContext context) => Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
         child:  ContactListPage()))
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                                  Icons.person_2_outlined,
-                                  color: Get.theme.kLightGrayColor,
-                                ),
-                             
-                    ],
-                  ),
-                ),
-                  SizedBox(width: 20.0,),
-                         InkWell(
-                  onTap: ()=>{
-        DatePicker.showDateTimePicker(context,
-                                showTitleActions: true, onChanged: (date) {
-                              print(
-                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                            }, onConfirm: (date) {
-                              // controller.dateSelected = date;
-                              // controller.updateSelectedDate();
-                            }, currentTime: DateTime.now())
-                  },
-                  child: Icon(
-                              Icons.people_alt_outlined,
-                              color: Get.theme.kLightGrayColor,
-                            ),
-                ),
-                  SizedBox(width: 20.0,),
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                                      Icons.person_2_outlined,
+                                      color: Get.theme.kLightGrayColor,
+                                    ),
+                                 
+                        ],
+                      ),
+                    ),
+                      SizedBox(width: 20.0,),
                          InkWell(
                   onTap: ()=>{
                               DatePicker.showDateTimePicker(context,
@@ -580,6 +662,10 @@ class HomePage extends GetView<HomePageController> {
                             ),
                 ),
                 SizedBox(width: 20.0,),
+                  ],
+                ),
+               
+                       ),
                          InkWell(
                   onTap: ()=>{
         DatePicker.showDateTimePicker(context,
@@ -610,6 +696,23 @@ SizedBox(width: 20.0,),
                   },
                   child: Icon(
                               Icons.flag_outlined,
+                              color: Get.theme.kLightGrayColor,
+                            ),
+                ),
+                   SizedBox(width: 20.0,),
+                         InkWell(
+                  onTap: ()=>{
+        DatePicker.showDateTimePicker(context,
+                                showTitleActions: true, onChanged: (date) {
+                              print(
+                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                            }, onConfirm: (date) {
+                              // controller.dateSelected = date;
+                              // controller.updateSelectedDate();
+                            }, currentTime: DateTime.now())
+                  },
+                  child: Icon(
+                              Icons.people_alt_outlined,
                               color: Get.theme.kLightGrayColor,
                             ),
                 ),
@@ -677,8 +780,11 @@ SizedBox(height: 16,)
                         icon: Icon(Icons.search_outlined,
                             color: Get.theme.btnTextCol.withOpacity(0.3))),
                     IconButton(
-                      onPressed: () => {Get.to(() => const NotificationPage())},
-                      icon: Icon(Icons.notifications_outlined,
+      
+                      onPressed: () => {
+                                        snackBarMsg('Task Done!', enableMsgBtn: true),
+                                        },
+                      icon: Icon(Icons.filter_list_rounded,
                           color: Get.theme.btnTextCol.withOpacity(0.3)),
                     ),
                   ],

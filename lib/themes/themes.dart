@@ -37,6 +37,8 @@ extension ThemeExtension on ThemeData {
       GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600);
   TextStyle get kNormalStyle =>
       GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700);
+    TextStyle get kPrimaryTxtStyle =>
+      GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600);    
   TextStyle get kTabTextLg =>
       GoogleFonts.inter(fontSize: 25, fontWeight: FontWeight.w700);
 }

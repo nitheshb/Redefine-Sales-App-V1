@@ -107,6 +107,7 @@ class HomePageController extends GetxController {
                             // print("due date is ${taskData!.get('due data')}");
                             // return Text("hello");
                             return taskCheckBox(
+                              context,
                                 taskPriority: taskData!['priority'] == "Basic"
                                     ? 3
                                     : taskData['priority'] == "Medium"
@@ -127,7 +128,7 @@ class HomePageController extends GetxController {
                                 task: taskData["task_title"],
                                 
                                 createdOn:
-                                    'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
+                                    '${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
                                 assigner: 'Assigner: ${taskData['by_name']}',
                                 onTap: () => {
                                       Get.to(() => TaskManager(
@@ -208,6 +209,7 @@ class HomePageController extends GetxController {
                               dateBoxForUpcomingSection(
                                   dateL: e.get('due_date')),
                               taskCheckBox(
+                                 context,
                                   due:
                                       "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}",
                                   taskPriority: e['priority'] == "Basic"
@@ -327,6 +329,7 @@ class HomePageController extends GetxController {
                               dateBoxForCreatedSection(
                                   dateL: e.get('created_on')),
                               taskCheckBox(
+                                context,
                                   due:
                                       "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}",
                                   taskPriority: e['priority'] == "Basic"

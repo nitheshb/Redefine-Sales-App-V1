@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:redefineerp/Utilities/snackbar.dart';
 
 class TaskController extends GetxController {
   var taskType = 'mark'.obs;
@@ -27,30 +28,37 @@ class TaskController extends GetxController {
       FirebaseFirestore.instance.collection('spark_assignedTasks');
 
   void createNewTask() {
-
-    
-    _collection
-        .add({
-          'task_title': taskTitle.text,
-          'task_desc': taskDescription.text,
-          'created_on': DateTime.now().millisecondsSinceEpoch,
-          'due_date': dateSelected.millisecondsSinceEpoch,
-          'by_email': auth.currentUser?.email,
-          'by_name': auth.currentUser?.displayName,
-          'by_uid': auth.currentUser?.uid,
-          'to_name': assignedUserName.value,
-          'to_uid': assignedUserUid.value,
-          'priority': taskPriority.value,
-          'to_email': assignedUserEmail.value,
-          'dept': assignedUserDepartment.value,
-          'status': "InProgress",
-        })
-        .then((value) => {
-              print("Task Created ${value}"),
-              sendPushMessage('Task Assigned for you:', taskTitle.text,
-                  assignedUserFcmToken.value)
-            })
-        .catchError((error) => print("Failed to create task: $error"));
+    taskTitle.clear();
+    taskDescription.clear();
+    dateinput.clear();
+    assignedUserName = 'Assign someone'.obs;
+    // Get.reset();
+    // Get.delete<TaskController>();
+    Get.back();
+    snackBarMsg('Task Created', enableMsgBtn: true);
+    // _collection
+    //     .add({
+    //       'task_title': taskTitle.text,
+    //       'task_desc': taskDescription.text,
+    //       'created_on': DateTime.now().millisecondsSinceEpoch,
+    //       'due_date': dateSelected.millisecondsSinceEpoch,
+    //       'by_email': auth.currentUser?.email,
+    //       'by_name': auth.currentUser?.displayName,
+    //       'by_uid': auth.currentUser?.uid,
+    //       'to_name': assignedUserName.value,
+    //       'to_uid': assignedUserUid.value,
+    //       'priority': taskPriority.value,
+    //       'to_email': assignedUserEmail.value,
+    //       'dept': assignedUserDepartment.value,
+    //       'status': "InProgress",
+    //     })
+    //     .then((value) => {
+    //           print("Task Created ${value}"),
+    //           snackBarMsg('Task Done!', enableMsgBtn: true),
+    //           sendPushMessage('Task Assigned for you:', taskTitle.text,
+    //               assignedUserFcmToken.value)
+    //         })
+    //     .catchError((error) => print("Failed to create task: $error"));
   }
 
   void sendPushMessage(String body, String title, String token) async {

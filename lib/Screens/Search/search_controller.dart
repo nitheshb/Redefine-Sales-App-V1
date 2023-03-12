@@ -67,6 +67,7 @@ class SearchController extends GetxController {
                             // print("due date is ${taskData!.get('due data')}");
                             // return Text("hello");
                             return taskCheckBox(
+                              context,
                                 taskPriority: taskData!['priority'] == "Basic"
                                     ? 3
                                     : taskData['priority'] == "Medium"
