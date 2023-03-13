@@ -2,7 +2,9 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Contact/contact_list_dialog.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
+import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
@@ -231,7 +233,7 @@ class TaskManager extends StatelessWidget {
                                                                       child: 
                                                                                      Text(
                                                   due,
-                                                                                     style: Get.theme.kNormalStyle.copyWith(color: Get.theme.kBadgeColor)
+                                                                                     style: Get.theme.kNormalStyle.copyWith()
                                                                                    ),
                                                                     ),
                                                                   ],
@@ -394,8 +396,9 @@ class TaskManager extends StatelessWidget {
                                                                       height: 22,
                                                                       child: 
                                                                                      Text(
-                                                  createdOn,
-                                                                                     style: Get.theme.kSubTitle
+                                                  // createdOn,
+                                                  due,
+                                                                                      style: Get.theme.kNormalStyle.copyWith()
                                                                                    ),
                                                                     ),
                                                                   ],
@@ -432,6 +435,7 @@ class TaskManager extends StatelessWidget {
                                                                     ),
 
                                                                      SizedBox(height: 12,),
+                                                                    
                                                           SizedBox(
                                                                       // height: 20,
                                                                       child:  Padding(
@@ -453,10 +457,62 @@ class TaskManager extends StatelessWidget {
                                                                                                                  ),
                                                                       )
                                                                     ),
+
+                                                                     SizedBox(height: 14,),
+                                                          SizedBox(
+                                                                      // height: 20,
+                                                                      child: Text('Participants',
+                                                                                            style: Get.theme.kSubTitle.copyWith(color: Color(0xff707070), fontSize: 16),),
+                                                                    ),
+                                                                     SizedBox(height: 10,),
+
+                                                                        Row(
+                                                                          children: [
+                                                                            Generator.buildOverlaysProfile(
+                      images: [
+                        'assets/images/icon.jpg',
+                         'assets/images/icon.jpg',
+                        
+                      ],
+                      enabledOverlayBorder: true,
+                      overlayBorderColor: Color(0xfff0f0f0),
+                      overlayBorderThickness: 1.7,
+                      leftFraction: 0.72,
+                      size: 26),
+
+                      SizedBox(width: 8,),
+                        InkWell(
+                                    onTap: ()=>{
+                        showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                       const ContactListDialogPage())
+          //                                Dialog(
+          //                 shape: RoundedRectangleBorder(
+          // borderRadius: BorderRadius.all(Radius.circular(8))),
+          //                 child:  const ContactListPage()))
+                                    },
+                                    child: DottedBorder(
+                                                                    borderType: BorderType.Circle,
+                                             color: Get.theme.kLightGrayColor,
+                                           radius: Radius.circular(27.0),
+                                           dashPattern: [3,3],
+                                             strokeWidth: 1,
+                                             child: Padding(
+                                               padding: const EdgeInsets.all(4.0),
+                                               child: Icon(
+                                                                                                                          Icons.add,
+                                                                                                                          size: 15,
+                                                                                                                          color: Get.theme.kLightGrayColor,
+                                                                                                                        ),
+                                             ),
+                                           )),
+                                                                          ],
+                                                                        ),
                                                ],
                                              ),
                                            ),
-
+  
                                            SizedBox(height: 18,),
    Expanded(
      child: Container(

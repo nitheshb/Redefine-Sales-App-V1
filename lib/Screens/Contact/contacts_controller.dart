@@ -18,6 +18,8 @@ class ContactController extends GetxController {
   var filterByEmployeeValue = 'ZA'.obs;
   var searchResult = ''.obs;
 
+   var participantsList = [].obs;
+
   Future<void> getDeptFilterData() async {
     await collection
         .where('department', isNull: false)

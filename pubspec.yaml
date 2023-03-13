@@ -44,6 +44,8 @@ dependencies:
   google_fonts: ^3.0.1
   introduction_screen: ^3.0.2
   percent_indicator: ^4.0.1
+  path: 
+  image_picker: 
 
 dev_dependencies:
   flutter_lints: ^2.0.0

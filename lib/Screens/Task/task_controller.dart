@@ -21,6 +21,8 @@ class TaskController extends GetxController {
   var assignedUserFcmToken = ''.obs;
   var taskPriority = 'Basic'.obs;
 
+     var participantsList = [].obs;
+
   TextEditingController taskTitle = TextEditingController();
   TextEditingController taskDescription = TextEditingController();
   TextEditingController dateinput = TextEditingController();
