@@ -277,28 +277,5 @@ class ContactListDialogPage extends StatelessWidget {
       // ),
     );
   }
-  Widget contact_card(controller, title,
-                      jobTitle,
-                      
-                      uid, onTap){
-return Container(
-      color: (controller.participants.any((participant) => participant['uid'] == uid)) ? Colors.yellow : Colors.white,
-      child: ListTile(
-        leading: Icon(
-          Icons.account_circle,
-          color: Get.theme.kContactIconColor,
-          size: 32,
-        ),
-        title: Text(title,
-            style: Get.theme.kNormalStyle
-                .copyWith(color: Get.theme.kContactIconColor)),
-        subtitle: Text(jobTitle,
-            style: Get.theme.kSubTitle
-                .copyWith(color: Get.theme.btnTextCol.withOpacity(0.2))),
-        trailing: Icon(Icons.arrow_forward_ios_rounded,
-            color: Get.theme.btnTextCol.withOpacity(0.2)),
-        onTap: onTap,
-      ),
-    );
-  }
+
 }

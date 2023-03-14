@@ -117,22 +117,22 @@ class ContactListPage extends StatelessWidget {
                             )),
                       ),
                     ),
-                    Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: TextButton.icon(
-                        style: TextButton.styleFrom(),
-                        onPressed: () => {},
-                        icon: Icon(
-                          Icons.swap_vert_rounded,
-                          size: 16,
-                          color: Get.theme.btnTextCol.withOpacity(0.3),
-                        ),
-                        label: Text('Pending Task',
-                            style: Get.theme.kSubTitle.copyWith(
-                              color: Get.theme.btnTextCol.withOpacity(0.3),
-                            )),
-                      ),
-                    ),
+                    // Directionality(
+                    //   textDirection: TextDirection.rtl,
+                    //   child: TextButton.icon(
+                    //     style: TextButton.styleFrom(),
+                    //     onPressed: () => {},
+                    //     icon: Icon(
+                    //       Icons.swap_vert_rounded,
+                    //       size: 16,
+                    //       color: Get.theme.btnTextCol.withOpacity(0.3),
+                    //     ),
+                    //     label: Text('Pending Task',
+                    //         style: Get.theme.kSubTitle.copyWith(
+                    //           color: Get.theme.btnTextCol.withOpacity(0.3),
+                    //         )),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -167,9 +167,9 @@ class ContactListPage extends StatelessWidget {
                   QueryDocumentSnapshot<Object?>? taskData =
                       snapshot.data?.docs[i];
                   return ContactCard(
-                      title: '"${taskData!["name"]}"',
-                      jobTitle: '"jroles"',
-                      uid: true,
+                      title: '${taskData!["name"]}',
+                      jobTitle: taskData["roles"][0],
+                      uid: taskData["uid"],
                       onTap: () => {
                             controller.taskController.assignedUserName.value =
                                 taskData["name"],

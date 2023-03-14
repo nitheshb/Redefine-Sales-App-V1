@@ -14,7 +14,7 @@ class ContactCard extends StatefulWidget {
   final String title;
   final String jobTitle;
   final VoidCallback onTap;
-  final bool uid;
+  final String uid;
 
   @override
   State<ContactCard> createState() => _ContactCardState();
@@ -36,7 +36,7 @@ class _ContactCardState extends State<ContactCard> {
 
 
     return Container(
-      color: (widget.uid) ? Colors.yellow : Colors.white,
+      color:  Colors.white,
       child: ListTile(
         leading: Icon(
           Icons.account_circle,
