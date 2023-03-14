@@ -87,7 +87,39 @@ class TaskManager extends StatelessWidget {
                 : sizeBox(0, 0)),
             Padding(
               padding: const EdgeInsets.fromLTRB(14, 22,0, 4),
-              child: Text(task, style: Get.theme.kTitleStyle),
+              child: InkWell( onTap:() => {
+
+ showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(9.0))),
+        backgroundColor: Colors.white.withAlpha(244),
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Padding(
+          padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                        left: 14.0,
+                        right:14.0,
+                        top: 10.0),
+          child: Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                            children: [
+                                  TextField(
+                                    controller: controller.taskTitle,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Task name...'),
+                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                              
+                                    autofocus: true,
+                                  ),
+                            ],
+                          )
+        ))
+            
+                
+              },child: Text(task, style: Get.theme.kTitleStyle)),
             ),
             sizeBox(10, 0),
                                            Padding(
@@ -252,7 +284,7 @@ class TaskManager extends StatelessWidget {
                                                ],
                                              ),
                                            ),
-
+              
                 Padding(
                                              padding: const EdgeInsets.fromLTRB(18.0, 10, 18.0, 0),
                                              child: Column(
@@ -414,21 +446,54 @@ class TaskManager extends StatelessWidget {
                                                                              ),
                                                           ],
                                                         ),
-
+              
                                                         SizedBox(height: 10,),
                                                           SizedBox(
                                                                       // height: 20,
-                                                                      child: Text('Description',
-                                                                                            style: Get.theme.kSubTitle.copyWith(color: Color(0xff707070), fontSize: 16),),
+                                                                      child: InkWell(
+                                                                        onTap: ()=>{
+                                                                          
+ showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(9.0))),
+        backgroundColor: Colors.white.withAlpha(244),
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Padding(
+          padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                        left: 14.0,
+                        right:14.0,
+                        top: 10.0),
+          child: Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                            children: [
+                                  TextField(
+                                    controller: controller.taskTitle,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Description...'),
+                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                              
+                                    autofocus: true,
+                                  ),
+                            ],
+                          )
+        ))
+                                                                        },
+                                                                        child: Text('Description',
+                                                                                              style: Get.theme.kSubTitle.copyWith(color: Color(0xff707070), fontSize: 16),),
+                                                                      ),
                                                                     ),
-
+              
                                                                      SizedBox(height: 4,),
                                                           SizedBox(
                                                                       // height: 20,
                                                                       child: Text('Add more details to the task',
                                                                                             style: Get.theme.kSubTitle.copyWith(color: Get.theme.kLightGrayColor,),),
                                                                     ),
-
+              
                                                                     
                                                         SizedBox(height: 10,),
                                                           SizedBox(
@@ -436,10 +501,10 @@ class TaskManager extends StatelessWidget {
                                                                       child: Text('Attachments',
                                                                                             style: Get.theme.kSubTitle.copyWith(color: Color(0xff707070), fontSize: 16),),
                                                                     ),
-     SizedBox(
+           SizedBox(
                         height: 12,
                       ),
-
+              
                 
                       // {controller.attachmentsA.map(x=>{
                       //   return 
@@ -496,19 +561,19 @@ class TaskManager extends StatelessWidget {
                                                                                                                               ),
                                                                                                                        ),
                                                                                                                      ),
-// Expanded(
+              // Expanded(
               
-//               child: ListView.builder(
-//                 shrinkWrap: true,
-//                 scrollDirection: Axis.horizontal,
-//                   physics: const BouncingScrollPhysics(),
+              //               child: ListView.builder(
+              //                 shrinkWrap: true,
+              //                 scrollDirection: Axis.horizontal,
+              //                   physics: const BouncingScrollPhysics(),
             
-//                 itemCount: 15,
-//                 itemBuilder: (BuildContext context, int index) => Card(
-//                       child: Center(child: Text('Dummy Card Text')),
-//                     ),
-//               ),
-//             ),
+              //                 itemCount: 15,
+              //                 itemBuilder: (BuildContext context, int index) => Card(
+              //                       child: Center(child: Text('Dummy Card Text')),
+              //                     ),
+              //               ),
+              //             ),
                                                                                                                               Container(
                        height: 100,
             child: Container(
@@ -532,7 +597,7 @@ class TaskManager extends StatelessWidget {
                                                                         ),
                                                                       )
                                                                     ),
-
+              
                                                                      SizedBox(height: 14,),
                                                           SizedBox(
                                                                       // height: 20,
@@ -540,7 +605,7 @@ class TaskManager extends StatelessWidget {
                                                                                             style: Get.theme.kSubTitle.copyWith(color: Color(0xff707070), fontSize: 16),),
                                                                     ),
                                                                      SizedBox(height: 10,),
-
+              
                                                                         Row(
                                                                           children: [
                                                                             Generator.buildOverlaysProfile(
@@ -597,21 +662,21 @@ class TaskManager extends StatelessWidget {
                                                ],
                                              ),
                                            ),
-  
+        
                                            SizedBox(height: 18,),
-   Expanded(
-     child: Container(
-      color:Color(0xffF8F8F8),
-      alignment: Alignment.topLeft,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Text(
+         Expanded(
+           child: Container(
+            color:Color(0xffF8F8F8),
+            alignment: Alignment.topLeft,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Text(
         '${assigner} created & assigned this task to ${assigner} on ${createdOn}',
         style: Get.theme.kSubTitle.copyWith(color: Get.theme.kGreenDark),
-      ),
-     ),
-   ),
-
-    Padding(
+            ),
+           ),
+         ),
+              
+          Padding(
                 padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).viewInsets.bottom,
                         left: 14.0,
@@ -628,7 +693,7 @@ class TaskManager extends StatelessWidget {
                                   ),
               ),
                                            
-
+              
                      
           ]
         ),
