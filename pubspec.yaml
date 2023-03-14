@@ -28,13 +28,13 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   change_app_package_name: ^1.1.0
-  cloud_firestore: ^3.1.10
+  cloud_firestore: ^4.4.4
   cupertino_icons: ^1.0.2
   dotted_border: ^2.0.0+3
-  firebase_auth: ^3.7.0
-  firebase_core: ^1.13.1
-  firebase_messaging: ^13.0.0
-  firebase_storage: ^10.0.0
+  firebase_auth: ^4.2.2
+  firebase_core: ^2.7.1
+  firebase_messaging: ^14.2.6
+  firebase_storage: ^11.0.15
   flutter:
     sdk: flutter
   flutter_custom_clippers: ^2.0.0
@@ -42,7 +42,7 @@ dependencies:
   flutter_svg: ^1.0.3
   get: ^4.6.5
   get_storage: ^2.0.3
-  google_fonts: ^3.0.1
+  google_fonts: ^4.0.3
   introduction_screen: ^3.0.2
   image_picker: ^0.8.6
   percent_indicator: ^4.0.1
@@ -51,8 +51,8 @@ dependencies:
 
 dev_dependencies:
   flutter_lints: ^2.0.0
-  flutter_local_notifications: ^11.0.0
-  flutter_launcher_icons: ^0.11.0
+  flutter_local_notifications: ^13.0.0
+  flutter_launcher_icons: ^0.12.0
   flutter_test:
     sdk: flutter
   timeago: ^3.3.0
