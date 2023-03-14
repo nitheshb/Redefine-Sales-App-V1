@@ -39,6 +39,7 @@ class DbQuery {
         return FirebaseFirestore.instance
             .collection('users')
             .where('roles', isNull: false)
+            .where('maahomes', isEqualTo: "maahomes")
             // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
             // .where("department", arrayContainsAny: [deptName.toString().toLowerCase()])
             .snapshots();
