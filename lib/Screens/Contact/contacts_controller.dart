@@ -18,6 +18,32 @@ class ContactController extends GetxController {
   var filterByEmployeeValue = 'ZA'.obs;
   var searchResult = ''.obs;
 
+   var participantsList = [].obs;
+
+   var participants = <Map<String, dynamic>>[].obs;
+
+
+ void addParticipant(String username, String userId) {
+
+   // Check if the participant already exists in the list
+  bool participantExists =
+      participants.any((participant) => participant['uid'] == userId);
+
+      print('exists ${participantExists} ${userId}');
+  if (participantExists) {
+    removeParticipant(userId);
+    return;
+  }
+
+    Map<String, dynamic> newParticipant = {'name': username, 'uid': userId};
+    participants.add(newParticipant);
+  }
+
+  // Remove a participant from the list by their userId
+  void removeParticipant(String userId) {
+    participants.removeWhere((participant) => participant['uid'] == userId);
+  }
+
   Future<void> getDeptFilterData() async {
     await collection
         .where('department', isNull: false)

@@ -41,6 +41,7 @@ extension ThemeExtension on ThemeData {
       GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600);    
   TextStyle get kTabTextLg =>
       GoogleFonts.inter(fontSize: 25, fontWeight: FontWeight.w700);
+
 }
 
 class Themes {

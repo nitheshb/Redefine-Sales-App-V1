@@ -13,132 +13,134 @@ class ContactListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<ContactController>(ContactController());
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: Colors.black,
-            )),
-        title: Container(
-          width: double.infinity,
-          height: 40,
-          decoration: BoxDecoration(
-              border: Border.all(color: Colors.black38),
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20)),
-          child: Center(
-            child: TextField(
-              controller: controller.searchController,
-              // onChanged: (v) {
-              //   controller.searchResult.value = v;
-              // },
-              onSubmitted: (v) {
-                controller.searchResult.value = v;
-              },
-              decoration: InputDecoration(
-                  prefix: sizeBox(20, 20),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.search_rounded),
-                    onPressed: () {
-                      controller.searchResult.value =
-                          controller.searchController.text;
-                    },
-                  ),
-                  hintText: 'Search',
-                  hintStyle: Get.theme.kNormalStyle
-                      .copyWith(color: Get.theme.kBadgeColor),
-                  border: InputBorder.none),
+    return Container(
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+              onPressed: () => Get.back(),
+              icon: const Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.black,
+              )),
+          title: Container(
+            width: double.infinity,
+            height: 40,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.black38),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20)),
+            child: Center(
+              child: TextField(
+                controller: controller.searchController,
+                // onChanged: (v) {
+                //   controller.searchResult.value = v;
+                // },
+                onSubmitted: (v) {
+                  controller.searchResult.value = v;
+                },
+                decoration: InputDecoration(
+                    prefix: sizeBox(20, 20),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.search_rounded),
+                      onPressed: () {
+                        controller.searchResult.value =
+                            controller.searchController.text;
+                      },
+                    ),
+                    hintText: 'Search',
+                    hintStyle: Get.theme.kNormalStyle
+                        .copyWith(color: Get.theme.kBadgeColor),
+                    border: InputBorder.none),
+              ),
             ),
           ),
         ),
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              child: Obx(
-                () => Row(
-                  children: [
-                    _contactFilterChip(0,
-                        title: 'All',
-                        controller: controller,
-                        onTap: () => {
-                              controller.selectedIndex.value = 0,
-                              controller.filterValue.value = 'All',
-                            }),
-                    ...controller.deptFilterList.map((e) {
-                      int id = controller.deptFilterList.indexOf(e) + 1;
-                      if (e == 'a' || e == 'c' || e == 'f' || e == 'p') {
-                        return sizeBox(0, 0);
-                      }
-                      return _contactFilterChip(id,
-                          title: e,
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                child: Obx(
+                  () => Row(
+                    children: [
+                      _contactFilterChip(0,
+                          title: 'All',
                           controller: controller,
                           onTap: () => {
-                                controller.selectedIndex.value = id,
-                                controller.filterValue.value = e,
-                              });
-                    }),
+                                controller.selectedIndex.value = 0,
+                                controller.filterValue.value = 'All',
+                              }),
+                      ...controller.deptFilterList.map((e) {
+                        int id = controller.deptFilterList.indexOf(e) + 1;
+                        if (e == 'a' || e == 'c' || e == 'f' || e == 'p') {
+                          return sizeBox(0, 0);
+                        }
+                        return _contactFilterChip(id,
+                            title: e,
+                            controller: controller,
+                            onTap: () => {
+                                  controller.selectedIndex.value = id,
+                                  controller.filterValue.value = e,
+                                });
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextButton.icon(
+                        style: TextButton.styleFrom(),
+                        onPressed: () => {
+                          if (controller.filterByEmployeeValue.value == 'ZA')
+                            {controller.filterByEmployeeValue.value = 'AZ'}
+                          else
+                            controller.filterByEmployeeValue.value = 'ZA',
+                        },
+                        icon: Icon(
+                          Icons.sort_by_alpha_outlined,
+                          size: 16,
+                          color: Get.theme.btnTextCol.withOpacity(0.3),
+                        ),
+                        label: Text('Employee Name',
+                            style: Get.theme.kSubTitle.copyWith(
+                              color: Get.theme.btnTextCol.withOpacity(0.3),
+                            )),
+                      ),
+                    ),
+                    Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TextButton.icon(
+                        style: TextButton.styleFrom(),
+                        onPressed: () => {},
+                        icon: Icon(
+                          Icons.swap_vert_rounded,
+                          size: 16,
+                          color: Get.theme.btnTextCol.withOpacity(0.3),
+                        ),
+                        label: Text('Pending Task',
+                            style: Get.theme.kSubTitle.copyWith(
+                              color: Get.theme.btnTextCol.withOpacity(0.3),
+                            )),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(),
-                      onPressed: () => {
-                        if (controller.filterByEmployeeValue.value == 'ZA')
-                          {controller.filterByEmployeeValue.value = 'AZ'}
-                        else
-                          controller.filterByEmployeeValue.value = 'ZA',
-                      },
-                      icon: Icon(
-                        Icons.sort_by_alpha_outlined,
-                        size: 16,
-                        color: Get.theme.btnTextCol.withOpacity(0.3),
-                      ),
-                      label: Text('Employee Name',
-                          style: Get.theme.kSubTitle.copyWith(
-                            color: Get.theme.btnTextCol.withOpacity(0.3),
-                          )),
-                    ),
-                  ),
-                  Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(),
-                      onPressed: () => {},
-                      icon: Icon(
-                        Icons.swap_vert_rounded,
-                        size: 16,
-                        color: Get.theme.btnTextCol.withOpacity(0.3),
-                      ),
-                      label: Text('Pending Task',
-                          style: Get.theme.kSubTitle.copyWith(
-                            color: Get.theme.btnTextCol.withOpacity(0.3),
-                          )),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-                height: 2, width: Get.size.width, color: Get.theme.curveBG),
-            _streamUsersContacts(controller),
-          ],
+              Container(
+                  height: 2, width: Get.size.width, color: Get.theme.curveBG),
+              _streamUsersContacts(controller),
+            ],
+          ),
         ),
       ),
     );
@@ -165,8 +167,9 @@ class ContactListPage extends StatelessWidget {
                   QueryDocumentSnapshot<Object?>? taskData =
                       snapshot.data?.docs[i];
                   return ContactCard(
-                      title: '${taskData!["name"]}',
-                      jobTitle: '${taskData["roles"][0]}',
+                      title: '"${taskData!["name"]}"',
+                      jobTitle: '"jroles"',
+                      uid: true,
                       onTap: () => {
                             controller.taskController.assignedUserName.value =
                                 taskData["name"],
