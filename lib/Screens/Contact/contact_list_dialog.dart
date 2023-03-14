@@ -14,6 +14,8 @@ class ContactListDialogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<ContactController>(ContactController());
+   
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -158,56 +160,18 @@ class ContactListDialogPage extends StatelessWidget {
                 itemBuilder: (c, i) {
                   QueryDocumentSnapshot<Object?>? taskData =
                       snapshot.data?.docs[i];
-           
-                  return ContactCard(
-                      title: '${taskData!["name"]}',
-                      jobTitle: '${taskData["roles"][0]}',
-                      onTap: () => {
-                            // controller.taskController.assignedUserName.value =
-                            //     taskData["name"],
-                            // controller.taskController.assignedUserDepartment
-                            //     .value = taskData["department"][0],
-                            // controller.taskController.assignedUserEmail.value =
-                            //     taskData["email"],
-                            // controller.taskController.assignedUserUid.value =
-                            //     taskData["uid"],
-                            // controller.taskController.assignedUserFcmToken
-                            //     .value = taskData["user_fcmtoken"],
+                  var uid ="";
+                    try {
+                      uid = taskData!["uid"];
+                    } catch (e) {
+                      uid = "";
+                    }
+               return _contactCardChip(uid, title:taskData!["name"], role:taskData["roles"][0], controller:controller, onTap: ()=>{
 
-                            // controller.participantsList.value.filter()
-                            tempFollwers = controller.participantsList.value,
-                             
 
-                              //  tempFollwers.where((i) => i.isAnimated).toList(),
+              controller.addParticipant(taskData['name'], taskData["uid"]),
 
-                        if(tempFollwers.length >0){
-                            tempFollwers.map( (a) {
-                              if(a["uid"] != taskData["uid"]){
-                                print('this will get dded');
-                                myTemp.add({"uid": taskData["uid"],"name": taskData['name']});
-                                  
-                              }else{
-                                return;
-                              }
-                              
-                              // else{
-
-                              //    data.removeWhere((item) => item["name"]=="stack")
-                              //                                   tempFollwers.remove({"uid": taskData["uid"],"name": taskData['name']})
-
-                              // }
-                             
-                                
-                               
-    // object[a.empid] = a;
-}),}else{
-                               myTemp.add({"uid": taskData["uid"],"name": taskData['name']})
-                             },
-controller.participantsList.value = myTemp,
-                            // controller.participantsList.add({"uid": taskData["uid"],"name": taskData['name']}) ,   
-                            print('temp followers list ${taskData["uid"]}, ${controller.participantsList.value}  ${myTemp}') ,
-                            // Get.back()
-                          });
+            } );
                 });
           } else {
             return Center(
@@ -254,6 +218,86 @@ controller.participantsList.value = myTemp,
               ),
             ),
             onPressed: onTap),
+      ),
+    );
+  }
+  Widget _contactCardChip(index,
+      {required String title,
+      required String role,
+      required ContactController controller,
+      required VoidCallback onTap}) {
+
+                                         print('myValue  ${controller.participants.any((participant) => participant['uid'] == index)}');
+
+    return Obx(
+        () => Padding(
+      padding: index == 0
+          ? const EdgeInsets.only(left: 20, right: 5, top: 8, bottom: 8)
+          : const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+          child: Container(
+      color: controller.participants.any((participant) => participant['uid'] == index)
+                ? Get.theme.colorPrimaryDark
+                : Colors.white,
+      child: ListTile(
+        leading: Icon(
+          Icons.account_circle,
+          color: Get.theme.kContactIconColor,
+          size: 32,
+        ),
+        title: Text(title,
+            style: Get.theme.kNormalStyle
+                .copyWith(color: Get.theme.kContactIconColor)),
+        subtitle: Text(role,
+            style: Get.theme.kSubTitle
+                .copyWith(color: Get.theme.btnTextCol.withOpacity(0.2))),
+        trailing: Icon(Icons.arrow_forward_ios_rounded,
+            color: Get.theme.btnTextCol.withOpacity(0.2)),
+        onTap: onTap,
+      ),
+    ))
+      // child: Obx(
+      //   () => ActionChip(
+      //       elevation: 0,
+      //       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+      //       shape: index != controller.selectedIndex.value
+      //           ? const StadiumBorder(side: BorderSide(color: Colors.black26))
+      //           : null,
+      //       backgroundColor: controller.participants.any((participant) => participant['uid'] == index)
+      //           ? Get.theme.colorPrimaryDark
+      //           : Colors.white,
+      //       label: Text(
+      //         title,
+      //         style: Get.theme.kSubTitle.copyWith(
+      //           color: controller.selectedIndex.value == index
+      //               ? Colors.white
+      //               : Get.theme.kBadgeColor,
+      //         ),
+      //       ),
+      //       onPressed: onTap),
+      // ),
+    );
+  }
+  Widget contact_card(controller, title,
+                      jobTitle,
+                      
+                      uid, onTap){
+return Container(
+      color: (controller.participants.any((participant) => participant['uid'] == uid)) ? Colors.yellow : Colors.white,
+      child: ListTile(
+        leading: Icon(
+          Icons.account_circle,
+          color: Get.theme.kContactIconColor,
+          size: 32,
+        ),
+        title: Text(title,
+            style: Get.theme.kNormalStyle
+                .copyWith(color: Get.theme.kContactIconColor)),
+        subtitle: Text(jobTitle,
+            style: Get.theme.kSubTitle
+                .copyWith(color: Get.theme.btnTextCol.withOpacity(0.2))),
+        trailing: Icon(Icons.arrow_forward_ios_rounded,
+            color: Get.theme.btnTextCol.withOpacity(0.2)),
+        onTap: onTap,
       ),
     );
   }

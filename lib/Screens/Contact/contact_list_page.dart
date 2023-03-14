@@ -167,8 +167,9 @@ class ContactListPage extends StatelessWidget {
                   QueryDocumentSnapshot<Object?>? taskData =
                       snapshot.data?.docs[i];
                   return ContactCard(
-                      title: '${taskData!["name"]}',
-                      jobTitle: '${taskData["roles"][0]}',
+                      title: '"${taskData!["name"]}"',
+                      jobTitle: '"jroles"',
+                      uid: true,
                       onTap: () => {
                             controller.taskController.assignedUserName.value =
                                 taskData["name"],

@@ -21,6 +21,7 @@ class HomePageController extends GetxController {
   var donecount = 0.obs;
   var index = 0.obs;
   var notdone = 0.obs;
+  var url = "".obs;
   final User? currentUser = FirebaseAuth.instance.currentUser;
 
   var userName = ''.obs;
@@ -135,6 +136,7 @@ class HomePageController extends GetxController {
                                             task: taskData["task_title"],
                                             status: taskData['status'],
                                             docId: taskData.reference.id,
+                                            // url: taskData['url'],
                                             due:
                                                 "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
                                                     .toString(),

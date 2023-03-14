@@ -4,6 +4,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_dialog.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
+import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
 import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
@@ -35,6 +36,8 @@ class TaskManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<TaskController>(TaskController());
+    final controller_Contacts = Get.put<ContactController>(ContactController());
+
     controller.setTaskType(status);
     debugPrint('DOC ID $docId');
     return Scaffold(
@@ -433,28 +436,100 @@ class TaskManager extends StatelessWidget {
                                                                       child: Text('Attachments',
                                                                                             style: Get.theme.kSubTitle.copyWith(color: Color(0xff707070), fontSize: 16),),
                                                                     ),
+     SizedBox(
+                        height: 12,
+                      ),
 
+                
+                      // {controller.attachmentsA.map(x=>{
+                      //   return 
+                   
+                      // Row(
+                      //   children: [
+                      //     SizedBox(
+                      //         // height: 20,
+                      //         child: Padding(
+                      //       padding: const EdgeInsets.only(left: 2.0),
+                      //       child: DottedBorder(
+                      //         // borderType: BorderType.Circle,
+                      //         color: Get.theme.kLightGrayColor,
+                      //         radius: Radius.circular(27.0),
+                      //         dashPattern: [6, 8],
+                      //         strokeWidth: 1.5,
+                      //         child: Padding(
+                      //           padding: const EdgeInsets.all(24.0),
+                      //           child: Icon(
+                      //             Icons.add,
+                      //             size: 22,
+                      //             color: Get.theme.kLightGrayColor,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     )),
+                      //     Image(
+                      //       image: NetworkImage(url!),
+                      //       width: 100,
+                      //       height: 100,
+                      //     )
+                      //   ],
+                      // );   })},
                                                                      SizedBox(height: 12,),
                                                                     
                                                           SizedBox(
                                                                       // height: 20,
                                                                       child:  Padding(
                                                                         padding: const EdgeInsets.only(left:2.0),
-                                                                        child: DottedBorder(
-                                                                                                                                          // borderType: BorderType.Circle,
-                                                                                                                   color: Get.theme.kLightGrayColor,
-                                                                                                                 radius: Radius.circular(27.0),
-                                                                                                                 dashPattern: [6,8],
-                                                                                                                   strokeWidth: 1.5,
-                                                                                                                   child: Padding(
-                                                                                                                     padding: const EdgeInsets.all(24.0),
-                                                                                                                     child: Icon(
-                                                                                                                            Icons.add,
-                                                                                                                            size: 22,
-                                                                                                                            color: Get.theme.kLightGrayColor,
-                                                                                                                          ),
-                                                                                                                   ),
-                                                                                                                 ),
+                                                                        child: Row(
+                                                                          children: [
+                                                                            DottedBorder(
+                                                                                                                                              // borderType: BorderType.Circle,
+                                                                                                                       color: Get.theme.kLightGrayColor,
+                                                                                                                     radius: Radius.circular(27.0),
+                                                                                                                     dashPattern: [6,8],
+                                                                                                                       strokeWidth: 1.5,
+                                                                                                                       child: Padding(
+                                                                                                                         padding: const EdgeInsets.all(24.0),
+                                                                                                                         child: Icon(
+                                                                                                                                Icons.add,
+                                                                                                                                size: 22,
+                                                                                                                                color: Get.theme.kLightGrayColor,
+                                                                                                                              ),
+                                                                                                                       ),
+                                                                                                                     ),
+// Expanded(
+              
+//               child: ListView.builder(
+//                 shrinkWrap: true,
+//                 scrollDirection: Axis.horizontal,
+//                   physics: const BouncingScrollPhysics(),
+            
+//                 itemCount: 15,
+//                 itemBuilder: (BuildContext context, int index) => Card(
+//                       child: Center(child: Text('Dummy Card Text')),
+//                     ),
+//               ),
+//             ),
+                                                                                                                              Container(
+                       height: 100,
+            child: Container(
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                itemCount: controller.attachmentsA.length,
+                itemBuilder: (BuildContext context, int index) => Card(
+                    child:   Image(
+                            image: NetworkImage(controller.attachmentsA[index]),
+                           // fit: BoxFit.fill,
+                            width: 100,
+                            height: 100,
+                          ))
+                    ),
+              
+            ),
+          ),
+                                                                          ],
+                                                                        ),
                                                                       )
                                                                     ),
 
@@ -479,10 +554,20 @@ class TaskManager extends StatelessWidget {
                       overlayBorderThickness: 1.7,
                       leftFraction: 0.72,
                       size: 26),
-
                       SizedBox(width: 8,),
+                       SizedBox(
+                                                                                     child: Material(
+                                                                    type: MaterialType.transparency,
+                                                                    child: CircleAvatar(
+                                                                      backgroundColor: Get.theme.colorPrimaryDark,
+                                                                      radius: 14,
+                                                                      child: Text('${controller.assignedUserName.value.substring(0,2)}',  style:TextStyle(color: Colors.white, fontSize: 10)),
+                                                                    ),
+                                                                  ),
+                                                                                   ),
                         InkWell(
                                     onTap: ()=>{
+                                      controller_Contacts.participants.clear(),
                         showDialog(
                                         context: context,
                                         builder: (BuildContext context) =>

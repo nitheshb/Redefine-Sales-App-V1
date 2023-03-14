@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_dialog.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
@@ -29,6 +33,12 @@ import 'package:redefineerp/themes/themes.dart';
 import 'package:intl/intl.dart';
 
 class HomePage extends GetView<HomePageController> {
+  final storageReference =
+      FirebaseStorage.instance.ref().child('images/image.jpg');
+
+  ImagePicker picker = ImagePicker();
+
+  XFile? image;
   @override
   Widget build(BuildContext context) {
     TaskController controller1 = Get.put<TaskController>(TaskController());
@@ -667,16 +677,18 @@ dashPattern: [3,3],
                
                        ),
                          InkWell(
-                  onTap: ()=>{
-        DatePicker.showDateTimePicker(context,
-                                showTitleActions: true, onChanged: (date) {
-                              print(
-                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                            }, onConfirm: (date) {
-                              // controller.dateSelected = date;
-                              // controller.updateSelectedDate();
-                            }, currentTime: DateTime.now())
-                  },
+                 onTap: () async {
+                                        image = await picker.pickImage(
+                                            source: ImageSource.gallery);
+                                        storageReference
+                                            .putFile(File(image!.path))
+                                            .then((value) async {
+                                          controller1.attachmentsA.value =
+                                              [await value.ref.getDownloadURL()];
+                                          print(
+                                              'Image URL: ${controller.url}');
+                                        });
+                                      },
                   child: Icon(
                               Icons.attach_file,
                               color: Get.theme.kLightGrayColor,
@@ -723,12 +735,11 @@ SizedBox(width: 20.0,),
           ),
 
           InkWell(
-                          onTap: () => {controller1.createNewTask()},
-
+            onTap: () => {controller1.createNewTask()},
             child: Text('Create'))
                                     ],
                                   ),
-SizedBox(height: 16,)
+            SizedBox(height: 16,)
 
                             ],
                           )
