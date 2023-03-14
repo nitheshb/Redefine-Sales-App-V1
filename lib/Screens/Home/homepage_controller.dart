@@ -76,9 +76,9 @@ class HomePageController extends GetxController {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('spark_assignedTasks')
-            // .where("due_date",
-            //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
-            // .where("status", isEqualTo: "InProgress")
+            .where("due_date",
+                isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+            .where("status", isEqualTo: "InProgress")
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -146,6 +146,8 @@ class HomePageController extends GetxController {
                                             taskPriority: taskData['priority'],
                                             selected: false,
                                             assigner: taskData['by_name'],
+
+                                            
                                           ))
                                     });
                           }),

@@ -490,8 +490,41 @@ class TaskManager extends StatelessWidget {
                                                                      SizedBox(height: 4,),
                                                           SizedBox(
                                                                       // height: 20,
-                                                                      child: Text('Add more details to the task',
-                                                                                            style: Get.theme.kSubTitle.copyWith(color: Get.theme.kLightGrayColor,),),
+                                                                      child: InkWell(
+                                                                        onTap: ()=> {
+                                                                           showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(9.0))),
+        backgroundColor: Colors.white.withAlpha(244),
+        context: context,
+        isScrollControlled: true,
+        builder: (context) => Padding(
+          padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                        left: 14.0,
+                        right:14.0,
+                        top: 10.0),
+          child: Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                            children: [
+                                  TextField(
+                                    controller: controller.taskTitle,
+                                    
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Description...'),
+                                        style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                              
+                                    autofocus: true,
+                                  ),
+                            ],
+                          )
+        ))
+                                                                        },
+                                                                        child: Text('Add more details to the task',
+                                                                                              style: Get.theme.kSubTitle.copyWith(color: Get.theme.kLightGrayColor,),),
+                                                                      ),
                                                                     ),
               
                                                                     
