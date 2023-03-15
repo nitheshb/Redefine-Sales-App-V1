@@ -39,6 +39,7 @@ class DbQuery {
         return FirebaseFirestore.instance
             .collection('users')
             .where('roles', isNull: false)
+            .where('orgId', isEqualTo: "maahomes")
             // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
             // .where("department", arrayContainsAny: [deptName.toString().toLowerCase()])
             .snapshots();
@@ -46,6 +47,7 @@ class DbQuery {
         return FirebaseFirestore.instance.collection('users').where(
                 "department",
                 arrayContainsAny: [sortByDeptName.toString().toLowerCase()])
+                .where('orgId', isEqualTo: "maahomes")
             // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
             .snapshots();
       }

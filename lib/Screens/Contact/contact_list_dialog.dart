@@ -145,6 +145,7 @@ class ContactListDialogPage extends StatelessWidget {
                   ],
                 ),
               ),
+
               if (controller.participants.isNotEmpty)
                 Positioned(
                   bottom: MediaQuery.of(context).size.height * 0.020,
@@ -169,6 +170,11 @@ class ContactListDialogPage extends StatelessWidget {
                     ),
                   ),
                 )
+
+              Container(
+                  height: 2, width: Get.size.width, color: Get.theme.curveBG),
+              _streamUsersContacts(controller),
+
             ],
           )),
 
@@ -349,4 +355,5 @@ class ContactListDialogPage extends StatelessWidget {
       ),
     );
   }
+
 }

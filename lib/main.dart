@@ -9,9 +9,12 @@ import 'package:redefineerp/Screens/OnBoarding/onboarding_page.dart';
 import 'package:redefineerp/getx_bindings.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:redefineerp/themes/themes_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fireAuth;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'firebase_options.dart';
+
+import 'package:gotrue/src/types/user.dart' as GoTrue;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
    await Firebase.initializeApp(
@@ -46,6 +49,10 @@ void main() async {
       badge: true,
       sound: true,
     );
+     await Supabase.initialize(
+    url: 'https://cezgydfbprzqgxkfcepq.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlemd5ZGZicHJ6cWd4a2ZjZXBxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDU0NTA4NTQsImV4cCI6MTk2MTAyNjg1NH0.UDAQvbY_GqEdLLrZG6MFnhDWXonAbcYnrHGHDD6-hYU',
+  );
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp])
       .then((_) => runApp(const MyApp()));
@@ -57,7 +64,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final User? currentUser = FirebaseAuth.instance.currentUser;
+    final fireAuth.User? currentUser = fireAuth.FirebaseAuth.instance.currentUser;
     return GetMaterialApp(
       defaultTransition: Transition.circularReveal,
       transitionDuration: const Duration(milliseconds: 800),

@@ -56,7 +56,7 @@ class TaskController extends GetxController {
               print("Task Created ${value}"),
               
               Get.back(),
-              snackBarMsg('Task Done!', enableMsgBtn: true),
+              snackBarMsg('Task Created!', enableMsgBtn: false),
                sendPushMessage('Task Assigned for you:', taskTitle.text,
                   assignedUserFcmToken.value),
                 taskTitle.clear(),

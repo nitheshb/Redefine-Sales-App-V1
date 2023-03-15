@@ -56,23 +56,23 @@ class TaskManager extends StatelessWidget {
                   Icons.arrow_back_rounded,
                   color: Colors.black,
                 )),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Obx(
-                  () => controller.taskType.value == 'close'
-                      ? IconButton(
-                          onPressed: () => {
-                                Get.to(() => CreateTaskPage(isEditTask: true)),
-                              },
-                          icon: const Icon(
-                            Icons.edit_rounded,
-                            color: Colors.black,
-                          ))
-                      : sizeBox(0, 0),
-                ),
-              ),
-            ],
+            // actions: [
+            //   Padding(
+            //     padding: const EdgeInsets.all(8.0),
+            //     child: Obx(
+            //       () => controller.taskType.value == 'close'
+            //           ? IconButton(
+            //               onPressed: () => {
+            //                     Get.to(() => CreateTaskPage(isEditTask: true)),
+            //                   },
+            //               icon: const Icon(
+            //                 Icons.edit_rounded,
+            //                 color: Colors.black,
+            //               ))
+            //           : sizeBox(0, 0),
+            //     ),
+            //   ),
+            // ],
           ),
         ),
       ),
@@ -733,7 +733,14 @@ class TaskManager extends StatelessWidget {
                   controller: controller.taskTitle,
                   decoration: InputDecoration(
                       suffixIcon:
-                          IconButton(onPressed: () {}, icon: Icon(Icons.send)),
+                          IconButton(onPressed: () {
+                            print("save to comment section ${controller.taskTitle.value}");
+                            // save to comments section
+                            // get the list of all follwers + assigne name + creator
+                            // ignore the sender from receipnt list
+                            // send fcm notification to all followers
+                            // add the log to supabase 
+                          }, icon: Icon(Icons.send)),
                       border: InputBorder.none,
                       hintText: 'Comments '),
                   style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
