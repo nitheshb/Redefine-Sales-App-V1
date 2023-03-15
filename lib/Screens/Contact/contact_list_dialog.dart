@@ -119,6 +119,8 @@ class ContactListDialogPage extends StatelessWidget {
                   ],
                 ),
               ),
+
+              Text('no of selected ${controller.participants.length}'),
               Container(
                   height: 2, width: Get.size.width, color: Get.theme.curveBG),
               _streamUsersContacts(controller),

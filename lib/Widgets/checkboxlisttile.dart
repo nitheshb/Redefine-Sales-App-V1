@@ -41,7 +41,7 @@ Widget taskCheckBox(
                     .copyWith(color: Get.theme.btnTextCol.withOpacity(0.3)),
               ),
               // Text('${taskPriority}')
-              Text('! Urgent', style: TextStyle(color: Color.fromARGB(255, 64, 138, 68), fontSize: 10),)
+              Text('Urgent', style: TextStyle(color: Color.fromARGB(255, 64, 138, 68), fontSize: 10),)
              
             ],
           ),

@@ -79,6 +79,8 @@ class HomePageController extends GetxController {
             .where("due_date",
                 isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
             .where("status", isEqualTo: "InProgress")
+            .where("to_email", isEqualTo: currentUser?.email)
+            
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -183,6 +185,7 @@ class HomePageController extends GetxController {
             // .where("due_date",
             //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
             .where("by_uid", isEqualTo: _auth.currentUser!.uid)
+             .where("status", isEqualTo: "InProgress")
             .orderBy("due_date")
             .snapshots(),
         builder: (context, snapshot) {
