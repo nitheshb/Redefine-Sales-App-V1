@@ -602,62 +602,104 @@ class TaskManager extends StatelessWidget {
                           height: 10,
                         ),
 
-                        Row(
-                          children: [
-                            Generator.buildOverlaysProfile(
-                                images: [
-                                  'assets/images/icon.jpg',
-                                  'assets/images/icon.jpg',
-                                ],
-                                enabledOverlayBorder: true,
-                                overlayBorderColor: Color(0xfff0f0f0),
-                                overlayBorderThickness: 1.7,
-                                leftFraction: 0.72,
-                                size: 26),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            SizedBox(
-                              child: Material(
-                                type: MaterialType.transparency,
-                                child: CircleAvatar(
-                                  backgroundColor: Get.theme.colorPrimaryDark,
-                                  radius: 14,
-                                  child: Text(
-                                      '${controller.assignedUserName.value.substring(0, 2)}',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 10)),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 1,
+                          child: Row(
+                            children: [
+                              // Generator.buildOverlaysProfile(
+                              //     images: [
+                              //       'assets/images/icon.jpg',
+                              //       'assets/images/icon.jpg',
+                              //     ],
+                              //     enabledOverlayBorder: true,
+                              //     overlayBorderColor: Color(0xfff0f0f0),
+                              //     overlayBorderThickness: 1.7,
+                              //     leftFraction: 0.72,
+                              //     size: 26),
+
+                              SizedBox(
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: CircleAvatar(
+                                    backgroundColor: Get.theme.colorPrimaryDark,
+                                    radius: 14,
+                                    child: Text(
+                                        '${controller.assignedUserName.value.substring(0, 2)}',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 10)),
+                                  ),
                                 ),
                               ),
-                            ),
-                            InkWell(
-                                onTap: () => {
-                                      controller_Contacts.participants.clear(),
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              const ContactListDialogPage())
-                                      //                                Dialog(
-                                      //                 shape: RoundedRectangleBorder(
-                                      // borderRadius: BorderRadius.all(Radius.circular(8))),
-                                      //                 child:  const ContactListPage()))
+
+                              SizedBox(
+                                width: 8,
+                              ),
+
+                              Obx(
+                                () => SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.04,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.720,
+                                  child: ListView.builder(
+                                    itemCount: controller_Contacts
+                                        .participants.value.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      print(
+                                          "${controller_Contacts.participants[index]['name']}");
+                                      return SizedBox(
+                                        child: Material(
+                                          type: MaterialType.transparency,
+                                          child: CircleAvatar(
+                                            backgroundColor:
+                                                Get.theme.colorPrimaryDark,
+                                            radius: 14,
+                                            child: Text(
+                                                '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10)),
+                                          ),
+                                        ),
+                                      );
                                     },
-                                child: DottedBorder(
-                                  borderType: BorderType.Circle,
-                                  color: Get.theme.kLightGrayColor,
-                                  radius: Radius.circular(27.0),
-                                  dashPattern: [3, 3],
-                                  strokeWidth: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Icon(
-                                      Icons.add,
-                                      size: 15,
-                                      color: Get.theme.kLightGrayColor,
-                                    ),
                                   ),
-                                )),
-                          ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              InkWell(
+                                  onTap: () => {
+                                        controller_Contacts.participants
+                                            .clear(),
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                const ContactListDialogPage())
+                                        //                                Dialog(
+                                        //                 shape: RoundedRectangleBorder(
+                                        // borderRadius: BorderRadius.all(Radius.circular(8))),
+                                        //                 child:  const ContactListPage()))
+                                      },
+                                  child: DottedBorder(
+                                    borderType: BorderType.Circle,
+                                    color: Get.theme.kLightGrayColor,
+                                    radius: Radius.circular(27.0),
+                                    dashPattern: [3, 3],
+                                    strokeWidth: 1,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 15,
+                                        color: Get.theme.kLightGrayColor,
+                                      ),
+                                    ),
+                                  )),
+                            ],
+                          ),
                         ),
                       ],
                     ),
