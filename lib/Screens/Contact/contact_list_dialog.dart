@@ -169,12 +169,8 @@ class ContactListDialogPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                )
-
-              Container(
-                  height: 2, width: Get.size.width, color: Get.theme.curveBG),
-              _streamUsersContacts(controller),
-
+                ),
+      
             ],
           )),
 

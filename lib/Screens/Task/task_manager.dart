@@ -490,7 +490,7 @@ class TaskManager extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: 12,
+                          height: 8,
                         ),
 
                         // {controller.attachmentsA.map(x=>{
@@ -617,71 +617,15 @@ class TaskManager extends StatelessWidget {
                               //     leftFraction: 0.72,
                               //     size: 26),
 
-                              SizedBox(
-                                child: Material(
-                                  type: MaterialType.transparency,
-                                  child: CircleAvatar(
-                                    backgroundColor: Get.theme.colorPrimaryDark,
-                                    radius: 14,
-                                    child: Text(
-                                        '${controller.assignedUserName.value.substring(0, 2)}',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 10)),
-                                  ),
-                                ),
-                              ),
+                           
 
-                              SizedBox(
-                                width: 8,
-                              ),
-
-                              Obx(
-                                () => SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.720,
-                                  child: ListView.builder(
-                                    itemCount: controller_Contacts
-                                        .participants.value.length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      print(
-                                          "${controller_Contacts.participants[index]['name']}");
-                                      return SizedBox(
-                                        child: Material(
-                                          type: MaterialType.transparency,
-                                          child: CircleAvatar(
-                                            backgroundColor:
-                                                Get.theme.colorPrimaryDark,
-                                            radius: 14,
-                                            child: Text(
-                                                '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 10)),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              InkWell(
+                                     InkWell(
                                   onTap: () => {
-                                        controller_Contacts.participants
-                                            .clear(),
                                         showDialog(
                                             context: context,
                                             builder: (BuildContext context) =>
                                                 const ContactListDialogPage())
-                                        //                                Dialog(
-                                        //                 shape: RoundedRectangleBorder(
-                                        // borderRadius: BorderRadius.all(Radius.circular(8))),
-                                        //                 child:  const ContactListPage()))
+
                                       },
                                   child: DottedBorder(
                                     borderType: BorderType.Circle,
@@ -698,6 +642,46 @@ class TaskManager extends StatelessWidget {
                                       ),
                                     ),
                                   )),
+
+                              SizedBox(
+                                width: 4,
+                              ),
+
+                              Obx(
+                                () => SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.04,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.720,
+                                  child: ListView.builder(
+                                    itemCount: controller_Contacts
+                                        .participants.value.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(left:3.0),
+                                        child: SizedBox(
+                                          child: Material(
+                                            type: MaterialType.transparency,
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Get.theme.colorPrimaryDark,
+                                              radius: 14,
+                                              child: Text(
+                                                  '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10)),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                             
+                       
                             ],
                           ),
                         ),

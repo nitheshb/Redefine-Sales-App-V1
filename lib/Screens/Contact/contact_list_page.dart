@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
+import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/Widgets/contact_card.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/themes/themes.dart';
@@ -85,6 +86,7 @@ class ContactListPage extends StatelessWidget {
                             onTap: () => {
                                   controller.selectedIndex.value = id,
                                   controller.filterValue.value = e,
+                                  Get.back()
                                 });
                       }),
                     ],
@@ -170,18 +172,22 @@ class ContactListPage extends StatelessWidget {
                       title: '${taskData!["name"]}',
                       jobTitle: taskData["roles"][0],
                       uid: taskData["uid"],
-                      onTap: () => {
+                      onTap: () {
+
+                   try{
                             controller.taskController.assignedUserName.value =
-                                taskData["name"],
+                                taskData["name"];
                             controller.taskController.assignedUserDepartment
-                                .value = taskData["department"][0],
+                                .value = taskData["department"][0];
                             controller.taskController.assignedUserEmail.value =
-                                taskData["email"],
+                                taskData["email"];
                             controller.taskController.assignedUserUid.value =
-                                taskData["uid"],
+                                taskData["uid"];
                             controller.taskController.assignedUserFcmToken
-                                .value = taskData["user_fcmtoken"],
-                            Get.back()
+                                .value = taskData["user_fcmtoken"];
+                            Get.back();}catch(e){
+                                        snackBarMsg('This user is not yet using TaskMan');
+                            }
                           });
                 });
           } else {
