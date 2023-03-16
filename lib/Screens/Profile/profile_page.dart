@@ -49,14 +49,18 @@ class ProfilePage extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
-            Obx(()=>Text(
-              controller.homePageController.userName.value,
-              style: Get.theme.kNormalStyle.copyWith(fontSize: 16),
-            ),),
-            Obx(()=>Text(
-              controller.homePageController.userEmail.value,
-              style: Get.theme.kNormalStyle,
-            ),),
+            Obx(
+              () => Text(
+                controller.homePageController.userName.value,
+                style: Get.theme.kNormalStyle.copyWith(fontSize: 16),
+              ),
+            ),
+            Obx(
+              () => Text(
+                controller.homePageController.userEmail.value,
+                style: Get.theme.kNormalStyle,
+              ),
+            ),
             Padding(
               padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.01),
@@ -176,8 +180,7 @@ class ProfilePage extends StatelessWidget {
             TextButton(
               onPressed: () {
                 FirebaseAuth.instance.signOut();
-                Get.to(() => const OnBoardingPage());
-
+                Get.offAll(() => const OnBoardingPage());
               },
               child: Text(
                 'Log Out',

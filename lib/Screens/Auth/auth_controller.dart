@@ -11,7 +11,7 @@ import 'package:redefineerp/methods/methods.dart';
 class AuthController extends GetxController {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   var showPass = true.obs;
 
   final User? currentUser = FirebaseAuth.instance.currentUser;
@@ -56,7 +56,7 @@ class AuthController extends GetxController {
               .update({"user_fcmtoken": localFcmToken}).then((_) {
             debugPrint("success!");
           });
-          Get.to(() => HomePage());
+          Get.offAll(() => HomePage());
         } else {
           snackBarMsg('Error: Invalid credentials');
           debugPrint("Login Failed");

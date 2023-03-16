@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthController controller = Get.put<AuthController>(AuthController());
+    final controller = Get.put<AuthController>(AuthController());
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(

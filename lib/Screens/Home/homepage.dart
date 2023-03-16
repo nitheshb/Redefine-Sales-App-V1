@@ -32,7 +32,7 @@ import 'package:redefineerp/Widgets/task_sheet_widget.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:intl/intl.dart';
 
-class HomePage extends GetView<HomePageController> {
+class HomePage extends StatelessWidget {
   final storageReference =
       FirebaseStorage.instance.ref().child('images/image.jpg');
 
@@ -41,8 +41,9 @@ class HomePage extends GetView<HomePageController> {
   XFile? image;
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put<HomePageController>(HomePageController());
     TaskController controller1 = Get.put<TaskController>(TaskController());
-
+    debugPrint("home called");
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -644,191 +645,194 @@ class HomePage extends GetView<HomePageController> {
                             ),
                           ),
 
-                     SizedBox(
-                          // height: 20,
-                          child: Text(
-                            'Attachments',
-                            style: Get.theme.kSubTitle.copyWith(
-                                color: Color(0xff707070), fontSize: 16),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                              Visibility(
-                            visible: (controller1.attachmentsA.value.length >0
-                                ),
-            child:   
-            
-         SizedBox(
+                          SizedBox(
                             // height: 20,
-                            child: Column(
-                              children: [
-                                      SizedBox(height: 15),
-                                Padding(
-                          padding: const EdgeInsets.only(left: 2.0),
-                          child: Row(
+                            child: Text(
+                              'Attachments',
+                              style: Get.theme.kSubTitle.copyWith(
+                                  color: Color(0xff707070), fontSize: 16),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Visibility(
+                              visible:
+                                  (controller1.attachmentsA.value.length > 0),
+                              child: SizedBox(
+                                  // height: 20,
+                                  child: Column(
                                 children: [
-                                 InkWell(
-                                                  onTap: () async {
-                                                    image = await picker.pickImage(
-                                                        source: ImageSource.gallery);
-                                                    storageReference
-                                                        .putFile(File(image!.path))
-                                                        .then((value) async {
-                                                      controller1.attachmentsA.value.add(
-                                                        await value.ref.getDownloadURL()
-                                                      );
-                                                      print('Image URL: ${ controller1.attachmentsA.value}');
-                                                    });
-                                                  },
-                                    child: DottedBorder(
-                                      // borderType: BorderType.Circle,
-                                      color: Get.theme.kLightGrayColor,
-                                      radius: Radius.circular(27.0),
-                                      dashPattern: [6, 8],
-                                      strokeWidth: 1.5,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(24.0),
-                                        child: Icon(
-                                          Icons.add,
-                                          size: 22,
-                                          color: Get.theme.kLightGrayColor,
+                                  SizedBox(height: 15),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 2.0),
+                                    child: Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () async {
+                                            image = await picker.pickImage(
+                                                source: ImageSource.gallery);
+                                            storageReference
+                                                .putFile(File(image!.path))
+                                                .then((value) async {
+                                              controller1.attachmentsA.value
+                                                  .add(await value.ref
+                                                      .getDownloadURL());
+                                              print(
+                                                  'Image URL: ${controller1.attachmentsA.value}');
+                                            });
+                                          },
+                                          child: DottedBorder(
+                                            // borderType: BorderType.Circle,
+                                            color: Get.theme.kLightGrayColor,
+                                            radius: Radius.circular(27.0),
+                                            dashPattern: [6, 8],
+                                            strokeWidth: 1.5,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(24.0),
+                                              child: Icon(
+                                                Icons.add,
+                                                size: 22,
+                                                color:
+                                                    Get.theme.kLightGrayColor,
+                                              ),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                        
-                                  Container(
-                                    height: 100,
-                                    child: Container(
-                                      child: ListView.builder(
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.horizontal,
-                                          physics: const BouncingScrollPhysics(),
-                                          itemCount: controller1.attachmentsA.length,
-                                          itemBuilder: (BuildContext context,
-                                                  int index) =>
-                                              Card(
-                                                  child: Image(
-                                                image: NetworkImage(
-                                                    controller1.attachmentsA[index]),
-                                                // fit: BoxFit.fill,
-                                                width: 100,
-                                                height: 100,
-                                              ))),
+                                        Container(
+                                          height: 100,
+                                          child: Container(
+                                            child: ListView.builder(
+                                                shrinkWrap: true,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                physics:
+                                                    const BouncingScrollPhysics(),
+                                                itemCount: controller1
+                                                    .attachmentsA.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                            int index) =>
+                                                        Card(
+                                                            child: Image(
+                                                          image: NetworkImage(
+                                                              controller1
+                                                                      .attachmentsA[
+                                                                  index]),
+                                                          // fit: BoxFit.fill,
+                                                          width: 100,
+                                                          height: 100,
+                                                        ))),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
-                          ),
-                        ),
-                              ],
-                            ))
-            ),
+                              ))),
 
-                     Visibility(
-                            visible: (controller1.attachmentsA.value.length >0
-                                ),
-                                child: SizedBox(
-                          // height: 20,
-                          child: Column(
-                            children: [
-                              Text(
-                                'Participants',
-                                style: Get.theme.kSubTitle.copyWith(
-                                    color: Color(0xff707070), fontSize: 16),
-                              ),
-                               SizedBox(
-                          height: 8,
-                        ),
-                           SizedBox(
-                          width: MediaQuery.of(context).size.width * 1,
-                          child: Row(
-                            children: [
-                              // Generator.buildOverlaysProfile(
-                              //     images: [
-                              //       'assets/images/icon.jpg',
-                              //       'assets/images/icon.jpg',
-                              //     ],
-                              //     enabledOverlayBorder: true,
-                              //     overlayBorderColor: Color(0xfff0f0f0),
-                              //     overlayBorderThickness: 1.7,
-                              //     leftFraction: 0.72,
-                              //     size: 26),
+                          Visibility(
+                            visible:
+                                (controller1.attachmentsA.value.length > 0),
+                            child: SizedBox(
+                              // height: 20,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Participants',
+                                    style: Get.theme.kSubTitle.copyWith(
+                                        color: Color(0xff707070), fontSize: 16),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 1,
+                                    child: Row(
+                                      children: [
+                                        // Generator.buildOverlaysProfile(
+                                        //     images: [
+                                        //       'assets/images/icon.jpg',
+                                        //       'assets/images/icon.jpg',
+                                        //     ],
+                                        //     enabledOverlayBorder: true,
+                                        //     overlayBorderColor: Color(0xfff0f0f0),
+                                        //     overlayBorderThickness: 1.7,
+                                        //     leftFraction: 0.72,
+                                        //     size: 26),
 
-                           
+                                        InkWell(
+                                            onTap: () => {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          const ContactListDialogPage())
+                                                },
+                                            child: DottedBorder(
+                                              borderType: BorderType.Circle,
+                                              color: Get.theme.kLightGrayColor,
+                                              radius: Radius.circular(27.0),
+                                              dashPattern: [3, 3],
+                                              strokeWidth: 1,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child: Icon(
+                                                  Icons.add,
+                                                  size: 15,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
+                                                ),
+                                              ),
+                                            )),
 
-                                     InkWell(
-                                  onTap: () => {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                const ContactListDialogPage())
+                                        SizedBox(
+                                          width: 4,
+                                        ),
 
-                                      },
-                                  child: DottedBorder(
-                                    borderType: BorderType.Circle,
-                                    color: Get.theme.kLightGrayColor,
-                                    radius: Radius.circular(27.0),
-                                    dashPattern: [3, 3],
-                                    strokeWidth: 1,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: Icon(
-                                        Icons.add,
-                                        size: 15,
-                                        color: Get.theme.kLightGrayColor,
-                                      ),
+                                        // Obx(
+                                        //   () => SizedBox(
+                                        //     height:
+                                        //         MediaQuery.of(context).size.height * 0.04,
+                                        //     width:
+                                        //         MediaQuery.of(context).size.width * 0.720,
+                                        //     child: ListView.builder(
+                                        //       itemCount: controller_Contacts
+                                        //           .participants.value.length,
+                                        //       scrollDirection: Axis.horizontal,
+                                        //       itemBuilder: (context, index) {
+                                        //         return Padding(
+                                        //           padding: const EdgeInsets.only(left:3.0),
+                                        //           child: SizedBox(
+                                        //             child: Material(
+                                        //               type: MaterialType.transparency,
+                                        //               child: CircleAvatar(
+                                        //                 backgroundColor:
+                                        //                     Get.theme.colorPrimaryDark,
+                                        //                 radius: 14,
+                                        //                 child: Text(
+                                        //                     '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
+                                        //                     style: TextStyle(
+                                        //                         color: Colors.white,
+                                        //                         fontSize: 10)),
+                                        //               ),
+                                        //             ),
+                                        //           ),
+                                        //         );
+                                        //       },
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                      ],
                                     ),
-                                  )),
-
-                              SizedBox(
-                                width: 4,
+                                  ),
+                                ],
                               ),
-
-                              // Obx(
-                              //   () => SizedBox(
-                              //     height:
-                              //         MediaQuery.of(context).size.height * 0.04,
-                              //     width:
-                              //         MediaQuery.of(context).size.width * 0.720,
-                              //     child: ListView.builder(
-                              //       itemCount: controller_Contacts
-                              //           .participants.value.length,
-                              //       scrollDirection: Axis.horizontal,
-                              //       itemBuilder: (context, index) {
-                              //         return Padding(
-                              //           padding: const EdgeInsets.only(left:3.0),
-                              //           child: SizedBox(
-                              //             child: Material(
-                              //               type: MaterialType.transparency,
-                              //               child: CircleAvatar(
-                              //                 backgroundColor:
-                              //                     Get.theme.colorPrimaryDark,
-                              //                 radius: 14,
-                              //                 child: Text(
-                              //                     '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
-                              //                     style: TextStyle(
-                              //                         color: Colors.white,
-                              //                         fontSize: 10)),
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         );
-                              //       },
-                              //     ),
-                              //   ),
-                              // ),
-                             
-                       
-                            ],
+                            ),
                           ),
-                        ),
-                            ],
-                          ),
-                        ),
-                       
-                     ),
                           SizedBox(height: 15),
 
                           Row(
@@ -899,39 +903,47 @@ class HomePage extends GetView<HomePageController> {
                                         ],
                                       ),
                                     ),
-                                              Visibility(
-                            visible: !(controller1.attachmentsA.value.length >0
-                                ),
-                                child:  Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        InkWell(
-                                              onTap: () async {
-                                                image = await picker.pickImage(
-                                                    source: ImageSource.gallery);
-                                                storageReference
-                                                    .putFile(File(image!.path))
-                                                    .then((value) async {
-                                                  controller1.attachmentsA.value = [
-                                                    await value.ref.getDownloadURL()
-                                                  ];
-                                                  print('Image URL: ${ controller1.attachmentsA.value}');
-                                                });
-                                              },
-                                              child: Icon(
-                                                Icons.attach_file,
-                                                color: Get.theme.kLightGrayColor,
+                                    Visibility(
+                                      visible: !(controller1
+                                              .attachmentsA.value.length >
+                                          0),
+                                      child: Row(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              InkWell(
+                                                onTap: () async {
+                                                  image =
+                                                      await picker.pickImage(
+                                                          source: ImageSource
+                                                              .gallery);
+                                                  storageReference
+                                                      .putFile(
+                                                          File(image!.path))
+                                                      .then((value) async {
+                                                    controller1
+                                                        .attachmentsA.value = [
+                                                      await value.ref
+                                                          .getDownloadURL()
+                                                    ];
+                                                    print(
+                                                        'Image URL: ${controller1.attachmentsA.value}');
+                                                  });
+                                                },
+                                                child: Icon(
+                                                  Icons.attach_file,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
+                                                ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                      width: 20.0,
+                                              SizedBox(
+                                                width: 20.0,
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                      ],
-                                    ),
-                                  ],
-                                ),),
-                                    
                                     InkWell(
                                       onTap: () => {
                                         DatePicker.showDateTimePicker(context,
@@ -980,8 +992,6 @@ class HomePage extends GetView<HomePageController> {
                           SizedBox(
                             height: 16,
                           ),
-        
-
                         ],
                       )))
             },

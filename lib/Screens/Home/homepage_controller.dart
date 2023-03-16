@@ -11,7 +11,6 @@ import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:redefineerp/main.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class HomePageController extends GetxController {
   var tabIndex = 0.obs;
@@ -80,7 +79,6 @@ class HomePageController extends GetxController {
                 isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
             .where("status", isEqualTo: "InProgress")
             .where("to_email", isEqualTo: currentUser?.email)
-            
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -109,8 +107,7 @@ class HomePageController extends GetxController {
                             //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
                             // print("due date is ${taskData!.get('due data')}");
                             // return Text("hello");
-                            return taskCheckBox(
-                              context,
+                            return taskCheckBox(context,
                                 taskPriority: taskData!['priority'] == "Basic"
                                     ? 3
                                     : taskData['priority'] == "Medium"
@@ -129,7 +126,6 @@ class HomePageController extends GetxController {
                                 due:
                                     "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}",
                                 task: taskData["task_title"],
-                                
                                 createdOn:
                                     '${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
                                 assigner: 'Assigner: ${taskData['by_name']}',
@@ -148,8 +144,6 @@ class HomePageController extends GetxController {
                                             taskPriority: taskData['priority'],
                                             selected: false,
                                             assigner: taskData['by_name'],
-
-                                            
                                           ))
                                     });
                           }),
@@ -185,7 +179,7 @@ class HomePageController extends GetxController {
             // .where("due_date",
             //     isEqualTo: "${DateTime.now().microsecondsSinceEpoch - } ")
             .where("by_uid", isEqualTo: _auth.currentUser!.uid)
-             .where("status", isEqualTo: "InProgress")
+            .where("status", isEqualTo: "InProgress")
             .orderBy("due_date")
             .snapshots(),
         builder: (context, snapshot) {
@@ -215,8 +209,7 @@ class HomePageController extends GetxController {
                             children: [
                               dateBoxForUpcomingSection(
                                   dateL: e.get('due_date')),
-                              taskCheckBox(
-                                 context,
+                              taskCheckBox(context,
                                   due:
                                       "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}",
                                   taskPriority: e['priority'] == "Basic"
@@ -241,8 +234,8 @@ class HomePageController extends GetxController {
                                   onTap: () => {
                                         Get.to(() => TaskManager(
                                               task: e["task_title"],
-                                            status: e['status'],
-                                            docId: e.reference.id,
+                                              status: e['status'],
+                                              docId: e.reference.id,
                                               due:
                                                   "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
                                                       .toString(),
@@ -335,8 +328,7 @@ class HomePageController extends GetxController {
                             children: [
                               dateBoxForCreatedSection(
                                   dateL: e.get('created_on')),
-                              taskCheckBox(
-                                context,
+                              taskCheckBox(context,
                                   due:
                                       "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}",
                                   taskPriority: e['priority'] == "Basic"
@@ -361,8 +353,8 @@ class HomePageController extends GetxController {
                                   onTap: () => {
                                         Get.to(() => TaskManager(
                                               task: e["task_title"],
-                                            status: e['status'],
-                                            docId: e.reference.id,
+                                              status: e['status'],
+                                              docId: e.reference.id,
                                               due:
                                                   "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
                                                       .toString(),
@@ -507,65 +499,15 @@ class HomePageController extends GetxController {
 
   @override
   void onInit() async {
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage? message) {
-      if (message != null) {
-        debugPrint('A new initialmessage event was published!');
-        RemoteNotification? notification = message.notification;
-        AndroidNotification? android = message.notification?.android;
-
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification?.title,
-          notification?.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: 'launch_background',
-            ),
-          ),
-        );
-      }
-    });
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              // TODO add a proper drawable resource to android, for now using
-              //      one that already exists in example app.
-              icon: 'launch_background',
-            ),
-          ),
-        );
-      }
-    });
-
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      // ignore: unnecessary_null_comparison
-      if (message != null) {
-        RemoteNotification? notification = message.notification;
-        AndroidNotification? android = message.notification?.android;
-
-        if (notification != null && android != null) {}
-      }
-    });
     getToken();
     await fetchdata();
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    debugPrint("on close called - home");
+    super.onClose();
   }
 
   void getToken() async {
