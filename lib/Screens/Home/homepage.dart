@@ -107,7 +107,7 @@ class HomePage extends StatelessWidget {
                       () => Text(
                         '${controller.donecount.value}/${controller.notdone.value + controller.donecount.value} Tasks pending',
                         style: Get.theme.kSubTitle
-                            .copyWith(color: Get.theme.colorAccent),
+                            .copyWith(color: Get.theme.colorPrimaryDark.withOpacity(0.6)),
                       ),
                     ),
                   ),
@@ -120,9 +120,9 @@ class HomePage extends StatelessWidget {
                   isScrollable: true,
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   physics: const BouncingScrollPhysics(),
-                  indicatorColor: Colors.transparent,
+                  indicatorColor: Get.theme.colorPrimaryDark, 
                   labelColor: Get.theme.colorPrimaryDark,
-                  labelStyle: Get.theme.kTabTextLg,
+                  labelStyle: Get.theme.kTitleStyle,
                   unselectedLabelStyle: Get.theme.kNormalStyle,
                   unselectedLabelColor: Get.theme.btnTextCol.withOpacity(0.2),
                   tabs: [
@@ -394,606 +394,613 @@ class HomePage extends StatelessWidget {
                           left: 14.0,
                           right: 14.0,
                           top: 10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextField(
-                            controller: controller1.taskTitle,
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Task name...'),
-                            style: TextStyle(
-                                fontSize: 19, fontWeight: FontWeight.w500),
-                            autofocus: true,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Description'),
-                            style: TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w400),
-                            onSubmitted: (value) {
-                              Navigator.pop(context);
-                              var currentDate = DateTime.now();
-                              DatePicker.showTimePicker(context,
-                                  showSecondsColumn: false,
-                                  showTitleActions: true,
-                                  onChanged: (date) {}, onConfirm: (date) {
-                                if (value.isNotEmpty) {
-                                  print('value iss ${value} data is ${date}');
-                                  //  var task = Task.create(name: value, createdAt: date);
-                                  // base.dataStore.addTask(task: task);
-                                }
-                              }, currentTime: DateTime.now());
-                            },
-                            autofocus: true,
-                          ),
-                          //  Container(
-                          //   height:
-                          //  child: null),
-                          Visibility(
-                            visible: !(controller1.assignedUserName.value ==
-                                "Assign someone"),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // assign to
-
-                                InkWell(
-                                  onTap: () => {
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            Dialog(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                ),
-                                                child: const ContactListPage()))
-                                  },
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        child: Material(
-                                          type: MaterialType.transparency,
-                                          child: CircleAvatar(
-                                            backgroundColor:
-                                                Get.theme.colorPrimaryDark,
-                                            radius: 17,
-                                            child: Text(
-                                                '${controller1.assignedUserName.value.substring(0, 2)}',
-                                                style: TextStyle(
-                                                    color: Colors.white)),
-                                          ),
-                                        ),
-                                      ),
-                                      Obx(() => Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0, bottom: 4),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 16,
-                                                      child: Text(
-                                                        'Assigned to',
-                                                        style: Get
-                                                            .theme.kSubTitle
-                                                            .copyWith(
-                                                                color: Get.theme
-                                                                    .kLightGrayColor),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 22,
-                                                      child: Text(
-                                                        controller1
-                                                            .assignedUserName
-                                                            .value,
-                                                        style: Get.theme
-                                                            .kPrimaryTxtStyle
-                                                            .copyWith(
-                                                                color: Get.theme
-                                                                    .kBadgeColor),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                          //               () => ActionChip(
-                                          // elevation: 0,
-                                          // side: BorderSide(color: Get.theme.btnTextCol.withOpacity(0.1)),
-                                          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                          // backgroundColor: Get.theme.kBadgeColorBg,
-                                          // label: Text(
-                                          //   controller1.assignedUserName.value,
-                                          //   style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
-                                          // ),
-                                          // onPressed: () => {
-                                          //       // Get.to(() => const ContactListPage()),
-                                          //       showDialog(
-                                          //               context: context,
-                                          //               builder: (BuildContext context) => Dialog(
-                                          // shape: RoundedRectangleBorder(
-                                          //   borderRadius: BorderRadius.circular(8),
-                                          // ),
-                                          // child:  ContactListPage()))
-                                          //     }
-                                          //     )
-
-                                          ),
-                                    ],
-                                  ),
-                                ),
-
-                                // Due Date
-
-                                InkWell(
-                                  onTap: () => {
-                                    DatePicker.showDateTimePicker(context,
-                                        showTitleActions: true,
-                                        onChanged: (date) {
-                                      print(
-                                          'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                    }, onConfirm: (date) {
-                                      controller1.dateSelected = date;
-                                      controller1.updateSelectedDate();
-                                    }, currentTime: DateTime.now())
-                                  },
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        child: Material(
-                                            type: MaterialType.transparency,
-                                            child: DottedBorder(
-                                              borderType: BorderType.Circle,
-                                              color: Get.theme.kLightGrayColor,
-                                              radius: Radius.circular(27.0),
-                                              dashPattern: [3, 3],
-                                              strokeWidth: 1,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(6.0),
-                                                child: Icon(
-                                                  Icons.calendar_month_outlined,
-                                                  size: 18,
-                                                  color:
-                                                      Get.theme.kLightGrayColor,
-                                                ),
-                                              ),
-                                            )
-                                            // child: CircleAvatar(
-                                            //   radius: 19,
-                                            //     backgroundColor: Get.theme.colorPrimaryDark,
-                                            //   child: CircleAvatar(
-                                            //     backgroundColor: Colors.white,
-                                            //     radius: 18,
-                                            //     child:   Icon(
-                                            //                                                     Icons.calendar_month_outlined,
-                                            //                                                     size: 18,
-                                            //                                                     color: Get.theme.kLightGrayColor,
-                                            //                                                   ),
-                                            //   ),
-                                            // ),
-                                            ),
-                                      ),
-                                      Obx(() => Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 8.0, bottom: 4),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 16,
-                                                      child: Text(
-                                                        'Due Date',
-                                                        style: Get
-                                                            .theme.kSubTitle
-                                                            .copyWith(
-                                                                color: Get.theme
-                                                                    .kLightGrayColor),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 22,
-                                                      child: Text(
-                                                          controller1
-                                                              .selectedDateTime
-                                                              .value,
-                                                          style: Get.theme
-                                                              .kNormalStyle
-                                                              .copyWith(
-                                                                  color: Get
-                                                                      .theme
-                                                                      .kBadgeColor)),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                          //               () => ActionChip(
-                                          // elevation: 0,
-                                          // side: BorderSide(color: Get.theme.btnTextCol.withOpacity(0.1)),
-                                          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                          // backgroundColor: Get.theme.kBadgeColorBg,
-                                          // label: Text(
-                                          //   controller1.assignedUserName.value,
-                                          //   style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
-                                          // ),
-                                          // onPressed: () => {
-                                          //       // Get.to(() => const ContactListPage()),
-                                          //       showDialog(
-                                          //               context: context,
-                                          //               builder: (BuildContext context) => Dialog(
-                                          // shape: RoundedRectangleBorder(
-                                          //   borderRadius: BorderRadius.circular(8),
-                                          // ),
-                                          // child:  ContactListPage()))
-                                          //     }
-                                          //     )
-                                          ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                      child: Form(
+                        key:controller1.taskKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextFormField(
+                               validator: controller1.validateTaskTitle,
+                              controller: controller1.taskTitle,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Task name...'),
+                              style: TextStyle(
+                                  fontSize: 19, fontWeight: FontWeight.w500),
+                              autofocus: true,
                             ),
-                          ),
-
-                          SizedBox(
-                            // height: 20,
-                            child: Text(
-                              'Attachments',
-                              style: Get.theme.kSubTitle.copyWith(
-                                  color: Color(0xff707070), fontSize: 16),
+                            TextField(
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Description'),
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.w400),
+                              onSubmitted: (value) {
+                                Navigator.pop(context);
+                                var currentDate = DateTime.now();
+                                DatePicker.showTimePicker(context,
+                                    showSecondsColumn: false,
+                                    showTitleActions: true,
+                                    onChanged: (date) {}, onConfirm: (date) {
+                                  if (value.isNotEmpty) {
+                                    print('value iss ${value} data is ${date}');
+                                    //  var task = Task.create(name: value, createdAt: date);
+                                    // base.dataStore.addTask(task: task);
+                                  }
+                                }, currentTime: DateTime.now());
+                              },
+                              autofocus: true,
                             ),
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Visibility(
-                              visible:
-                                  (controller1.attachmentsA.value.length > 0),
-                              child: SizedBox(
-                                  // height: 20,
-                                  child: Column(
+                            //  Container(
+                            //   height:
+                            //  child: null),
+                            Visibility(
+                              visible: !(controller1.assignedUserName.value ==
+                                  "Assign someone"),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(height: 15),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 2.0),
+                                  // assign to
+                      
+                                  InkWell(
+                                    onTap: () => {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              Dialog(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(8),
+                                                  ),
+                                                  child: const ContactListPage()))
+                                    },
                                     child: Row(
                                       children: [
-                                        InkWell(
-                                          onTap: () async {
-                                            image = await picker.pickImage(
-                                                source: ImageSource.gallery);
-                                            storageReference
-                                                .putFile(File(image!.path))
-                                                .then((value) async {
-                                              controller1.attachmentsA.value
-                                                  .add(await value.ref
-                                                      .getDownloadURL());
-                                              print(
-                                                  'Image URL: ${controller1.attachmentsA.value}');
-                                            });
-                                          },
-                                          child: DottedBorder(
-                                            // borderType: BorderType.Circle,
-                                            color: Get.theme.kLightGrayColor,
-                                            radius: Radius.circular(27.0),
-                                            dashPattern: [6, 8],
-                                            strokeWidth: 1.5,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(24.0),
-                                              child: Icon(
-                                                Icons.add,
-                                                size: 22,
-                                                color:
-                                                    Get.theme.kLightGrayColor,
-                                              ),
+                                        SizedBox(
+                                          child: Material(
+                                            type: MaterialType.transparency,
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Get.theme.colorPrimaryDark,
+                                              radius: 17,
+                                              child: Text(
+                                                  '${controller1.assignedUserName.value.substring(0, 2)}',
+                                                  style: TextStyle(
+                                                      color: Colors.white)),
                                             ),
                                           ),
                                         ),
-                                        Container(
-                                          height: 100,
-                                          child: Container(
-                                            child: ListView.builder(
-                                                shrinkWrap: true,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                physics:
-                                                    const BouncingScrollPhysics(),
-                                                itemCount: controller1
-                                                    .attachmentsA.length,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                            int index) =>
-                                                        Card(
-                                                            child: Image(
-                                                          image: NetworkImage(
-                                                              controller1
-                                                                      .attachmentsA[
-                                                                  index]),
-                                                          // fit: BoxFit.fill,
-                                                          width: 100,
-                                                          height: 100,
-                                                        ))),
-                                          ),
-                                        ),
+                                        Obx(() => Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      left: 8.0, bottom: 4),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 16,
+                                                        child: Text(
+                                                          'Assigned to',
+                                                          style: Get
+                                                              .theme.kSubTitle
+                                                              .copyWith(
+                                                                  color: Get.theme
+                                                                      .kLightGrayColor),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 22,
+                                                        child: Text(
+                                                          controller1
+                                                              .assignedUserName
+                                                              .value,
+                                                          style: Get.theme
+                                                              .kPrimaryTxtStyle
+                                                              .copyWith(
+                                                                  color: Get.theme
+                                                                      .kBadgeColor),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                            //               () => ActionChip(
+                                            // elevation: 0,
+                                            // side: BorderSide(color: Get.theme.btnTextCol.withOpacity(0.1)),
+                                            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                            // backgroundColor: Get.theme.kBadgeColorBg,
+                                            // label: Text(
+                                            //   controller1.assignedUserName.value,
+                                            //   style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
+                                            // ),
+                                            // onPressed: () => {
+                                            //       // Get.to(() => const ContactListPage()),
+                                            //       showDialog(
+                                            //               context: context,
+                                            //               builder: (BuildContext context) => Dialog(
+                                            // shape: RoundedRectangleBorder(
+                                            //   borderRadius: BorderRadius.circular(8),
+                                            // ),
+                                            // child:  ContactListPage()))
+                                            //     }
+                                            //     )
+                      
+                                            ),
                                       ],
                                     ),
                                   ),
-                                ],
-                              ))),
-
-                          Visibility(
-                            visible:
-                                (controller1.attachmentsA.value.length > 0),
-                            child: SizedBox(
-                              // height: 20,
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Participants',
-                                    style: Get.theme.kSubTitle.copyWith(
-                                        color: Color(0xff707070), fontSize: 16),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * 1,
+                      
+                                  // Due Date
+                      
+                                  InkWell(
+                                    onTap: () => {
+                                      DatePicker.showDateTimePicker(context,
+                                          showTitleActions: true,
+                                          onChanged: (date) {
+                                        print(
+                                            'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                      }, onConfirm: (date) {
+                                        controller1.dateSelected = date;
+                                        controller1.updateSelectedDate();
+                                      }, currentTime: DateTime.now())
+                                    },
                                     child: Row(
                                       children: [
-                                        // Generator.buildOverlaysProfile(
-                                        //     images: [
-                                        //       'assets/images/icon.jpg',
-                                        //       'assets/images/icon.jpg',
-                                        //     ],
-                                        //     enabledOverlayBorder: true,
-                                        //     overlayBorderColor: Color(0xfff0f0f0),
-                                        //     overlayBorderThickness: 1.7,
-                                        //     leftFraction: 0.72,
-                                        //     size: 26),
-
-                                        InkWell(
-                                            onTap: () => {
-                                                  showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          const ContactListDialogPage())
-                                                },
-                                            child: DottedBorder(
-                                              borderType: BorderType.Circle,
-                                              color: Get.theme.kLightGrayColor,
-                                              radius: Radius.circular(27.0),
-                                              dashPattern: [3, 3],
-                                              strokeWidth: 1,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4.0),
-                                                child: Icon(
-                                                  Icons.add,
-                                                  size: 15,
-                                                  color:
-                                                      Get.theme.kLightGrayColor,
-                                                ),
-                                              ),
-                                            )),
-
                                         SizedBox(
-                                          width: 4,
+                                          child: Material(
+                                              type: MaterialType.transparency,
+                                              child: DottedBorder(
+                                                borderType: BorderType.Circle,
+                                                color: Get.theme.kLightGrayColor,
+                                                radius: Radius.circular(27.0),
+                                                dashPattern: [3, 3],
+                                                strokeWidth: 1,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(6.0),
+                                                  child: Icon(
+                                                    Icons.calendar_month_outlined,
+                                                    size: 18,
+                                                    color:
+                                                        Get.theme.kLightGrayColor,
+                                                  ),
+                                                ),
+                                              )
+                                              // child: CircleAvatar(
+                                              //   radius: 19,
+                                              //     backgroundColor: Get.theme.colorPrimaryDark,
+                                              //   child: CircleAvatar(
+                                              //     backgroundColor: Colors.white,
+                                              //     radius: 18,
+                                              //     child:   Icon(
+                                              //                                                     Icons.calendar_month_outlined,
+                                              //                                                     size: 18,
+                                              //                                                     color: Get.theme.kLightGrayColor,
+                                              //                                                   ),
+                                              //   ),
+                                              // ),
+                                              ),
                                         ),
-
-                                        // Obx(
-                                        //   () => SizedBox(
-                                        //     height:
-                                        //         MediaQuery.of(context).size.height * 0.04,
-                                        //     width:
-                                        //         MediaQuery.of(context).size.width * 0.720,
-                                        //     child: ListView.builder(
-                                        //       itemCount: controller_Contacts
-                                        //           .participants.value.length,
-                                        //       scrollDirection: Axis.horizontal,
-                                        //       itemBuilder: (context, index) {
-                                        //         return Padding(
-                                        //           padding: const EdgeInsets.only(left:3.0),
-                                        //           child: SizedBox(
-                                        //             child: Material(
-                                        //               type: MaterialType.transparency,
-                                        //               child: CircleAvatar(
-                                        //                 backgroundColor:
-                                        //                     Get.theme.colorPrimaryDark,
-                                        //                 radius: 14,
-                                        //                 child: Text(
-                                        //                     '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
-                                        //                     style: TextStyle(
-                                        //                         color: Colors.white,
-                                        //                         fontSize: 10)),
-                                        //               ),
-                                        //             ),
-                                        //           ),
-                                        //         );
-                                        //       },
-                                        //     ),
-                                        //   ),
-                                        // ),
+                                        Obx(() => Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      left: 8.0, bottom: 4),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 16,
+                                                        child: Text(
+                                                          'Due Date',
+                                                          style: Get
+                                                              .theme.kSubTitle
+                                                              .copyWith(
+                                                                  color: Get.theme
+                                                                      .kLightGrayColor),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 22,
+                                                        child: Text(
+                                                            controller1
+                                                                .selectedDateTime
+                                                                .value,
+                                                            style: Get.theme
+                                                                .kNormalStyle
+                                                                .copyWith(
+                                                                    color: Get
+                                                                        .theme
+                                                                        .kBadgeColor)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                            //               () => ActionChip(
+                                            // elevation: 0,
+                                            // side: BorderSide(color: Get.theme.btnTextCol.withOpacity(0.1)),
+                                            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                            // backgroundColor: Get.theme.kBadgeColorBg,
+                                            // label: Text(
+                                            //   controller1.assignedUserName.value,
+                                            //   style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
+                                            // ),
+                                            // onPressed: () => {
+                                            //       // Get.to(() => const ContactListPage()),
+                                            //       showDialog(
+                                            //               context: context,
+                                            //               builder: (BuildContext context) => Dialog(
+                                            // shape: RoundedRectangleBorder(
+                                            //   borderRadius: BorderRadius.circular(8),
+                                            // ),
+                                            // child:  ContactListPage()))
+                                            //     }
+                                            //     )
+                                            ),
                                       ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                          SizedBox(height: 15),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
+                      
+                            SizedBox(
+                              // height: 20,
+                              child: Text(
+                                'Attachments',
+                                style: Get.theme.kSubTitle.copyWith(
+                                    color: Color(0xff707070), fontSize: 16),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Visibility(
+                                visible:
+                                    (controller1.attachmentsA.value.length > 0),
+                                child: SizedBox(
+                                    // height: 20,
+                                    child: Column(
                                   children: [
-                                    Visibility(
-                                      visible:
-                                          (controller1.assignedUserName.value ==
-                                              "Assign someone"),
+                                    SizedBox(height: 15),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 2.0),
                                       child: Row(
                                         children: [
                                           InkWell(
-                                            onTap: () => {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext
-                                                          context) =>
-                                                      Dialog(
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8),
-                                                          ),
-                                                          child:
-                                                              ContactListPage()))
-                                            },
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.person,
-                                                  color:
-                                                      Get.theme.kLightGrayColor,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 20.0,
-                                          ),
-                                          InkWell(
-                                            onTap: () => {
-                                              DatePicker.showDateTimePicker(
-                                                  context,
-                                                  showTitleActions: true,
-                                                  onChanged: (date) {
+                                            onTap: () async {
+                                              image = await picker.pickImage(
+                                                  source: ImageSource.gallery);
+                                              storageReference
+                                                  .putFile(File(image!.path))
+                                                  .then((value) async {
+                                                controller1.attachmentsA.value
+                                                    .add(await value.ref
+                                                        .getDownloadURL());
                                                 print(
-                                                    'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                              }, onConfirm: (date) {
-                                                controller1.dateSelected = date;
-                                                controller1
-                                                    .updateSelectedDate();
-                                              }, currentTime: DateTime.now())
+                                                    'Image URL: ${controller1.attachmentsA.value}');
+                                              });
                                             },
-                                            child: Icon(
-                                              Icons.calendar_month_outlined,
+                                            child: DottedBorder(
+                                              // borderType: BorderType.Circle,
                                               color: Get.theme.kLightGrayColor,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 20.0,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Visibility(
-                                      visible: !(controller1
-                                              .attachmentsA.value.length >
-                                          0),
-                                      child: Row(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              InkWell(
-                                                onTap: () async {
-                                                  image =
-                                                      await picker.pickImage(
-                                                          source: ImageSource
-                                                              .gallery);
-                                                  storageReference
-                                                      .putFile(
-                                                          File(image!.path))
-                                                      .then((value) async {
-                                                    controller1
-                                                        .attachmentsA.value = [
-                                                      await value.ref
-                                                          .getDownloadURL()
-                                                    ];
-                                                    print(
-                                                        'Image URL: ${controller1.attachmentsA.value}');
-                                                  });
-                                                },
+                                              radius: Radius.circular(27.0),
+                                              dashPattern: [6, 8],
+                                              strokeWidth: 1.5,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(24.0),
                                                 child: Icon(
-                                                  Icons.attach_file,
+                                                  Icons.add,
+                                                  size: 22,
                                                   color:
                                                       Get.theme.kLightGrayColor,
                                                 ),
                                               ),
-                                              SizedBox(
-                                                width: 20.0,
-                                              ),
-                                            ],
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 100,
+                                            child: Container(
+                                              child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  physics:
+                                                      const BouncingScrollPhysics(),
+                                                  itemCount: controller1
+                                                      .attachmentsA.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                              int index) =>
+                                                          Card(
+                                                              child: Image(
+                                                            image: NetworkImage(
+                                                                controller1
+                                                                        .attachmentsA[
+                                                                    index]),
+                                                            // fit: BoxFit.fill,
+                                                            width: 100,
+                                                            height: 100,
+                                                          ))),
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    InkWell(
-                                      onTap: () => {
-                                        DatePicker.showDateTimePicker(context,
-                                            showTitleActions: true,
-                                            onChanged: (date) {
-                                          print(
-                                              'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                        }, onConfirm: (date) {
-                                          // controller.dateSelected = date;
-                                          // controller.updateSelectedDate();
-                                        }, currentTime: DateTime.now())
-                                      },
-                                      child: Icon(
-                                        Icons.flag_outlined,
-                                        color: Get.theme.kLightGrayColor,
-                                      ),
+                                  ],
+                                ))),
+                      
+                            Visibility(
+                              visible:
+                                  (controller1.attachmentsA.value.length > 0),
+                              child: SizedBox(
+                                // height: 20,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Participants',
+                                      style: Get.theme.kSubTitle.copyWith(
+                                          color: Color(0xff707070), fontSize: 16),
                                     ),
                                     SizedBox(
-                                      width: 20.0,
+                                      height: 8,
                                     ),
-                                    InkWell(
-                                      onTap: () => {
-                                        DatePicker.showDateTimePicker(context,
-                                            showTitleActions: true,
-                                            onChanged: (date) {
-                                          print(
-                                              'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                        }, onConfirm: (date) {
-                                          // controller.dateSelected = date;
-                                          // controller.updateSelectedDate();
-                                        }, currentTime: DateTime.now())
-                                      },
-                                      child: Icon(
-                                        Icons.people_alt_outlined,
-                                        color: Get.theme.kLightGrayColor,
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width * 1,
+                                      child: Row(
+                                        children: [
+                                          // Generator.buildOverlaysProfile(
+                                          //     images: [
+                                          //       'assets/images/icon.jpg',
+                                          //       'assets/images/icon.jpg',
+                                          //     ],
+                                          //     enabledOverlayBorder: true,
+                                          //     overlayBorderColor: Color(0xfff0f0f0),
+                                          //     overlayBorderThickness: 1.7,
+                                          //     leftFraction: 0.72,
+                                          //     size: 26),
+                      
+                                          InkWell(
+                                              onTap: () => {
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                                context) =>
+                                                            const ContactListDialogPage())
+                                                  },
+                                              child: DottedBorder(
+                                                borderType: BorderType.Circle,
+                                                color: Get.theme.kLightGrayColor,
+                                                radius: Radius.circular(27.0),
+                                                dashPattern: [3, 3],
+                                                strokeWidth: 1,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    size: 15,
+                                                    color:
+                                                        Get.theme.kLightGrayColor,
+                                                  ),
+                                                ),
+                                              )),
+                      
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                      
+                                          // Obx(
+                                          //   () => SizedBox(
+                                          //     height:
+                                          //         MediaQuery.of(context).size.height * 0.04,
+                                          //     width:
+                                          //         MediaQuery.of(context).size.width * 0.720,
+                                          //     child: ListView.builder(
+                                          //       itemCount: controller_Contacts
+                                          //           .participants.value.length,
+                                          //       scrollDirection: Axis.horizontal,
+                                          //       itemBuilder: (context, index) {
+                                          //         return Padding(
+                                          //           padding: const EdgeInsets.only(left:3.0),
+                                          //           child: SizedBox(
+                                          //             child: Material(
+                                          //               type: MaterialType.transparency,
+                                          //               child: CircleAvatar(
+                                          //                 backgroundColor:
+                                          //                     Get.theme.colorPrimaryDark,
+                                          //                 radius: 14,
+                                          //                 child: Text(
+                                          //                     '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
+                                          //                     style: TextStyle(
+                                          //                         color: Colors.white,
+                                          //                         fontSize: 10)),
+                                          //               ),
+                                          //             ),
+                                          //           ),
+                                          //         );
+                                          //       },
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              InkWell(
-                                  onTap: () => {controller1.createNewTask()},
-                                  child: Text('Create'))
-                            ],
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                        ],
-                      )))
+                            ),
+                            SizedBox(height: 15),
+                      
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      Visibility(
+                                        visible:
+                                            (controller1.assignedUserName.value ==
+                                                "Assign someone"),
+                                        child: Row(
+                                          children: [
+                                            InkWell(
+                                              onTap: () => {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        Dialog(
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8),
+                                                            ),
+                                                            child:
+                                                                ContactListPage()))
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.person,
+                                                    color:
+                                                        Get.theme.kLightGrayColor,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 20.0,
+                                            ),
+                                            InkWell(
+                                              onTap: () => {
+                                                DatePicker.showDateTimePicker(
+                                                    context,
+                                                    showTitleActions: true,
+                                                    onChanged: (date) {
+                                                  print(
+                                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                                }, onConfirm: (date) {
+                                                  controller1.dateSelected = date;
+                                                  controller1
+                                                      .updateSelectedDate();
+                                                }, currentTime: DateTime.now())
+                                              },
+                                              child: Icon(
+                                                Icons.calendar_month_outlined,
+                                                color: Get.theme.kLightGrayColor,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 20.0,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: !(controller1
+                                                .attachmentsA.value.length >
+                                            0),
+                                        child: Row(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                InkWell(
+                                                  onTap: () async {
+                                                    image =
+                                                        await picker.pickImage(
+                                                            source: ImageSource
+                                                                .gallery);
+                                                    storageReference
+                                                        .putFile(
+                                                            File(image!.path))
+                                                        .then((value) async {
+                                                      controller1
+                                                          .attachmentsA.value = [
+                                                        await value.ref
+                                                            .getDownloadURL()
+                                                      ];
+                                                      print(
+                                                          'Image URL: ${controller1.attachmentsA.value}');
+                                                    });
+                                                  },
+                                                  child: Icon(
+                                                    Icons.attach_file,
+                                                    color:
+                                                        Get.theme.kLightGrayColor,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 20.0,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () => {
+                                          DatePicker.showDateTimePicker(context,
+                                              showTitleActions: true,
+                                              onChanged: (date) {
+                                            print(
+                                                'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                          }, onConfirm: (date) {
+                                            // controller.dateSelected = date;
+                                            // controller.updateSelectedDate();
+                                          }, currentTime: DateTime.now())
+                                        },
+                                        child: Icon(
+                                          Icons.flag_outlined,
+                                          color: Get.theme.kLightGrayColor,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 20.0,
+                                      ),
+                                      InkWell(
+                                        onTap: () => {
+                                          DatePicker.showDateTimePicker(context,
+                                              showTitleActions: true,
+                                              onChanged: (date) {
+                                            print(
+                                                'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                          }, onConfirm: (date) {
+                                            // controller.dateSelected = date;
+                                            // controller.updateSelectedDate();
+                                          }, currentTime: DateTime.now())
+                                        },
+                                        child: Icon(
+                                          Icons.people_alt_outlined,
+                                          color: Get.theme.kLightGrayColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                InkWell(
+                                    onTap: () => 
+                                      {controller1.checkTaskValidation()},
+                                    // {controller1.createNewTask()},
+                                    child: Text('Create'))
+                              ],
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                          ],
+                        ),
+                      )
+                      ))
             },
             backgroundColor: Get.theme.colorPrimaryDark,
             child: const Icon(

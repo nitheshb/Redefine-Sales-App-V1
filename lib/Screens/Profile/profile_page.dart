@@ -31,17 +31,19 @@ class ProfilePage extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
-            Hero(
-              tag: 'profile',
-              child: Material(
-                type: MaterialType.transparency,
-                child: CircleAvatar(
-                  backgroundColor: Get.theme.colorPrimaryDark,
-                  radius: 40,
-                  child: Icon(
-                    Icons.person,
-                    color: Get.theme.colorPrimary,
-                    size: 60,
+            Obx(
+              () => Hero(
+                tag: 'profile',
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: CircleAvatar(
+                    backgroundColor: Get.theme.colorPrimaryDark,
+                    radius: 40,
+                    child: Icon(
+                      Icons.person,
+                      color: Get.theme.colorPrimary,
+                      size: 60,
+                    ),
                   ),
                 ),
               ),
@@ -84,6 +86,67 @@ class ProfilePage extends StatelessWidget {
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.04,
+                  ),
+                  Text(
+                    'Change Theme',
+                    style: Get.theme.kNormalStyle.copyWith(fontSize: 16),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.02,
+                  ),
+                  Row(
+                 mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                     
+                      GestureDetector(
+                        onTap: () {
+                          controller.currentTheme.value = 'green';
+                          controller.changeTheme(controller.currentTheme.value);
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Color(0xFF4CD471),
+                          radius: MediaQuery.of(context).size.width * 0.030,
+                        ),
+                      ),
+                      SizedBox(width: 12), 
+                      GestureDetector(
+                        onTap: () {
+                          controller.currentTheme.value = 'blue';
+                          controller.changeTheme(controller.currentTheme.value);
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Color(0xFF6EC2FB),
+                          radius: MediaQuery.of(context).size.width * 0.030,
+                        ),
+                      ),
+                                            SizedBox(width: 12), 
+
+                      GestureDetector(
+                        onTap: () {
+                          controller.currentTheme.value = 'light';
+                          controller.changeTheme(controller.currentTheme.value);
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Color(0xFFFF7562),
+                          radius: MediaQuery.of(context).size.width * 0.030,
+                        ),
+                      ),
+                                                                  SizedBox(width: 12), 
+
+                      // CircleAvatar(
+                      //   backgroundColor: Color(0xFF303437),
+                      //   radius: MediaQuery.of(context).size.width * 0.030,
+                      // ),
+                                                                 SizedBox(width: 12), 
+
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.04,
                   ),
                   InkWell(
                     child: Row(
@@ -177,15 +240,20 @@ class ProfilePage extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.94,
               child: const Divider(color: Colors.grey, thickness: 0.2),
             ),
-            TextButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-                Get.offAll(() => const OnBoardingPage());
-              },
-              child: Text(
-                'Log Out',
-                style: Get.theme.kNormalStyle
-                    .copyWith(color: Get.theme.colorPrimaryDark),
+            Obx(
+              () => TextButton(
+                onPressed: () {
+                  FirebaseAuth.instance.signOut();
+
+                  Get.offAll(() => const OnBoardingPage());
+
+                  // Get.to(() => const OnBoardingPage());
+                },
+                child: Text(
+                  'Log Out',
+                  style: Get.theme.kNormalStyle
+                      .copyWith(color: Get.theme.colorPrimaryDark),
+                ),
               ),
             ),
             SizedBox(

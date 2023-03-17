@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -9,19 +11,18 @@ import 'package:redefineerp/Screens/OnBoarding/onboarding_page.dart';
 import 'package:redefineerp/getx_bindings.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:redefineerp/themes/themes_services.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fireAuth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'Screens/Profile/profile_controller.dart';
 import 'firebase_options.dart';
 
-import 'package:gotrue/src/types/user.dart' as GoTrue;
-
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-   await Firebase.initializeApp(
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   print('Handling a background message ${message.messageId}');
 }
+
 late AndroidNotificationChannel channel;
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 void main() async {
@@ -29,29 +30,24 @@ void main() async {
 
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-   channel = const AndroidNotificationChannel(
-      'redefine_channel',
-      'Redefine notifications',
-      description: 'Redefine ERP tasks notifications',
-      enableLights: true,
-      ledColor: Colors.green,
-      importance: Importance.high,
-    );
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+  channel = const AndroidNotificationChannel(
+    'redefine_channel',
+    'Redefine notifications',
+    description: 'Redefine ERP tasks notifications',
+    enableLights: true,
+    ledColor: Colors.green,
+    importance: Importance.high,
+  );
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
 
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-     await Supabase.initialize(
-    url: 'https://cezgydfbprzqgxkfcepq.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlemd5ZGZicHJ6cWd4a2ZjZXBxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDU0NTA4NTQsImV4cCI6MTk2MTAyNjg1NH0.UDAQvbY_GqEdLLrZG6MFnhDWXonAbcYnrHGHDD6-hYU',
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
   );
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp])
@@ -64,11 +60,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final fireAuth.User? currentUser = fireAuth.FirebaseAuth.instance.currentUser;
+    final User? currentUser = FirebaseAuth.instance.currentUser;
+    final controller = Get.put<ProfileController>(ProfileController());
     return GetMaterialApp(
       defaultTransition: Transition.circularReveal,
       transitionDuration: const Duration(milliseconds: 800),
-      theme: Themes.light,
       darkTheme: Themes.dark,
       initialBinding: ControllerBindings(),
       themeMode: ThemeService().theme,

@@ -1,14 +1,25 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Profile/profile_controller.dart';
+
+ProfileController profileController = Get.put(ProfileController());
 
 extension ThemeExtension on ThemeData {
   Color get colorPrimary => brightness == Brightness.dark
       ? const Color.fromARGB(255, 29, 29, 29)
       : const Color(0xFFFFFFFF);
-  Color get colorPrimaryDark => const Color(0xffFF7562);
+  Color get colorPrimaryDark => profileController.currentTheme.value == 'light'
+      ? const Color(0xffFF7562)
+      : profileController.currentTheme.value == 'blue'
+          ? const Color(0xff6EC2FB)
+          : profileController.currentTheme.value == 'green'
+              ? const Color(0xff4CD471)
+              : const Color(0xffFF7562);
+
   Color get colorAccent => const Color.fromRGBO(236, 163, 152, 1);
   Color get overlayColor => Color(0xFFFFEDEB);
   Color get successColor => const Color.fromARGB(255, 41, 204, 57);
@@ -37,11 +48,10 @@ extension ThemeExtension on ThemeData {
       GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600);
   TextStyle get kNormalStyle =>
       GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700);
-    TextStyle get kPrimaryTxtStyle =>
-      GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600);    
+  TextStyle get kPrimaryTxtStyle =>
+      GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600);
   TextStyle get kTabTextLg =>
       GoogleFonts.inter(fontSize: 25, fontWeight: FontWeight.w700);
-
 }
 
 class Themes {
@@ -61,5 +71,27 @@ class Themes {
             statusBarColor: Color(0xf2161616),
             statusBarIconBrightness: Brightness.light)),
     scaffoldBackgroundColor: const Color(0xff161616),
+  );
+
+  static final blueTheme = ThemeData.light().copyWith(
+    // backgroundColor: Colors.white,
+    primaryColor: const Color(0xff6EC2FB),
+    appBarTheme: const AppBarTheme(
+        systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Color(0xff6EC2FB),
+            statusBarIconBrightness: Brightness.dark)),
+    scaffoldBackgroundColor: const Color(0xffffffff),
+    // textTheme: TextTheme(headline1: GoogleFonts.quicksand(fontSize: 18,fontWeight: FontWeight.w800,color: Theme.of(context).btnTextCol),headline2: GoogleFonts.quicksand(fontSize: 16,fontWeight: FontWeight.w600),headline3: GoogleFonts.quicksand(fontSize: 14,fontWeight: FontWeight.w600))
+  );
+
+  static final greenTheme = ThemeData.light().copyWith(
+    backgroundColor: Colors.white,
+    primaryColor: const Color(0xff4CD471),
+    appBarTheme: const AppBarTheme(
+        systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: const Color(0xffffffff),
+            statusBarIconBrightness: Brightness.dark)),
+    scaffoldBackgroundColor: const Color(0xffffffff),
+    // textTheme: TextTheme(headline1: GoogleFonts.quicksand(fontSize: 18,fontWeight: FontWeight.w800,color: Theme.of(context).btnTextCol),headline2: GoogleFonts.quicksand(fontSize: 16,fontWeight: FontWeight.w600),headline3: GoogleFonts.quicksand(fontSize: 14,fontWeight: FontWeight.w600))
   );
 }

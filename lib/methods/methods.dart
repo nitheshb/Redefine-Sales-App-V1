@@ -31,7 +31,7 @@ Future logOut() async {
 
   try {
     await _auth.signOut().then((value) {
-      Get.to(() => const LoginPage());
+      Get.to(() =>  LoginPage());
     });
   } catch (e) {
     print("error");

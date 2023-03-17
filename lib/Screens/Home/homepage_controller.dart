@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/task_manager.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Widgets/checkboxlisttile.dart';
@@ -11,6 +12,7 @@ import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:redefineerp/main.dart';
+import 'package:redefineerp/themes/themes.dart';
 
 class HomePageController extends GetxController {
   var tabIndex = 0.obs;
@@ -129,6 +131,46 @@ class HomePageController extends GetxController {
                                 createdOn:
                                     '${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
                                 assigner: 'Assigner: ${taskData['by_name']}',
+                                 participants: Row(
+                                  children: [
+                                    // Generator.buildOverlaysProfile(
+                                    //     images: [
+                                    //       'assets/images/icon.jpg',
+                                    //       'assets/images/icon.jpg',
+                                    //     ],
+                                    //     enabledOverlayBorder: true,
+                                    //     overlayBorderColor: Color(0xfff0f0f0),
+                                    //     overlayBorderThickness: 1.7,
+                                    //     leftFraction: 0.72,
+                                    //     size: 26),
+                                    SizedBox(
+                                      child: Material(
+                                        type: MaterialType.transparency,
+                                        child: CircleAvatar(
+                                          backgroundColor:
+                                              Get.theme.colorPrimaryDark,
+                                          radius: 14,
+                                          child: Text(
+                                              '${taskData['by_name'].substring(0, 2)}',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10)),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      " 0 comments",
+                                      style: Get.theme.kPrimaryTxtStyle,
+                                    ),
+                                    Text(
+                                      " . 0 Files",
+                                      style: Get.theme.kPrimaryTxtStyle,
+                                    )
+                                  ],
+                                ),
                                 onTap: () => {
                                       Get.to(() => TaskManager(
                                             task: taskData["task_title"],
@@ -231,6 +273,46 @@ class HomePageController extends GetxController {
                                   createdOn:
                                       'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}',
                                   assigner: 'Assigner: ${e['by_name']}',
+                                   participants: Row(
+                                  children: [
+                                    Generator.buildOverlaysProfile(
+                                        images: [
+                                          'assets/images/icon.jpg',
+                                          'assets/images/icon.jpg',
+                                        ],
+                                        enabledOverlayBorder: true,
+                                        overlayBorderColor: Color(0xfff0f0f0),
+                                        overlayBorderThickness: 1.7,
+                                        leftFraction: 0.72,
+                                        size: 26),
+                                    SizedBox(
+                                      child: Material(
+                                        type: MaterialType.transparency,
+                                        child: CircleAvatar(
+                                          backgroundColor:
+                                              Get.theme.colorPrimaryDark,
+                                          radius: 14,
+                                          child: Text(
+                                              '${e.get('by_name').substring(0, 2)}',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10)),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      " 0 comments",
+                                      style: Get.theme.kPrimaryTxtStyle,
+                                    ),
+                                    Text(
+                                      " . 0 Files",
+                                      style: Get.theme.kPrimaryTxtStyle,
+                                    )
+                                  ],
+                                ),
                                   onTap: () => {
                                         Get.to(() => TaskManager(
                                               task: e["task_title"],
@@ -350,6 +432,46 @@ class HomePageController extends GetxController {
                                   createdOn:
                                       'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}',
                                   assigner: 'Assigner: ${e['by_name']}',
+                                   participants: Row(
+                                  children: [
+                                    Generator.buildOverlaysProfile(
+                                        images: [
+                                          'assets/images/icon.jpg',
+                                          'assets/images/icon.jpg',
+                                        ],
+                                        enabledOverlayBorder: true,
+                                        overlayBorderColor: Color(0xfff0f0f0),
+                                        overlayBorderThickness: 1.7,
+                                        leftFraction: 0.72,
+                                        size: 26),
+                                    SizedBox(
+                                      child: Material(
+                                        type: MaterialType.transparency,
+                                        child: CircleAvatar(
+                                          backgroundColor:
+                                              Get.theme.colorPrimaryDark,
+                                          radius: 14,
+                                          child: Text(
+                                              '${e['by_name'].substring(0, 2)}',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10)),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      " 0 comments",
+                                      style: Get.theme.kPrimaryTxtStyle,
+                                    ),
+                                    Text(
+                                      " . 0 Files",
+                                      style: Get.theme.kPrimaryTxtStyle,
+                                    )
+                                  ],
+                                ),
                                   onTap: () => {
                                         Get.to(() => TaskManager(
                                               task: e["task_title"],

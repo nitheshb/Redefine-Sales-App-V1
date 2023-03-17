@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:redefineerp/Utilities/snackbar.dart';
+import 'package:redefineerp/themes/themes.dart';
 
 class TaskController extends GetxController {
   var taskType = 'mark'.obs;
@@ -27,8 +28,19 @@ class TaskController extends GetxController {
   TextEditingController taskTitle = TextEditingController();
   TextEditingController taskDescription = TextEditingController();
   TextEditingController dateinput = TextEditingController();
+   GlobalKey<FormState> taskKey = GlobalKey<FormState>();
   final _collection =
       FirebaseFirestore.instance.collection('spark_assignedTasks');
+
+      
+  String? validateTaskTitle(value) {
+    if (value == '') {
+      return 'Please enter task title';
+    } else {
+      return null;
+    }
+  }
+
 
   void createNewTask() {
   
@@ -71,7 +83,27 @@ class TaskController extends GetxController {
           snackBarMsg('Failed to create task: $error', enableMsgBtn: false),
         });
   }
+ checkTaskValidation() {
+    final validator = taskKey.currentState!.validate();
 
+    if (!validator) {
+      return;
+    } else {
+      if (assignedUserName == 'Assign someone') {
+        Get.snackbar(
+            colorText: Get.theme.colorPrimaryDark,
+            backgroundColor: Get.theme.overlayColor,
+            margin: const EdgeInsets.all(10),
+            duration: Duration(seconds: 3),
+            "",
+            "Please Assign task to someone",
+            snackPosition: SnackPosition.BOTTOM);
+      } else {
+        createNewTask();
+        print(assignedUserName);
+      }
+    }
+  }
   void sendPushMessage(String body, String title, String token) async {
     try {
       await http.post(
