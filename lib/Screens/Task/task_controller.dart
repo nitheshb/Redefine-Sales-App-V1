@@ -14,7 +14,11 @@ class TaskController extends GetxController {
   DateTime dateSelected = DateTime.now();
   var selectedDateTime = ''.obs;
   final FirebaseAuth auth = FirebaseAuth.instance;
+  var taskDocId = ''.obs;
+  var assignToId =''.obs;
+  var  assignToName = ''.obs;
 
+  // below are old ones
   var assignedUserName = 'Assign someone'.obs;
   var assignedUserDepartment = ''.obs;
   var assignedUserUid = ''.obs;
@@ -28,6 +32,8 @@ class TaskController extends GetxController {
   TextEditingController taskTitle = TextEditingController();
   TextEditingController taskDescription = TextEditingController();
   TextEditingController dateinput = TextEditingController();
+  TextEditingController commentLine = TextEditingController();
+
    GlobalKey<FormState> taskKey = GlobalKey<FormState>();
   final _collection =
       FirebaseFirestore.instance.collection('spark_assignedTasks');
@@ -41,6 +47,11 @@ class TaskController extends GetxController {
     }
   }
 
+void addComments(id, type, txt)async{
+  print('new vlu is ${commentLine.text}');
+  await _collection.doc(id).update({"comments": FieldValue.arrayUnion([{"typ":type, "txt": commentLine.text}])});
+  commentLine.text = "" ;
+}
 
   void createNewTask() {
   
@@ -154,6 +165,19 @@ class TaskController extends GetxController {
     } else
       taskType.value == 'mark';
   }
+   void setTaskId( task) {
+   taskDocId.value = task;
+  }
+
+    void setAssignDetails(docId,  uid, name) {
+print('value is docId: ${taskDocId}');
+      if(taskDocId == docId){
+ assignToId.value = uid;
+   assignToName.value = name;
+      }
+  
+  }
+
 
   @override
   void onClose() {

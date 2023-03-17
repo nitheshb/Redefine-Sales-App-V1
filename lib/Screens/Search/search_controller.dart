@@ -136,6 +136,7 @@ class SearchController extends GetxController {
                                             task: taskData["task_title"],
                                             status: taskData['status'],
                                             docId: taskData.reference.id,
+                                             comments: taskData['comments'],
                                             due:
                                                 "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
                                                     .toString(),

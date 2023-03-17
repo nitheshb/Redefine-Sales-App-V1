@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:redefineerp/Screens/Home/Generator.dart';
+import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Screens/Task/task_manager.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Widgets/checkboxlisttile.dart';
@@ -15,6 +16,10 @@ import 'package:redefineerp/main.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class HomePageController extends GetxController {
+
+  
+  TaskController taskController = Get.find();
+
   var tabIndex = 0.obs;
   var bottomBarIndex = 0.obs;
   var dummy = true.obs;
@@ -105,6 +110,8 @@ class HomePageController extends GetxController {
                             late QueryDocumentSnapshot<Object?>? taskData =
                                 snapshot.data?.docs[index];
                             print("qwdqwdw ${taskData?.id}");
+
+                            taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
                             // print(
                             //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
                             // print("due date is ${taskData!.get('due data')}");
@@ -171,11 +178,19 @@ class HomePageController extends GetxController {
                                     )
                                   ],
                                 ),
-                                onTap: () => {
+                                   onTap: ()  {
+                                    var comments = [];
+                                    try{
+                                      comments=   taskData['comments'];
+                                    }
+                                    catch(e) {
+                                      comments= [];
+                                    };
                                       Get.to(() => TaskManager(
                                             task: taskData["task_title"],
                                             status: taskData['status'],
                                             docId: taskData.reference.id,
+                                            comments: comments,
                                             // url: taskData['url'],
                                             due:
                                                 "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
@@ -186,7 +201,7 @@ class HomePageController extends GetxController {
                                             taskPriority: taskData['priority'],
                                             selected: false,
                                             assigner: taskData['by_name'],
-                                          ))
+                                          ));
                                     });
                           }),
                     ),
@@ -313,11 +328,19 @@ class HomePageController extends GetxController {
                                     )
                                   ],
                                 ),
-                                  onTap: () => {
+                                  onTap: ()  {
+                                    var comments = [];
+                                    try{
+                                      comments=   e['comments'];
+                                    }
+                                    catch(e) {
+                                      comments= [];
+                                    };
                                         Get.to(() => TaskManager(
                                               task: e["task_title"],
                                               status: e['status'],
                                               docId: e.reference.id,
+                                              comments: comments,
                                               due:
                                                   "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
                                                       .toString(),
@@ -327,7 +350,7 @@ class HomePageController extends GetxController {
                                               taskPriority: e['priority'],
                                               selected: false,
                                               assigner: e['by_name'],
-                                            ))
+                                            ));
                                       }),
                             ],
                           )),
@@ -472,11 +495,19 @@ class HomePageController extends GetxController {
                                     )
                                   ],
                                 ),
-                                  onTap: () => {
+                                    onTap: ()  {
+                                    var comments = [];
+                                    try{
+                                      comments=   e['comments'];
+                                    }
+                                    catch(e) {
+                                      comments= [];
+                                    };
                                         Get.to(() => TaskManager(
                                               task: e["task_title"],
                                               status: e['status'],
                                               docId: e.reference.id,
+                                               comments: comments,
                                               due:
                                                   "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
                                                       .toString(),
@@ -486,7 +517,7 @@ class HomePageController extends GetxController {
                                               taskPriority: e['priority'],
                                               selected: false,
                                               assigner: e['by_name'],
-                                            ))
+                                            ));
                                       }),
                             ],
                           )),
