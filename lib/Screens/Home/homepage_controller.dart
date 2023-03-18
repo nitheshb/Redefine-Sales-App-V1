@@ -302,7 +302,7 @@ void updateSelectedDate() {
                                 createdOn:
                                     '${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
                                 assigner: 'Assigner: ${taskData['by_name']}',
-                                 participants: Row(
+                                participants: Row(
                                   children: [
                                     // Generator.buildOverlaysProfile(
                                     //     images: [
@@ -341,32 +341,31 @@ void updateSelectedDate() {
                                       style: Get.theme.kPrimaryTxtStyle,
                                     )
                                   ],
-                                ),
-                                   onTap: ()  {
-                                    var comments = [];
-                                    try{
-                                      comments=   taskData['comments'];
-                                    }
-                                    catch(e) {
-                                      comments= [];
-                                    };
-                                      Get.to(() => TaskManager(
-                                            task: taskData["task_title"],
-                                            status: taskData['status'],
-                                            docId: taskData.reference.id,
-                                            comments: comments,
-                                            // url: taskData['url'],
-                                            due:
-                                                "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
-                                                    .toString(),
-                                            createdOn:
-                                                "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}"
-                                                    .toString(),
-                                            taskPriority: taskData['priority'],
-                                            selected: false,
-                                            assigner: taskData['by_name'],
-                                          ));
-                                    });
+                                ), onTap: () {
+                              var comments = [];
+                              try {
+                                comments = taskData['comments'];
+                              } catch (e) {
+                                comments = [];
+                              }
+                              ;
+                              Get.to(() => TaskManager(
+                                    task: taskData["task_title"],
+                                    status: taskData['status'],
+                                    docId: taskData.reference.id,
+                                    comments: comments,
+                                    // url: taskData['url'],
+                                    due:
+                                        "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
+                                            .toString(),
+                                    createdOn:
+                                        "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}"
+                                            .toString(),
+                                    taskPriority: taskData['priority'],
+                                    selected: false,
+                                    assigner: taskData['by_name'],
+                                  ));
+                            });
                           }),
                     ),
                   ),
@@ -452,70 +451,69 @@ void updateSelectedDate() {
                                   createdOn:
                                       'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}',
                                   assigner: 'Assigner: ${e['by_name']}',
-                                   participants: Row(
-                                  children: [
-                                    Generator.buildOverlaysProfile(
-                                        images: [
-                                          'assets/images/icon.jpg',
-                                          'assets/images/icon.jpg',
-                                        ],
-                                        enabledOverlayBorder: true,
-                                        overlayBorderColor: Color(0xfff0f0f0),
-                                        overlayBorderThickness: 1.7,
-                                        leftFraction: 0.72,
-                                        size: 26),
-                                    SizedBox(
-                                      child: Material(
-                                        type: MaterialType.transparency,
-                                        child: CircleAvatar(
-                                          backgroundColor:
-                                              Get.theme.colorPrimaryDark,
-                                          radius: 14,
-                                          child: Text(
-                                              '${e.get('by_name').substring(0, 2)}',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 10)),
+                                  participants: Row(
+                                    children: [
+                                      Generator.buildOverlaysProfile(
+                                          images: [
+                                            'assets/images/icon.jpg',
+                                            'assets/images/icon.jpg',
+                                          ],
+                                          enabledOverlayBorder: true,
+                                          overlayBorderColor: Color(0xfff0f0f0),
+                                          overlayBorderThickness: 1.7,
+                                          leftFraction: 0.72,
+                                          size: 26),
+                                      SizedBox(
+                                        child: Material(
+                                          type: MaterialType.transparency,
+                                          child: CircleAvatar(
+                                            backgroundColor:
+                                                Get.theme.colorPrimaryDark,
+                                            radius: 14,
+                                            child: Text(
+                                                '${e.get('by_name').substring(0, 2)}',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10)),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Text(
-                                      " 0 comments",
-                                      style: Get.theme.kPrimaryTxtStyle,
-                                    ),
-                                    Text(
-                                      " . 0 Files",
-                                      style: Get.theme.kPrimaryTxtStyle,
-                                    )
-                                  ],
-                                ),
-                                  onTap: ()  {
-                                    var comments = [];
-                                    try{
-                                      comments=   e['comments'];
-                                    }
-                                    catch(e) {
-                                      comments= [];
-                                    };
-                                        Get.to(() => TaskManager(
-                                              task: e["task_title"],
-                                              status: e['status'],
-                                              docId: e.reference.id,
-                                              comments: comments,
-                                              due:
-                                                  "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
-                                                      .toString(),
-                                              createdOn:
-                                                  "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}"
-                                                      .toString(),
-                                              taskPriority: e['priority'],
-                                              selected: false,
-                                              assigner: e['by_name'],
-                                            ));
-                                      }),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Text(
+                                        " 0 comments",
+                                        style: Get.theme.kPrimaryTxtStyle,
+                                      ),
+                                      Text(
+                                        " . 0 Files",
+                                        style: Get.theme.kPrimaryTxtStyle,
+                                      )
+                                    ],
+                                  ), onTap: () {
+                                var comments = [];
+                                try {
+                                  comments = e['comments'];
+                                } catch (e) {
+                                  comments = [];
+                                }
+                                ;
+                                Get.to(() => TaskManager(
+                                      task: e["task_title"],
+                                      status: e['status'],
+                                      docId: e.reference.id,
+                                      comments: comments,
+                                      due:
+                                          "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
+                                              .toString(),
+                                      createdOn:
+                                          "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}"
+                                              .toString(),
+                                      taskPriority: e['priority'],
+                                      selected: false,
+                                      assigner: e['by_name'],
+                                    ));
+                              }),
                             ],
                           )),
                     ],
@@ -619,70 +617,69 @@ void updateSelectedDate() {
                                   createdOn:
                                       'Created:  ${DateFormat('MMMM-dd, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}',
                                   assigner: 'Assigner: ${e['by_name']}',
-                                   participants: Row(
-                                  children: [
-                                    Generator.buildOverlaysProfile(
-                                        images: [
-                                          'assets/images/icon.jpg',
-                                          'assets/images/icon.jpg',
-                                        ],
-                                        enabledOverlayBorder: true,
-                                        overlayBorderColor: Color(0xfff0f0f0),
-                                        overlayBorderThickness: 1.7,
-                                        leftFraction: 0.72,
-                                        size: 26),
-                                    SizedBox(
-                                      child: Material(
-                                        type: MaterialType.transparency,
-                                        child: CircleAvatar(
-                                          backgroundColor:
-                                              Get.theme.colorPrimaryDark,
-                                          radius: 14,
-                                          child: Text(
-                                              '${e['by_name'].substring(0, 2)}',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 10)),
+                                  participants: Row(
+                                    children: [
+                                      Generator.buildOverlaysProfile(
+                                          images: [
+                                            'assets/images/icon.jpg',
+                                            'assets/images/icon.jpg',
+                                          ],
+                                          enabledOverlayBorder: true,
+                                          overlayBorderColor: Color(0xfff0f0f0),
+                                          overlayBorderThickness: 1.7,
+                                          leftFraction: 0.72,
+                                          size: 26),
+                                      SizedBox(
+                                        child: Material(
+                                          type: MaterialType.transparency,
+                                          child: CircleAvatar(
+                                            backgroundColor:
+                                                Get.theme.colorPrimaryDark,
+                                            radius: 14,
+                                            child: Text(
+                                                '${e['by_name'].substring(0, 2)}',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10)),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Text(
-                                      " 0 comments",
-                                      style: Get.theme.kPrimaryTxtStyle,
-                                    ),
-                                    Text(
-                                      " . 0 Files",
-                                      style: Get.theme.kPrimaryTxtStyle,
-                                    )
-                                  ],
-                                ),
-                                    onTap: ()  {
-                                    var comments = [];
-                                    try{
-                                      comments=   e['comments'];
-                                    }
-                                    catch(e) {
-                                      comments= [];
-                                    };
-                                        Get.to(() => TaskManager(
-                                              task: e["task_title"],
-                                              status: e['status'],
-                                              docId: e.reference.id,
-                                               comments: comments,
-                                              due:
-                                                  "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
-                                                      .toString(),
-                                              createdOn:
-                                                  "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}"
-                                                      .toString(),
-                                              taskPriority: e['priority'],
-                                              selected: false,
-                                              assigner: e['by_name'],
-                                            ));
-                                      }),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Text(
+                                        " 0 comments",
+                                        style: Get.theme.kPrimaryTxtStyle,
+                                      ),
+                                      Text(
+                                        " . 0 Files",
+                                        style: Get.theme.kPrimaryTxtStyle,
+                                      )
+                                    ],
+                                  ), onTap: () {
+                                var comments = [];
+                                try {
+                                  comments = e['comments'];
+                                } catch (e) {
+                                  comments = [];
+                                }
+                                ;
+                                Get.to(() => TaskManager(
+                                      task: e["task_title"],
+                                      status: e['status'],
+                                      docId: e.reference.id,
+                                      comments: comments,
+                                      due:
+                                          "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(e.get('due_date')))}"
+                                              .toString(),
+                                      createdOn:
+                                          "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(e.get('created_on')))}"
+                                              .toString(),
+                                      taskPriority: e['priority'],
+                                      selected: false,
+                                      assigner: e['by_name'],
+                                    ));
+                              }),
                             ],
                           )),
                     ],

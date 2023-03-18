@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Auth/login_page.dart';
+import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/OnBoarding/onboarding_page.dart';
 import 'package:redefineerp/Screens/Profile/profile_controller.dart';
 import 'package:redefineerp/themes/themes.dart';
@@ -10,8 +12,13 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     final controller = Get.put<ProfileController>(ProfileController());
       final FirebaseAuth auth = FirebaseAuth.instance;
+=======
+    HomePageController homePageController = Get.find();
+    ProfileController controller = Get.find();
+>>>>>>> 56ff974527eeb3f8f8f3c386bd4302359c26cf5a
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -97,10 +104,9 @@ class ProfilePage extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
                   Row(
-                 mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                     
                       GestureDetector(
                         onTap: () {
                           controller.currentTheme.value = 'green';
@@ -111,7 +117,7 @@ class ProfilePage extends StatelessWidget {
                           radius: MediaQuery.of(context).size.width * 0.030,
                         ),
                       ),
-                      SizedBox(width: 12), 
+                      SizedBox(width: 12),
                       GestureDetector(
                         onTap: () {
                           controller.currentTheme.value = 'blue';
@@ -122,7 +128,7 @@ class ProfilePage extends StatelessWidget {
                           radius: MediaQuery.of(context).size.width * 0.030,
                         ),
                       ),
-                                            SizedBox(width: 12), 
+                      SizedBox(width: 12),
 
                       GestureDetector(
                         onTap: () {
@@ -134,14 +140,13 @@ class ProfilePage extends StatelessWidget {
                           radius: MediaQuery.of(context).size.width * 0.030,
                         ),
                       ),
-                                                                  SizedBox(width: 12), 
+                      SizedBox(width: 12),
 
                       // CircleAvatar(
                       //   backgroundColor: Color(0xFF303437),
                       //   radius: MediaQuery.of(context).size.width * 0.030,
                       // ),
-                                                                 SizedBox(width: 12), 
-
+                      SizedBox(width: 12),
                     ],
                   ),
                   SizedBox(
@@ -239,20 +244,16 @@ class ProfilePage extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.94,
               child: const Divider(color: Colors.grey, thickness: 0.2),
             ),
-            Obx(
-              () => TextButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-
-                  Get.offAll(() => const OnBoardingPage());
-
-                  // Get.to(() => const OnBoardingPage());
-                },
-                child: Text(
-                  'Log Out',
-                  style: Get.theme.kNormalStyle
-                      .copyWith(color: Get.theme.colorPrimaryDark),
-                ),
+            TextButton(
+              onPressed: () {
+                FirebaseAuth.instance
+                    .signOut()
+                    .then((value) => Get.offAll(() => LoginPage()));
+              },
+              child: Text(
+                'Log Out',
+                style: Get.theme.kNormalStyle
+                    .copyWith(color: Get.theme.colorPrimaryDark),
               ),
             ),
             SizedBox(
