@@ -215,7 +215,10 @@ void updateSelectedDate() {
     print('am i here ${currentUser?.email}');
     await FirebaseFirestore.instance
         .collection('spark_assignedTasks')
-        .where("by_email", isEqualTo: currentUser?.email)
+           .where("due_date",
+                isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+            .where("status", isEqualTo: "InProgress")
+            .where("to_uid", isEqualTo: currentUser?.uid)
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {

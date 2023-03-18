@@ -12,13 +12,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     final controller = Get.put<ProfileController>(ProfileController());
       final FirebaseAuth auth = FirebaseAuth.instance;
-=======
-    HomePageController homePageController = Get.find();
-    ProfileController controller = Get.find();
->>>>>>> 56ff974527eeb3f8f8f3c386bd4302359c26cf5a
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

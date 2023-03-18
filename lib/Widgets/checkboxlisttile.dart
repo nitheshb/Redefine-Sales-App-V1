@@ -39,7 +39,7 @@ Widget taskCheckBox(BuildContext context,
                   children: [
                     Text(
                       // '$createdOn\n$assigner',
-                      '$createdOn',
+                      '$due',
                       style: Get.theme.kSubTitle.copyWith(
                           color: Get.theme.btnTextCol.withOpacity(0.3)),
                     ),
