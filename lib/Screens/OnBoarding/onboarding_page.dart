@@ -126,7 +126,7 @@ class OnBoardingPage extends StatelessWidget {
           style: TextButton.styleFrom(
               backgroundColor: Get.theme.colorPrimaryDark,
               fixedSize: Size(MediaQuery.of(context).size.width, 20)),
-          onPressed: () => {saveOpenInfo(), Get.offAll(() => const LoginPage())},
+          onPressed: () => {saveOpenInfo(), Get.offAll(() =>  LoginPage())},
           child: Text(
             'Get Started',
             style: Get.theme.kNormalStyle.copyWith(color: Colors.white),

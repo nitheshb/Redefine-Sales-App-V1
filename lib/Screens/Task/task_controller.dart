@@ -7,13 +7,18 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:redefineerp/Utilities/snackbar.dart';
+import 'package:redefineerp/themes/themes.dart';
 
 class TaskController extends GetxController {
   var taskType = 'mark'.obs;
   DateTime dateSelected = DateTime.now();
   var selectedDateTime = ''.obs;
   final FirebaseAuth auth = FirebaseAuth.instance;
+  var taskDocId = ''.obs;
+  var assignToId =''.obs;
+  var  assignToName = ''.obs;
 
+  // below are old ones
   var assignedUserName = 'Assign someone'.obs;
   var assignedUserDepartment = ''.obs;
   var assignedUserUid = ''.obs;
@@ -27,8 +32,26 @@ class TaskController extends GetxController {
   TextEditingController taskTitle = TextEditingController();
   TextEditingController taskDescription = TextEditingController();
   TextEditingController dateinput = TextEditingController();
+  TextEditingController commentLine = TextEditingController();
+
+   GlobalKey<FormState> taskKey = GlobalKey<FormState>();
   final _collection =
       FirebaseFirestore.instance.collection('spark_assignedTasks');
+
+      
+  String? validateTaskTitle(value) {
+    if (value == '') {
+      return 'Please enter task title';
+    } else {
+      return null;
+    }
+  }
+
+void addComments(id, type, txt)async{
+  print('new vlu is ${commentLine.text}');
+  await _collection.doc(id).update({"comments": FieldValue.arrayUnion([{"typ":type, "txt": commentLine.text}])});
+  commentLine.text = "" ;
+}
 
   void createNewTask() {
   
@@ -71,7 +94,27 @@ class TaskController extends GetxController {
           snackBarMsg('Failed to create task: $error', enableMsgBtn: false),
         });
   }
+ checkTaskValidation() {
+    final validator = taskKey.currentState!.validate();
 
+    if (!validator) {
+      return;
+    } else {
+      if (assignedUserName == 'Assign someone') {
+        Get.snackbar(
+            colorText: Get.theme.colorPrimaryDark,
+            backgroundColor: Get.theme.overlayColor,
+            margin: const EdgeInsets.all(10),
+            duration: Duration(seconds: 3),
+            "",
+            "Please Assign task to someone",
+            snackPosition: SnackPosition.BOTTOM);
+      } else {
+        createNewTask();
+        print(assignedUserName);
+      }
+    }
+  }
   void sendPushMessage(String body, String title, String token) async {
     try {
       await http.post(
@@ -122,6 +165,19 @@ class TaskController extends GetxController {
     } else
       taskType.value == 'mark';
   }
+   void setTaskId( task) {
+   taskDocId.value = task;
+  }
+
+    void setAssignDetails(docId,  uid, name) {
+print('value is docId: ${taskDocId}');
+      if(taskDocId == docId){
+ assignToId.value = uid;
+   assignToName.value = name;
+      }
+  
+  }
+
 
   @override
   void onClose() {

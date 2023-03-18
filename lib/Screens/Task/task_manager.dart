@@ -7,6 +7,7 @@ import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
 import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
 import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
+import 'package:redefineerp/Screens/Task/reAssignTo.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
@@ -24,6 +25,7 @@ class TaskManager extends StatelessWidget {
       required this.assigner,
       required this.docId,
       required this.due,
+      required this.comments,
       required this.status});
   final String task;
   final String createdOn;
@@ -33,12 +35,14 @@ class TaskManager extends StatelessWidget {
   final String docId;
   final String status;
   final String due;
+  final List comments;
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<TaskController>(TaskController());
     final controller_Contacts = Get.put<ContactController>(ContactController());
 
     controller.setTaskType(status);
+    controller.setTaskId(docId);
     debugPrint('DOC ID $docId');
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -114,7 +118,7 @@ class TaskManager extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(8),
                                         ),
-                                        child: const ContactListPage()))
+                                        child: const ReassignToList()))
                               },
                               child: Row(
                                 children: [
@@ -156,7 +160,7 @@ class TaskManager extends StatelessWidget {
                                         SizedBox(
                                           height: 22,
                                           child: Text(
-                                            assigner,
+                                            '${controller.assignToName}',
                                             style: Get.theme.kPrimaryTxtStyle
                                                 .copyWith(
                                               color: Get.theme.kBadgeColor,
@@ -702,6 +706,31 @@ class TaskManager extends StatelessWidget {
                           .copyWith(color: Get.theme.kGreenDark),
                     ),
                   ),
+                              SizedBox(
+                                
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.720,
+                                      height:
+                                      MediaQuery.of(context).size.height * 0.04,
+              child:    ListView.builder(
+                                    itemCount: comments.length,
+                                    scrollDirection: Axis.vertical,
+                                    itemBuilder: (context, index) {
+                                      return 
+                                        Container(
+                                                          color: Color(0xffF8F8F8),
+                                                          alignment: Alignment.topLeft,
+                                                          padding: EdgeInsets.only(left: 20.0, right: 20, top:8.0, bottom: 8.0),
+                                                          child: Text(
+                                                            '${comments[index]["txt"]}',
+                                                      
+                                                            style: Get.theme.kSubTitle
+                                                                .copyWith(color: Get.theme.kGreenDark),
+                                                          ),
+                                                        );
+                                      
+                                    },
+                                  )),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.150,
                   ),
@@ -714,11 +743,12 @@ class TaskManager extends StatelessWidget {
                     right: 14.0,
                     top: 10.0),
                 child: TextField(
-                  controller: controller.taskTitle,
+                  controller: controller.commentLine,
                   decoration: InputDecoration(
                       suffixIcon:
                           IconButton(onPressed: () {
-                            print("save to comment section ${controller.taskTitle.value}");
+                            print("save to comment section ${controller.commentLine.value}");
+                            controller.addComments(docId,'text', controller.commentLine.value);
                             // save to comments section
                             // get the list of all follwers + assigne name + creator
                             // ignore the sender from receipnt list
@@ -727,7 +757,7 @@ class TaskManager extends StatelessWidget {
                           }, icon: Icon(Icons.send)),
                       border: InputBorder.none,
                       hintText: 'Comments '),
-                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                   autofocus: true,
                 ),
               ),

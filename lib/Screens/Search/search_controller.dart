@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/task_manager.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Widgets/checkboxlisttile.dart';
@@ -87,6 +88,46 @@ class SearchController extends GetxController {
                                             : 4,
                                 selected: false,
                                 task: taskData["task_title"],
+                                 participants: Row(
+                                  children: [
+                                    Generator.buildOverlaysProfile(
+                                        images: [
+                                          'assets/images/icon.jpg',
+                                          'assets/images/icon.jpg',
+                                        ],
+                                        enabledOverlayBorder: true,
+                                        overlayBorderColor: Color(0xfff0f0f0),
+                                        overlayBorderThickness: 1.7,
+                                        leftFraction: 0.72,
+                                        size: 26),
+                                    SizedBox(
+                                      child: Material(
+                                        type: MaterialType.transparency,
+                                        child: CircleAvatar(
+                                          backgroundColor:
+                                              Get.theme.colorPrimaryDark,
+                                          radius: 14,
+                                          child: Text(
+                                              '${taskData['by_name'].substring(0, 2)}',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10)),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      " 0 comments",
+                                      style: Get.theme.kPrimaryTxtStyle,
+                                    ),
+                                    Text(
+                                      " . 0 Files",
+                                      style: Get.theme.kPrimaryTxtStyle,
+                                    )
+                                  ],
+                                ),
                                 createdOn:
                                     'Created:  ${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
                                 assigner: 'Assigner: ${taskData['by_name']}',
@@ -95,6 +136,7 @@ class SearchController extends GetxController {
                                             task: taskData["task_title"],
                                             status: taskData['status'],
                                             docId: taskData.reference.id,
+                                             comments: taskData['comments'],
                                             due:
                                                 "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
                                                     .toString(),

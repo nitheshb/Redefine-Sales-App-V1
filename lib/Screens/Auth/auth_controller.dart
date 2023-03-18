@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -13,6 +15,7 @@ class AuthController extends GetxController {
   TextEditingController password = TextEditingController();
   final formKey = GlobalKey<FormState>();
   var showPass = true.obs;
+  RxInt activeIndex = 0.obs;
 
   final User? currentUser = FirebaseAuth.instance.currentUser;
   bool isLoading = false;
@@ -21,7 +24,17 @@ class AuthController extends GetxController {
   String? loggedInFcmToken;
 
   var userDetails = [];
-
+startTimer() {
+    Timer.periodic(
+      Duration(seconds: 5),
+      (timer) {
+        activeIndex.value++;
+        if (activeIndex.value == 4) {
+          activeIndex.value = 0;
+        }
+      },
+    );
+  }
   void getToken() async {
     await FirebaseMessaging.instance.getToken().then((token) {
       localFcmToken = token;
@@ -38,6 +51,7 @@ class AuthController extends GetxController {
     showPass.value = false;
     getToken();
     getLoggedInUserDetails();
+     startTimer();
     super.onInit();
   }
 
