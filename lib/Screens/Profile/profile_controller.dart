@@ -4,15 +4,13 @@ import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import '../../themes/themes.dart';
 
 class ProfileController extends GetxController {
-  HomePageController homePageController = Get.put(HomePageController());
-
   @override
   void onInit() {
     changeTheme('light');
     super.onInit();
   }
 
-  RxString currentTheme = 'light'.obs;
+  var currentTheme = 'light'.obs;
 
   void changeTheme(theme) {
     if (theme == 'light') {

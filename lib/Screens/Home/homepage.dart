@@ -41,8 +41,8 @@ class HomePage extends StatelessWidget {
   XFile? image;
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put<HomePageController>(HomePageController());
     TaskController controller1 = Get.put<TaskController>(TaskController());
+    final controller = Get.put<HomePageController>(HomePageController());
     debugPrint("home called");
     return DefaultTabController(
       length: 3,

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
+import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/OnBoarding/onboarding_page.dart';
 import 'package:redefineerp/Screens/Profile/profile_controller.dart';
 import 'package:redefineerp/themes/themes.dart';
@@ -11,7 +12,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put<ProfileController>(ProfileController());
+    HomePageController homePageController = Get.find();
+    ProfileController controller = Get.find();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -54,13 +56,13 @@ class ProfilePage extends StatelessWidget {
             ),
             Obx(
               () => Text(
-                controller.homePageController.userName.value,
+                homePageController.userName.value,
                 style: Get.theme.kNormalStyle.copyWith(fontSize: 16),
               ),
             ),
             Obx(
               () => Text(
-                controller.homePageController.userEmail.value,
+                homePageController.userEmail.value,
                 style: Get.theme.kNormalStyle,
               ),
             ),
@@ -99,10 +101,9 @@ class ProfilePage extends StatelessWidget {
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
                   Row(
-                 mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                     
                       GestureDetector(
                         onTap: () {
                           controller.currentTheme.value = 'green';
@@ -113,7 +114,7 @@ class ProfilePage extends StatelessWidget {
                           radius: MediaQuery.of(context).size.width * 0.030,
                         ),
                       ),
-                      SizedBox(width: 12), 
+                      SizedBox(width: 12),
                       GestureDetector(
                         onTap: () {
                           controller.currentTheme.value = 'blue';
@@ -124,7 +125,7 @@ class ProfilePage extends StatelessWidget {
                           radius: MediaQuery.of(context).size.width * 0.030,
                         ),
                       ),
-                                            SizedBox(width: 12), 
+                      SizedBox(width: 12),
 
                       GestureDetector(
                         onTap: () {
@@ -136,14 +137,13 @@ class ProfilePage extends StatelessWidget {
                           radius: MediaQuery.of(context).size.width * 0.030,
                         ),
                       ),
-                                                                  SizedBox(width: 12), 
+                      SizedBox(width: 12),
 
                       // CircleAvatar(
                       //   backgroundColor: Color(0xFF303437),
                       //   radius: MediaQuery.of(context).size.width * 0.030,
                       // ),
-                                                                 SizedBox(width: 12), 
-
+                      SizedBox(width: 12),
                     ],
                   ),
                   SizedBox(
@@ -243,7 +243,9 @@ class ProfilePage extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                FirebaseAuth.instance.signOut().then((value) =>  Get.offAll(() => LoginPage()));
+                FirebaseAuth.instance
+                    .signOut()
+                    .then((value) => Get.offAll(() => LoginPage()));
               },
               child: Text(
                 'Log Out',
