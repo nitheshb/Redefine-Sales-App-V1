@@ -155,6 +155,11 @@ void addComments(id, type, txt)async{
   void updateSelectedDate() {
     selectedDateTime.value =
         DateFormat('dd-MM-yyyy kk:mm').format(dateSelected);
+        
+  }
+
+  void updateAssignTimeDb(docId){
+     _collection.doc(docId).update({"due_date": dateSelected.millisecondsSinceEpoch});
   }
 
   void setTaskType(String task) {

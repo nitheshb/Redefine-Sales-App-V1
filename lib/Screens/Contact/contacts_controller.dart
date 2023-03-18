@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 
 class ContactController extends GetxController {
@@ -11,7 +12,7 @@ class ContactController extends GetxController {
   final searchController = TextEditingController();
   final collection = FirebaseFirestore.instance.collection('users');
 
-  TaskController taskController = Get.find();
+  // HomePageController homeController = Get.find();
 
   var deptFilterList = <String>[].obs;
   var filterValue = 'All'.obs;

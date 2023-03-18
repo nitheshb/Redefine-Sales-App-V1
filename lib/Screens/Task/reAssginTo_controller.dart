@@ -42,11 +42,13 @@ class ReAssignController extends GetxController {
 
   void reAssignTo(id, name, toUid, fcm)async{
 
-  await _collection.doc(id.value).update({"to_name": name, "to_uid": toUid});
+  await _collection.doc(id).update({"to_name": name, "to_uid": toUid});
 
-  print('updated detaisl are ${name} ${id.value}');
+  print('updated detaisl are ${id} ${name} ${toUid}');
 
 }
+
+
 
   // Remove a participant from the list by their userId
   void removeParticipant(String userId) {

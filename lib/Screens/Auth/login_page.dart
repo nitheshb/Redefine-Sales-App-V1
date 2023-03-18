@@ -73,6 +73,7 @@ class LoginPage extends StatelessWidget {
                     key: controller.formKey,
                     child: TextFormField(
                       controller: controller.email,
+                      autocorrect: false,
                       validator: (value) {
                         if (!GetUtils.isEmail(value!)) {
                           return 'Please enter a valid email ID.';

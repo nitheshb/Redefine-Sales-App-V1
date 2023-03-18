@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +8,7 @@ import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Screens/Task/task_manager.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
+import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/Widgets/checkboxlisttile.dart';
 import 'package:intl/intl.dart';
 import 'package:redefineerp/Widgets/datewidget.dart';
@@ -17,8 +20,34 @@ import 'package:redefineerp/themes/themes.dart';
 
 class HomePageController extends GetxController {
 
+  @override
+  void onInit() async {
+        await fetchdata();
+    getToken();
+
+    updateSelectedDate();
+
+        FirebaseAuth.instance.authStateChanges().listen((User? user) {
+       currentUser = user;
+    });
+      print('my user is yo yo ${currentUser}');
+    super.onInit();
+  }
+
   
-  TaskController taskController = Get.find();
+  @override
+  void onReady() async{
+    print('yo yo');
+    // Get called after widget is rendered on the screen
+      await fetchdata();
+    super.onReady();
+  }
+  
+  // TaskController taskController = Get.find();
+    final _collection =
+      FirebaseFirestore.instance.collection('spark_assignedTasks');
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
 
   var tabIndex = 0.obs;
   var bottomBarIndex = 0.obs;
@@ -28,7 +57,8 @@ class HomePageController extends GetxController {
   var index = 0.obs;
   var notdone = 0.obs;
   var url = "".obs;
-  final User? currentUser = FirebaseAuth.instance.currentUser;
+
+
 
   var userName = ''.obs;
   var userEmail = ''.obs;
@@ -36,6 +66,8 @@ class HomePageController extends GetxController {
   var numOfTodayTasks = 0.obs;
   var numOfUpcomingTasks = 0.obs;
   var numOfCreatedTasks = 0.obs;
+
+  var currentUser;
 
   int tempDueDate = 0;
   int dueDateIndex = 0;
@@ -49,7 +81,138 @@ class HomePageController extends GetxController {
   var streamUpcomingWidget = sizeBox(0, 0).obs;
   var streamCreatedWidget = sizeBox(0, 0).obs;
 
+  // 
+    TextEditingController taskTitle = TextEditingController();
+  TextEditingController taskDescription = TextEditingController();
+  TextEditingController dateinput = TextEditingController();
+  TextEditingController commentLine = TextEditingController();
+
+   GlobalKey<FormState> taskKey = GlobalKey<FormState>();
+  var taskType = 'mark'.obs;
+  DateTime dateSelected = DateTime.now();
+  var selectedDateTime = ''.obs;
+
+    var assignedUserName = 'Assign someone'.obs;
+  var assignedUserDepartment = ''.obs;
+  var assignedUserUid = ''.obs;
+  var assignedUserEmail = ''.obs;
+  var assignedUserFcmToken = ''.obs;
+  var taskPriority = 'Basic'.obs;
+
+     var participantsA = [].obs;
+     var attachmentsA = [].obs;
+     
+       get http => null;
+  String? validateTaskTitle(value) {
+    if (value == '') {
+      return 'Please enter task title';
+    } else {
+      return null;
+    }
+  }
+void updateSelectedDate() {
+    selectedDateTime.value =
+        DateFormat('dd-MM-yyyy kk:mm').format(dateSelected);
+  }
+
+   checkTaskValidation() {
+    final validator = taskKey.currentState!.validate();
+
+    if (!validator) {
+      return;
+    } else {
+      if (assignedUserName == 'Assign someone') {
+        Get.snackbar(
+            colorText: Get.theme.colorPrimaryDark,
+            backgroundColor: Get.theme.overlayColor,
+            margin: const EdgeInsets.all(10),
+            duration: Duration(seconds: 3),
+            "",
+            "Please Assign task to someone",
+            snackPosition: SnackPosition.BOTTOM);
+      } else {
+        createNewTask();
+        print(assignedUserName);
+      }
+    }
+  }
+
+  
+  void createNewTask() {
+  
+    // Get.reset();
+    // Get.delete<TaskController>();
+
+    _collection
+        .add({
+          'task_title': taskTitle.text,
+          'task_desc': taskDescription.text,
+          'created_on': DateTime.now().millisecondsSinceEpoch,
+          'due_date': dateSelected.millisecondsSinceEpoch,
+          'by_email': auth.currentUser?.email,
+          'by_name': auth.currentUser?.displayName,
+          'by_uid': auth.currentUser?.uid,
+          'to_name': assignedUserName.value,
+          'to_uid': assignedUserUid.value,
+          'priority': taskPriority.value,
+          'atttachmentsA': attachmentsA.value,
+          'to_email': assignedUserEmail.value,
+          'dept': assignedUserDepartment.value,
+          'status': "InProgress",
+          'particpantsA' : participantsA.value,
+        })
+        .then((value) => {
+              print("Task Created ${value}"),
+              
+              Get.back(),
+              snackBarMsg('Task Created!', enableMsgBtn: false),
+               sendPushMessage('Task Assigned for you:', taskTitle.text,
+                  assignedUserFcmToken.value),
+                taskTitle.clear(),
+                taskDescription.clear(),
+                dateinput.clear(),
+                assignedUserName = 'Assign someone'.obs,
+              
+             
+            })
+        .catchError((error) =>{
+          print("Failed to create task: $error"),
+          snackBarMsg('Failed to create task: $error', enableMsgBtn: false),
+        });
+  }
+    void sendPushMessage(String body, String title, String token) async {
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization':
+              'key=AAAAu40SEOU:APA91bGOizFLorP1WdQSJSDotrKCpdCOPsJNa_N350JSpc07MeBdhl7vM8XJqBnX2lU0paRww1jILVxaArXjEyjDBpqbX--oR9Mo7NZwJY7TxaUy6OdWtrPHc0DO0EdEXBp3fCX4boZB',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body': body,
+              'title': title,
+            },
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'TASK_ASSIGN_NOTIF',
+              'id': '1',
+              'status': 'done'
+            },
+            "to": token,
+          },
+        ),
+      );
+      print('done');
+    } catch (e) {
+      print("error push notification");
+    }
+  }
   Future<void> fetchdata() async {
+
+    print('am i here ${currentUser?.email}');
     await FirebaseFirestore.instance
         .collection('spark_assignedTasks')
         .where("by_email", isEqualTo: currentUser?.email)
@@ -73,6 +236,7 @@ class HomePageController extends GetxController {
         .get()
         .then((QuerySnapshot querySnapshot) {
       final doc = querySnapshot.docs[0];
+      print('check it ${doc.data()}');
       userName.value = doc['name'];
       userEmail.value = doc['email'];
     });
@@ -85,7 +249,7 @@ class HomePageController extends GetxController {
             .where("due_date",
                 isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
             .where("status", isEqualTo: "InProgress")
-            .where("to_email", isEqualTo: currentUser?.email)
+            .where("to_uid", isEqualTo: currentUser?.uid)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -111,7 +275,7 @@ class HomePageController extends GetxController {
                                 snapshot.data?.docs[index];
                             print("qwdqwdw ${taskData?.id}");
 
-                            taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
+                            // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
                             // print(
                             //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
                             // print("due date is ${taskData!.get('due data')}");
@@ -650,12 +814,6 @@ class HomePageController extends GetxController {
     );
   }
 
-  @override
-  void onInit() async {
-    getToken();
-    await fetchdata();
-    super.onInit();
-  }
 
   @override
   void onClose() {

@@ -13,6 +13,8 @@ import '../../Widgets/minimsg.dart';
 class ContactListDialogPage extends StatelessWidget {
   const ContactListDialogPage({Key? key}) : super(key: key);
 
+  
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<ContactController>(ContactController());

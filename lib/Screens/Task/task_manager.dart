@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -15,7 +16,7 @@ import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:redefineerp/Widgets/task_sheet_widget.dart';
 import 'package:redefineerp/themes/themes.dart';
-
+import 'package:intl/intl.dart';
 class TaskManager extends StatelessWidget {
   TaskManager(
       {required this.task,
@@ -44,6 +45,42 @@ class TaskManager extends StatelessWidget {
     controller.setTaskType(status);
     controller.setTaskId(docId);
     debugPrint('DOC ID $docId');
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance.collection('spark_assignedTasks').doc(docId).snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        }
+
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        var data = snapshot.data!.data() as Map<String, dynamic>;
+
+        var attachementA_db = [];
+        try {
+          attachementA_db = data["atttachmentsA"];
+        } catch (e) {
+          attachementA_db = [];
+        }
+
+        // return Padding(
+        //   padding: const EdgeInsets.only(top:108.0),
+        //   child: Column(
+        //     children: [
+        //       Text(data['task_title']),
+        //       Text(data['task_desc']),
+        //       // add more data fields here as needed
+        //     ],
+        //   ),
+        // );
+     
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: PreferredSize(
@@ -93,7 +130,7 @@ class TaskManager extends StatelessWidget {
                   : sizeBox(0, 0)),
               Padding(
                 padding: const EdgeInsets.fromLTRB(14, 22, 0, 4),
-                child: Text(task, style: Get.theme.kTitleStyle),
+                child: Text(data['task_title'], style: Get.theme.kTitleStyle),
               ),
               sizeBox(10, 0),
               ListView(
@@ -118,7 +155,7 @@ class TaskManager extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(8),
                                         ),
-                                        child: const ReassignToList()))
+                                        child:  ReassignToList( docId: docId,)))
                               },
                               child: Row(
                                 children: [
@@ -130,7 +167,7 @@ class TaskManager extends StatelessWidget {
                                             Get.theme.colorPrimaryDark,
                                         radius: 14,
                                         child: Text(
-                                            '${controller.assignedUserName.value.substring(0, 2)}',
+                                            '${data['to_name'].substring(0, 2)}',
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 10)),
@@ -160,7 +197,7 @@ class TaskManager extends StatelessWidget {
                                         SizedBox(
                                           height: 22,
                                           child: Text(
-                                            '${controller.assignToName}',
+                                            '${data["to_name"]}',
                                             style: Get.theme.kPrimaryTxtStyle
                                                 .copyWith(
                                               color: Get.theme.kBadgeColor,
@@ -205,6 +242,7 @@ class TaskManager extends StatelessWidget {
                                 }, onConfirm: (date) {
                                   controller.dateSelected = date;
                                   controller.updateSelectedDate();
+                                  controller.updateAssignTimeDb(docId);
                                 }, currentTime: DateTime.now())
                               },
                               child: Row(
@@ -263,7 +301,7 @@ class TaskManager extends StatelessWidget {
                                         ),
                                         SizedBox(
                                           height: 22,
-                                          child: Text(due,
+                                          child: Text("${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(data["due_date"]))}",
                                               style: Get.theme.kNormalStyle
                                                   .copyWith()),
                                         ),
@@ -444,7 +482,7 @@ class TaskManager extends StatelessWidget {
                                           height: 22,
                                           child: Text(
                                               // createdOn,
-                                              due,
+                                            "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(data["created_on"]))}",
                                               style: Get.theme.kNormalStyle
                                                   .copyWith()),
                                         ),
@@ -476,6 +514,7 @@ class TaskManager extends StatelessWidget {
                           // height: 20,
                           child: Text(
                             'Add more details to the task',
+                            // data['task_desc'],
                             style: Get.theme.kSubTitle.copyWith(
                               color: Get.theme.kLightGrayColor,
                             ),
@@ -574,13 +613,13 @@ class TaskManager extends StatelessWidget {
                                       shrinkWrap: true,
                                       scrollDirection: Axis.horizontal,
                                       physics: const BouncingScrollPhysics(),
-                                      itemCount: controller.attachmentsA.length,
+                                      itemCount: attachementA_db.length,
                                       itemBuilder: (BuildContext context,
                                               int index) =>
                                           Card(
                                               child: Image(
                                             image: NetworkImage(
-                                                controller.attachmentsA[index]),
+                                               attachementA_db[index]),
                                             // fit: BoxFit.fill,
                                             width: 100,
                                             height: 100,
@@ -840,5 +879,8 @@ class TaskManager extends StatelessWidget {
       //   ),
       // ),
     );
+     },
+    );
+  
   }
 }

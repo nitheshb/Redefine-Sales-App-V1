@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
+import 'package:redefineerp/Screens/Home/homepage_controller.dart';
+import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/Widgets/contact_card.dart';
@@ -14,6 +16,7 @@ class ContactListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<ContactController>(ContactController());
+ final HomePageController controller1 = Get.put<HomePageController>(HomePageController());
     return Container(
       child: Scaffold(
         appBar: AppBar(
@@ -140,7 +143,7 @@ class ContactListPage extends StatelessWidget {
               ),
               Container(
                   height: 2, width: Get.size.width, color: Get.theme.curveBG),
-              _streamUsersContacts(controller),
+              _streamUsersContacts(controller, controller1),
             ],
           ),
         ),
@@ -148,7 +151,7 @@ class ContactListPage extends StatelessWidget {
     );
   }
 
-  Widget _streamUsersContacts(ContactController controller) {
+  Widget _streamUsersContacts(ContactController controller, controller1) {
     return Obx(() => StreamBuilder<QuerySnapshot>(
         stream: DbQuery.instanace.getEmployees(
             sortByDeptName: controller.filterValue.value,
@@ -175,15 +178,16 @@ class ContactListPage extends StatelessWidget {
                       onTap: () {
 
                    try{
-                            controller.taskController.assignedUserName.value =
+                          controller1.assignedUserName.value =
                                 taskData["name"];
-                            controller.taskController.assignedUserDepartment
+                                
+                            controller1.assignedUserDepartment
                                 .value = taskData["department"][0];
-                            controller.taskController.assignedUserEmail.value =
+                            controller1.assignedUserEmail.value =
                                 taskData["email"];
-                            controller.taskController.assignedUserUid.value =
+                            controller1.assignedUserUid.value =
                                 taskData["uid"];
-                            controller.taskController.assignedUserFcmToken
+                            controller1.assignedUserFcmToken
                                 .value = taskData["user_fcmtoken"];
                             Get.back();}catch(e){
                                         snackBarMsg('This user is not yet using TaskMan');

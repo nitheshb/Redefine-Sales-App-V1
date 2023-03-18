@@ -11,6 +11,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<ProfileController>(ProfileController());
+      final FirebaseAuth auth = FirebaseAuth.instance;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -51,18 +52,16 @@ class ProfilePage extends StatelessWidget {
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.02,
             ),
-            Obx(
-              () => Text(
-                controller.homePageController.userName.value,
+            Text(
+                '${auth.currentUser!.displayName}',
                 style: Get.theme.kNormalStyle.copyWith(fontSize: 16),
               ),
-            ),
-            Obx(
-              () => Text(
-                controller.homePageController.userEmail.value,
+            
+            Text(
+                '${auth.currentUser!.email}',
                 style: Get.theme.kNormalStyle,
               ),
-            ),
+            
             Padding(
               padding: EdgeInsets.only(
                   top: MediaQuery.of(context).size.height * 0.01),

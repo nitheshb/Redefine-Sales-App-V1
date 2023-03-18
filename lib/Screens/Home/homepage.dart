@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_dialog.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
+import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Profile/profile_page.dart';
@@ -42,8 +43,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<HomePageController>(HomePageController());
-    TaskController controller1 = Get.put<TaskController>(TaskController());
-    debugPrint("home called");
+    final controller1 = Get.put<ContactController>(ContactController());
+
+    // TaskController controller1 = Get.put<TaskController>(TaskController());
+    debugPrint("home called ${FirebaseAuth.instance.currentUser}");
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -93,13 +96,13 @@ class HomePage extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 35),
-                    child: Obx(
-                      () => Text(
-                        'Morning, ${controller.userName}',
+                    child: 
+                    Text(
+                        'Morning, ${FirebaseAuth.instance.currentUser!.displayName}',
                         style: Get.theme.kTitleStyle
                             .copyWith(color: Get.theme.btnTextCol),
                       ),
-                    ),
+                    
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 2, bottom: 20),
@@ -395,14 +398,14 @@ class HomePage extends StatelessWidget {
                           right: 14.0,
                           top: 10.0),
                       child: Form(
-                        key:controller1.taskKey,
+                        key:controller.taskKey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
-                               validator: controller1.validateTaskTitle,
-                              controller: controller1.taskTitle,
+                               validator: controller.validateTaskTitle,
+                              controller: controller.taskTitle,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'Task name...'),
@@ -436,7 +439,7 @@ class HomePage extends StatelessWidget {
                             //   height:
                             //  child: null),
                             Visibility(
-                              visible: !(controller1.assignedUserName.value ==
+                              visible: !(controller.assignedUserName.value ==
                                   "Assign someone"),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -465,7 +468,7 @@ class HomePage extends StatelessWidget {
                                                   Get.theme.colorPrimaryDark,
                                               radius: 17,
                                               child: Text(
-                                                  '${controller1.assignedUserName.value.substring(0, 2)}',
+                                                  '${controller.assignedUserName.value.substring(0, 2)}',
                                                   style: TextStyle(
                                                       color: Colors.white)),
                                             ),
@@ -494,7 +497,7 @@ class HomePage extends StatelessWidget {
                                                       SizedBox(
                                                         height: 22,
                                                         child: Text(
-                                                          controller1
+                                                          controller
                                                               .assignedUserName
                                                               .value,
                                                           style: Get.theme
@@ -513,7 +516,7 @@ class HomePage extends StatelessWidget {
                                             // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                             // backgroundColor: Get.theme.kBadgeColorBg,
                                             // label: Text(
-                                            //   controller1.assignedUserName.value,
+                                            //   controller.assignedUserName.value,
                                             //   style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
                                             // ),
                                             // onPressed: () => {
@@ -543,8 +546,8 @@ class HomePage extends StatelessWidget {
                                         print(
                                             'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
                                       }, onConfirm: (date) {
-                                        controller1.dateSelected = date;
-                                        controller1.updateSelectedDate();
+                                        controller.dateSelected = date;
+                                        controller.updateSelectedDate();
                                       }, currentTime: DateTime.now())
                                     },
                                     child: Row(
@@ -607,7 +610,7 @@ class HomePage extends StatelessWidget {
                                                       SizedBox(
                                                         height: 22,
                                                         child: Text(
-                                                            controller1
+                                                            controller
                                                                 .selectedDateTime
                                                                 .value,
                                                             style: Get.theme
@@ -626,7 +629,7 @@ class HomePage extends StatelessWidget {
                                             // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                             // backgroundColor: Get.theme.kBadgeColorBg,
                                             // label: Text(
-                                            //   controller1.assignedUserName.value,
+                                            //   controller.assignedUserName.value,
                                             //   style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
                                             // ),
                                             // onPressed: () => {
@@ -648,7 +651,18 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                       
-                            SizedBox(
+                             SizedBox(
+                              height: 8,
+                            ),
+                               
+                            Visibility(
+                                visible:
+                                    (controller.attachmentsA.value.length > 0),
+                                child: SizedBox(
+                                    // height: 20,
+                                    child: Column(
+                                  children: [
+                                     SizedBox(
                               // height: 20,
                               child: Text(
                                 'Attachments',
@@ -656,17 +670,7 @@ class HomePage extends StatelessWidget {
                                     color: Color(0xff707070), fontSize: 16),
                               ),
                             ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Visibility(
-                                visible:
-                                    (controller1.attachmentsA.value.length > 0),
-                                child: SizedBox(
-                                    // height: 20,
-                                    child: Column(
-                                  children: [
-                                    SizedBox(height: 15),
+                               SizedBox(height: 15),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 2.0),
                                       child: Row(
@@ -678,11 +682,11 @@ class HomePage extends StatelessWidget {
                                               storageReference
                                                   .putFile(File(image!.path))
                                                   .then((value) async {
-                                                controller1.attachmentsA.value
+                                                controller.attachmentsA.value
                                                     .add(await value.ref
                                                         .getDownloadURL());
                                                 print(
-                                                    'Image URL: ${controller1.attachmentsA.value}');
+                                                    'Image URL: ${controller.attachmentsA.value}');
                                               });
                                             },
                                             child: DottedBorder(
@@ -712,7 +716,7 @@ class HomePage extends StatelessWidget {
                                                       Axis.horizontal,
                                                   physics:
                                                       const BouncingScrollPhysics(),
-                                                  itemCount: controller1
+                                                  itemCount: controller
                                                       .attachmentsA.length,
                                                   itemBuilder:
                                                       (BuildContext context,
@@ -720,7 +724,7 @@ class HomePage extends StatelessWidget {
                                                           Card(
                                                               child: Image(
                                                             image: NetworkImage(
-                                                                controller1
+                                                                controller
                                                                         .attachmentsA[
                                                                     index]),
                                                             // fit: BoxFit.fill,
@@ -737,7 +741,7 @@ class HomePage extends StatelessWidget {
                       
                             Visibility(
                               visible:
-                                  (controller1.attachmentsA.value.length > 0),
+                                  (controller1.participants.value.isNotEmpty),
                               child: SizedBox(
                                 // height: 20,
                                 child: Column(
@@ -795,7 +799,39 @@ class HomePage extends StatelessWidget {
                                           SizedBox(
                                             width: 4,
                                           ),
-                      
+                                        Obx(
+                                () => SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.04,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.720,
+                                  child: ListView.builder(
+                                    itemCount: controller_Contacts
+                                        .participants.value.length,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(left:3.0),
+                                        child: SizedBox(
+                                          child: Material(
+                                            type: MaterialType.transparency,
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Get.theme.colorPrimaryDark,
+                                              radius: 14,
+                                              child: Text(
+                                                  '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10)),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                                           // Obx(
                                           //   () => SizedBox(
                                           //     height:
@@ -847,7 +883,7 @@ class HomePage extends StatelessWidget {
                                     children: [
                                       Visibility(
                                         visible:
-                                            (controller1.assignedUserName.value ==
+                                            (controller.assignedUserName.value ==
                                                 "Assign someone"),
                                         child: Row(
                                           children: [
@@ -890,8 +926,8 @@ class HomePage extends StatelessWidget {
                                                   print(
                                                       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
                                                 }, onConfirm: (date) {
-                                                  controller1.dateSelected = date;
-                                                  controller1
+                                                  controller.dateSelected = date;
+                                                  controller
                                                       .updateSelectedDate();
                                                 }, currentTime: DateTime.now())
                                               },
@@ -907,7 +943,7 @@ class HomePage extends StatelessWidget {
                                         ),
                                       ),
                                       Visibility(
-                                        visible: !(controller1
+                                        visible: !(controller
                                                 .attachmentsA.value.length >
                                             0),
                                         child: Row(
@@ -924,13 +960,13 @@ class HomePage extends StatelessWidget {
                                                         .putFile(
                                                             File(image!.path))
                                                         .then((value) async {
-                                                      controller1
+                                                      controller
                                                           .attachmentsA.value = [
                                                         await value.ref
                                                             .getDownloadURL()
                                                       ];
                                                       print(
-                                                          'Image URL: ${controller1.attachmentsA.value}');
+                                                          'Image URL: ${controller.attachmentsA.value}');
                                                     });
                                                   },
                                                   child: Icon(
@@ -967,21 +1003,24 @@ class HomePage extends StatelessWidget {
                                       SizedBox(
                                         width: 20.0,
                                       ),
-                                      InkWell(
-                                        onTap: () => {
-                                          DatePicker.showDateTimePicker(context,
-                                              showTitleActions: true,
-                                              onChanged: (date) {
-                                            print(
-                                                'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                          }, onConfirm: (date) {
-                                            // controller.dateSelected = date;
-                                            // controller.updateSelectedDate();
-                                          }, currentTime: DateTime.now())
-                                        },
-                                        child: Icon(
-                                          Icons.people_alt_outlined,
-                                          color: Get.theme.kLightGrayColor,
+                                      
+                                        Visibility(
+                              visible:
+                                  (!controller1.participants.value.isNotEmpty),
+                                        
+                                        child: InkWell(
+                                                onTap: () => {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              const ContactListDialogPage())
+                                                    },
+                                          
+                                          child: Icon(
+                                            Icons.people_alt_outlined,
+                                            color: Get.theme.kLightGrayColor,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -989,8 +1028,12 @@ class HomePage extends StatelessWidget {
                                 ),
                                 InkWell(
                                     onTap: () => 
-                                      {controller1.checkTaskValidation()},
-                                    // {controller1.createNewTask()},
+                                      {controller.checkTaskValidation()},
+
+                                      
+
+                                      
+                                    // {controller.createNewTask()},
                                     child: Text('Create'))
                               ],
                             ),

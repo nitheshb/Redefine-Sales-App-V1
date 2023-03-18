@@ -10,7 +10,10 @@ import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class ReassignToList extends StatelessWidget {
-  const ReassignToList({Key? key}) : super(key: key);
+  const ReassignToList({Key? key, required this.docId}) : super(key: key);
+
+
+final String docId;
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +191,7 @@ class ReassignToList extends StatelessWidget {
                                 .value = taskData["user_fcmtoken"];
 
                                 // add to db
-                                controller.reAssignTo(controller.taskController.taskDocId, taskData["name"], taskData["uid"], taskData["user_fcmtoken"]);
+                                controller.reAssignTo(docId, taskData["name"], taskData["uid"], taskData["user_fcmtoken"]);
                             Get.back();}catch(e){
                                         snackBarMsg('This user is not yet using TaskMan');
                             }
