@@ -99,7 +99,7 @@ class HomePageController extends GetxController {
   var assignedUserFcmToken = ''.obs;
   var taskPriority = 'Basic'.obs;
 
-     var participantsA = [].obs;
+     var participantsANew = [].obs;
      var attachmentsA = [].obs;
      
        get http => null;
@@ -142,6 +142,9 @@ void updateSelectedDate() {
   
     // Get.reset();
     // Get.delete<TaskController>();
+    // print('hello ${participantsANew}');
+
+    // return;
 
     _collection
         .add({
@@ -159,7 +162,7 @@ void updateSelectedDate() {
           'to_email': assignedUserEmail.value,
           'dept': assignedUserDepartment.value,
           'status': "InProgress",
-          'particpantsA' : participantsA.value,
+          'particpantsA' : participantsANew.value,
         })
         .then((value) => {
               print("Task Created ${value}"),

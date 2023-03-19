@@ -154,6 +154,8 @@ class ContactListDialogPage extends StatelessWidget {
                   left: MediaQuery.of(context).size.height * 0.130,
                   child: InkWell(
                     onTap: () {
+
+                      
                       Get.back();
                     },
                     child: Container(

@@ -64,10 +64,24 @@ class TaskManager extends StatelessWidget {
         var data = snapshot.data!.data() as Map<String, dynamic>;
 
         var attachementA_db = [];
+        var participantsA_db = [];
+        var commentsA_db = [];
         try {
           attachementA_db = data["atttachmentsA"];
         } catch (e) {
           attachementA_db = [];
+        }
+
+         try {
+          participantsA_db = data["particpantsA"];
+        } catch (e) {
+          participantsA_db = [];
+        }
+
+        try {
+          commentsA_db = data["comments"];
+        } catch (e) {
+          commentsA_db = [];
         }
 
         // return Padding(
@@ -690,15 +704,14 @@ class TaskManager extends StatelessWidget {
                                 width: 4,
                               ),
 
-                              Obx(
-                                () => SizedBox(
+                            
+                              SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.04,
                                   width:
                                       MediaQuery.of(context).size.width * 0.720,
                                   child: ListView.builder(
-                                    itemCount: controller_Contacts
-                                        .participants.value.length,
+                                    itemCount: participantsA_db.length,
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (context, index) {
                                       return Padding(
@@ -711,7 +724,7 @@ class TaskManager extends StatelessWidget {
                                                   Get.theme.colorPrimaryDark,
                                               radius: 14,
                                               child: Text(
-                                                  '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
+                                                  '${participantsA_db[index]['name'].substring(0, 2)}',
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 10)),
@@ -722,7 +735,7 @@ class TaskManager extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                              ),
+                              
                              
                        
                             ],
@@ -748,12 +761,13 @@ class TaskManager extends StatelessWidget {
                               SizedBox(
                                 
                                   width:
-                                      MediaQuery.of(context).size.width * 0.720,
+                                      MediaQuery.of(context).size.width * 0.1020,
                                       height:
-                                      MediaQuery.of(context).size.height * 0.04,
+                                      MediaQuery.of(context).size.height * 0.104,
               child:    ListView.builder(
-                                    itemCount: comments.length,
+                                    itemCount: commentsA_db.length,
                                     scrollDirection: Axis.vertical,
+                                    reverse: true,
                                     itemBuilder: (context, index) {
                                       return 
                                         Container(
@@ -761,7 +775,7 @@ class TaskManager extends StatelessWidget {
                                                           alignment: Alignment.topLeft,
                                                           padding: EdgeInsets.only(left: 20.0, right: 20, top:8.0, bottom: 8.0),
                                                           child: Text(
-                                                            '${comments[index]["txt"]}',
+                                                            '${commentsA_db[index]["txt"]}',
                                                       
                                                             style: Get.theme.kSubTitle
                                                                 .copyWith(color: Get.theme.kGreenDark),

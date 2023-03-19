@@ -6,6 +6,9 @@ import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 
 class ContactController extends GetxController {
+
+final homeController = Get.put<HomePageController>(HomePageController());
+
   var selectedIndex = 0.obs;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -37,11 +40,14 @@ class ContactController extends GetxController {
 
     Map<String, dynamic> newParticipant = {'name': username, 'uid': userId};
     participants.add(newParticipant);
+    homeController.participantsANew.value = participants;
   }
 
   // Remove a participant from the list by their userId
   void removeParticipant(String userId) {
     participants.removeWhere((participant) => participant['uid'] == userId);
+    homeController.participantsANew.value = participants;
+
   }
 
   Future<void> getDeptFilterData() async {

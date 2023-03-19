@@ -745,6 +745,8 @@ class HomePage extends StatelessWidget {
                               child: SizedBox(
                                 // height: 20,
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       'Participants',
@@ -806,8 +808,8 @@ class HomePage extends StatelessWidget {
                                   width:
                                       MediaQuery.of(context).size.width * 0.720,
                                   child: ListView.builder(
-                                    itemCount: controller_Contacts
-                                        .participants.value.length,
+                                    itemCount: controller
+                                        .participantsANew.value.length,
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (context, index) {
                                       return Padding(
@@ -820,7 +822,7 @@ class HomePage extends StatelessWidget {
                                                   Get.theme.colorPrimaryDark,
                                               radius: 14,
                                               child: Text(
-                                                  '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
+                                                  '${controller.participantsANew[index]['name'].substring(0, 2)}',
                                                   style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 10)),
