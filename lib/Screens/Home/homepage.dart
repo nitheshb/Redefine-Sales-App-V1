@@ -957,129 +957,158 @@ class HomePage extends StatelessWidget {
               return [
                 SliverAppBar(
                   pinned: true,
-                  expandedHeight: 150,
-                  leading: Padding(
-                    padding: const EdgeInsets.only(left: 10, top: 10),
-                    child: IconButton(
-                      onPressed: () => {Get.to(() => const ProfilePage())},
-                      icon: Hero(
-                        tag: 'profile',
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: CircleAvatar(
-                            backgroundColor: Get.theme.colorPrimaryDark,
-                            radius: 30,
-                            child: Icon(
-                              Icons.person,
-                              color: Get.theme.colorPrimary,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: IconButton(
-                        onPressed: () => {
-                          Get.to(() => const NotificationPage())
-                          // basicDialog('title', 'message')
-                        },
-                        icon: Icon(
-                          Icons.notifications_outlined,
-                          color: Get.theme.btnTextCol,
-                        ),
-                      ),
-                    )
-                  ],
+                  expandedHeight: 200,
                   elevation: 0,
                   backgroundColor: Colors.white,
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 35),
-                        child: Text(
-                          'Morning, ${FirebaseAuth.instance.currentUser!.displayName}',
-                          style: Get.theme.kTitleStyle
-                              .copyWith(color: Get.theme.btnTextCol),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 2, bottom: 20),
-                        child: Obx(
-                          () => Text(
-                            '${controller.donecount.value}/${controller.notdone.value + controller.donecount.value} Tasks pending',
-                            style: Get.theme.kSubTitle.copyWith(
-                                color: Get.theme.colorPrimaryDark
-                                    .withOpacity(0.6)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  bottom: TabBar(
-                      onTap: (value) => {
-                            controller.tabIndex.value = value,
-                          },
-                      isScrollable: true,
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      physics: const BouncingScrollPhysics(),
-                      indicatorColor: Get.theme.colorPrimaryDark,
-                      labelColor: Get.theme.colorPrimaryDark,
-                      labelStyle: Get.theme.kTitleStyle,
-                      unselectedLabelStyle: Get.theme.kNormalStyle,
-                      unselectedLabelColor:
-                          Get.theme.btnTextCol.withOpacity(0.2),
-                      tabs: [
-                        Tab(
+                  flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: true,
+                    title: TabBar(
+                        onTap: (value) => {
+                              controller.tabIndex.value = value,
+                            },
+                        isScrollable: true,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        physics: const BouncingScrollPhysics(),
+                        indicatorColor: Get.theme.colorPrimaryDark,
+                        labelColor: Get.theme.colorPrimaryDark,
+                        labelStyle: Get.theme.kTitleStyle,
+                        unselectedLabelStyle: Get.theme.kNormalStyle,
+                        unselectedLabelColor:
+                            Get.theme.btnTextCol.withOpacity(0.2),
+                        tabs: [
+                          Tab(
+                              icon: Row(
+                            children: [
+                              Text(
+                                'Today',
+                                style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            0.017),
+                              ),
+                              Obx(
+                                () => tabTaskIndicator(
+                                    context: context,
+                                    taskNum: controller.numOfTodayTasks.value,
+                                    index: 0,
+                                    controller: controller),
+                              )
+                            ],
+                          )),
+                          Tab(
                             icon: Row(
-                          children: [
-                            const Text(
-                              'Today',
+                              children: [
+                                Text(
+                                  'Upcoming',
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              0.017),
+                                ),
+                                Obx(
+                                  () => tabTaskIndicator(
+                                      context: context,
+                                      taskNum:
+                                          controller.numOfUpcomingTasks.value,
+                                      index: 1,
+                                      controller: controller),
+                                ),
+                              ],
                             ),
-                            Obx(
-                              () => tabTaskIndicator(
-                                  taskNum: controller.numOfTodayTasks.value,
-                                  index: 0,
-                                  controller: controller),
-                            )
+                          ),
+                          Tab(
+                            icon: Row(
+                              children: [
+                                Text(
+                                  'Created',
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              0.017),
+                                ),
+                                Obx(
+                                  () => tabTaskIndicator(
+                                      context: context,
+                                      taskNum:
+                                          controller.numOfCreatedTasks.value,
+                                      index: 2,
+                                      controller: controller),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ]),
+                    background: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, top: 10),
+                          child: IconButton(
+                            onPressed: () =>
+                                {Get.to(() => const ProfilePage())},
+                            icon: Hero(
+                              tag: 'profile',
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: CircleAvatar(
+                                  backgroundColor: Get.theme.colorPrimaryDark,
+                                  radius: 30,
+                                  child: Icon(
+                                    Icons.person,
+                                    color: Get.theme.colorPrimary,
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.030,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 35),
+                              child: Text(
+                                'Morning, ${FirebaseAuth.instance.currentUser!.displayName}',
+                                style: Get.theme.kTitleStyle
+                                    .copyWith(color: Get.theme.btnTextCol),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 2, bottom: 20),
+                              child: Obx(
+                                () => Text(
+                                  '${controller.donecount.value}/${controller.notdone.value + controller.donecount.value} Tasks pending',
+                                  style: Get.theme.kSubTitle.copyWith(
+                                      color: Get.theme.colorPrimaryDark
+                                          .withOpacity(0.6)),
+                                ),
+                              ),
+                            ),
                           ],
-                        )),
-                        Tab(
-                          icon: Row(
-                            children: [
-                              const Text(
-                                'Upcoming',
-                              ),
-                              Obx(
-                                () => tabTaskIndicator(
-                                    taskNum:
-                                        controller.numOfUpcomingTasks.value,
-                                    index: 1,
-                                    controller: controller),
-                              ),
-                            ],
+                        ),
+                        Spacer(),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: IconButton(
+                            onPressed: () => {
+                              Get.to(() => const NotificationPage())
+                              // basicDialog('title', 'message')
+                            },
+                            icon: Icon(
+                              Icons.notifications_outlined,
+                              color: Get.theme.btnTextCol,
+                            ),
                           ),
                         ),
-                        Tab(
-                          icon: Row(
-                            children: [
-                              const Text(
-                                'Created',
-                              ),
-                              Obx(
-                                () => tabTaskIndicator(
-                                    taskNum: controller.numOfCreatedTasks.value,
-                                    index: 2,
-                                    controller: controller),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ]),
+                      ],
+                    ),
+                  ),
                 ),
               ];
             },
@@ -1138,6 +1167,7 @@ class HomePage extends StatelessWidget {
 
   Widget tabTaskIndicator(
       {required int taskNum,
+      required BuildContext context,
       required int index,
       required HomePageController controller}) {
     return Obx(
@@ -1155,11 +1185,11 @@ class HomePage extends StatelessWidget {
         ),
         child: Text(
           '$taskNum',
-          style: Get.theme.kSubTitle.copyWith(
-            color: index == controller.tabIndex.value
-                ? Colors.white
-                : Get.theme.btnTextCol.withOpacity(0.3),
-          ),
+          style: TextStyle(
+              color: index == controller.tabIndex.value
+                  ? Colors.white
+                  : Get.theme.btnTextCol.withOpacity(0.3),
+              fontSize: MediaQuery.of(context).size.height * 0.017),
         ),
       ),
     );
