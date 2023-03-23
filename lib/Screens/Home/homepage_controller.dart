@@ -46,6 +46,10 @@ class HomePageController extends GetxController {
       FirebaseFirestore.instance.collection('spark_assignedTasks');
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  final scrollController = ScrollController();
+
+  RxDouble currentoffset = 0.0.obs;
+
   var tabIndex = 0.obs;
   var bottomBarIndex = 0.obs;
   var dummy = true.obs;

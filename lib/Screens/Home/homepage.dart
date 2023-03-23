@@ -14,6 +14,7 @@ import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_dialog.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
 import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
+import 'package:redefineerp/Screens/Home/homepage2.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Profile/profile_page.dart';
@@ -961,6 +962,9 @@ class HomePage extends StatelessWidget {
                   elevation: 0,
                   backgroundColor: Colors.white,
                   flexibleSpace: FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    expandedTitleScale: 1.2,
+                    titlePadding: EdgeInsets.all(0),
                     centerTitle: true,
                     title: TabBar(
                         onTap: (value) => {
@@ -1112,13 +1116,17 @@ class HomePage extends StatelessWidget {
                 ),
               ];
             },
-            body: TabBarView(
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  controller.streamToday(),
-                  controller.streamUpdates(),
-                  controller.streamCreated(),
-                ]),
+            body: Stack(
+              children: [
+                TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      controller.streamToday(),
+                      controller.streamUpdates(),
+                      controller.streamCreated(),
+                    ]),
+              ],
+            ),
           ),
           bottomNavigationBar: BottomAppBar(
             elevation: 20,
@@ -1139,6 +1147,17 @@ class HomePage extends StatelessWidget {
                         Icon(Icons.menu_rounded, color: Get.theme.btnTextCol)),
                 Row(
                   children: [
+                    IconButton(
+                        onPressed: () => {
+                              // BasicDialog(
+                              //     title: 'title',
+                              //     message: 'message',
+                              //     button1: 'button1',
+                              //     tapFeatures: () => {}),
+                              Get.to(() => HomePage2())
+                            },
+                        icon: Icon(Icons.home,
+                            color: Get.theme.btnTextCol.withOpacity(0.3))),
                     IconButton(
                         onPressed: () => {
                               // BasicDialog(
