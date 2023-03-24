@@ -19,35 +19,36 @@ import 'package:redefineerp/main.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class HomePageController extends GetxController {
-
   @override
   void onInit() async {
-        await fetchdata();
+    await fetchdata();
     getToken();
 
     updateSelectedDate();
 
-        FirebaseAuth.instance.authStateChanges().listen((User? user) {
-       currentUser = user;
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      currentUser = user;
     });
-      print('my user is yo yo ${currentUser}');
+    print('my user is yo yo ${currentUser}');
     super.onInit();
   }
 
-  
   @override
-  void onReady() async{
+  void onReady() async {
     print('yo yo');
     // Get called after widget is rendered on the screen
-      await fetchdata();
+    await fetchdata();
     super.onReady();
   }
-  
+
   // TaskController taskController = Get.find();
-    final _collection =
+  final _collection =
       FirebaseFirestore.instance.collection('spark_assignedTasks');
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  final scrollController = ScrollController();
+
+  RxDouble currentoffset = 0.0.obs;
 
   var tabIndex = 0.obs;
   var bottomBarIndex = 0.obs;
@@ -57,8 +58,6 @@ class HomePageController extends GetxController {
   var index = 0.obs;
   var notdone = 0.obs;
   var url = "".obs;
-
-
 
   var userName = ''.obs;
   var userEmail = ''.obs;
@@ -81,28 +80,28 @@ class HomePageController extends GetxController {
   var streamUpcomingWidget = sizeBox(0, 0).obs;
   var streamCreatedWidget = sizeBox(0, 0).obs;
 
-  // 
-    TextEditingController taskTitle = TextEditingController();
+  //
+  TextEditingController taskTitle = TextEditingController();
   TextEditingController taskDescription = TextEditingController();
   TextEditingController dateinput = TextEditingController();
   TextEditingController commentLine = TextEditingController();
 
-   GlobalKey<FormState> taskKey = GlobalKey<FormState>();
+  GlobalKey<FormState> taskKey = GlobalKey<FormState>();
   var taskType = 'mark'.obs;
   DateTime dateSelected = DateTime.now();
   var selectedDateTime = ''.obs;
 
-    var assignedUserName = 'Assign someone'.obs;
+  var assignedUserName = 'Assign someone'.obs;
   var assignedUserDepartment = ''.obs;
   var assignedUserUid = ''.obs;
   var assignedUserEmail = ''.obs;
   var assignedUserFcmToken = ''.obs;
   var taskPriority = 'Basic'.obs;
 
-     var participantsANew = [].obs;
-     var attachmentsA = [].obs;
-     
-       get http => null;
+  var participantsANew = [].obs;
+  var attachmentsA = [].obs;
+
+  get http => null;
   String? validateTaskTitle(value) {
     if (value == '') {
       return 'Please enter task title';
@@ -110,12 +109,13 @@ class HomePageController extends GetxController {
       return null;
     }
   }
-void updateSelectedDate() {
+
+  void updateSelectedDate() {
     selectedDateTime.value =
         DateFormat('dd-MM-yyyy kk:mm').format(dateSelected);
   }
 
-   checkTaskValidation() {
+  checkTaskValidation() {
     final validator = taskKey.currentState!.validate();
 
     if (!validator) {
@@ -137,9 +137,7 @@ void updateSelectedDate() {
     }
   }
 
-  
   void createNewTask() {
-  
     // Get.reset();
     // Get.delete<TaskController>();
     // print('hello ${participantsANew}');
@@ -162,28 +160,26 @@ void updateSelectedDate() {
           'to_email': assignedUserEmail.value,
           'dept': assignedUserDepartment.value,
           'status': "InProgress",
-          'particpantsA' : participantsANew.value,
+          'particpantsA': participantsANew.value,
         })
         .then((value) => {
               print("Task Created ${value}"),
-              
               Get.back(),
               snackBarMsg('Task Created!', enableMsgBtn: false),
-               sendPushMessage('Task Assigned for you:', taskTitle.text,
+              sendPushMessage('Task Assigned for you:', taskTitle.text,
                   assignedUserFcmToken.value),
-                taskTitle.clear(),
-                taskDescription.clear(),
-                dateinput.clear(),
-                assignedUserName = 'Assign someone'.obs,
-              
-             
+              taskTitle.clear(),
+              taskDescription.clear(),
+              dateinput.clear(),
+              assignedUserName = 'Assign someone'.obs,
             })
-        .catchError((error) =>{
-          print("Failed to create task: $error"),
-          snackBarMsg('Failed to create task: $error', enableMsgBtn: false),
-        });
+        .catchError((error) => {
+              print("Failed to create task: $error"),
+              snackBarMsg('Failed to create task: $error', enableMsgBtn: false),
+            });
   }
-    void sendPushMessage(String body, String title, String token) async {
+
+  void sendPushMessage(String body, String title, String token) async {
     try {
       await http.post(
         Uri.parse('https://fcm.googleapis.com/fcm/send'),
@@ -213,15 +209,15 @@ void updateSelectedDate() {
       print("error push notification");
     }
   }
-  Future<void> fetchdata() async {
 
+  Future<void> fetchdata() async {
     print('am i here ${currentUser?.email}');
     await FirebaseFirestore.instance
         .collection('spark_assignedTasks')
-           .where("due_date",
-                isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
-            .where("status", isEqualTo: "InProgress")
-            .where("to_uid", isEqualTo: currentUser?.uid)
+        .where("due_date",
+            isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+        .where("status", isEqualTo: "InProgress")
+        .where("to_uid", isEqualTo: currentUser?.uid)
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
@@ -274,6 +270,7 @@ void updateSelectedDate() {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: ListView.builder(
+                          shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),
                           itemCount: snapshot.data?.docs.length,
                           itemBuilder: (context, index) {
@@ -426,7 +423,6 @@ void updateSelectedDate() {
             List<QueryDocumentSnapshot<Object?>>? taskData =
                 snapshot.data?.docs;
             return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
               child: Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Column(
@@ -591,7 +587,6 @@ void updateSelectedDate() {
             List<QueryDocumentSnapshot<Object?>>? taskData =
                 snapshot.data?.docs;
             return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
               child: Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Column(
@@ -816,7 +811,6 @@ void updateSelectedDate() {
           }),
     );
   }
-
 
   @override
   void onClose() {

@@ -14,6 +14,7 @@ import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_dialog.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
 import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
+import 'package:redefineerp/Screens/Home/homepage2.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Profile/profile_page.dart';
@@ -50,132 +51,6 @@ class HomePage extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(120),
-            child: AppBar(
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
-                child: IconButton(
-                  onPressed: () => {Get.to(() => const ProfilePage())},
-                  icon: Hero(
-                    tag: 'profile',
-                    child: Material(
-                      type: MaterialType.transparency,
-                      child: CircleAvatar(
-                        backgroundColor: Get.theme.colorPrimaryDark,
-                        radius: 30,
-                        child: Icon(
-                          Icons.person,
-                          color: Get.theme.colorPrimary,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: IconButton(
-                    onPressed: () => {
-                      Get.to(() => const NotificationPage())
-                      // basicDialog('title', 'message')
-                    },
-                    icon: Icon(
-                      Icons.notifications_outlined,
-                      color: Get.theme.btnTextCol,
-                    ),
-                  ),
-                )
-              ],
-              elevation: 0,
-              backgroundColor: Colors.white,
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 35),
-                    child: 
-                    Text(
-                        'Morning, ${FirebaseAuth.instance.currentUser!.displayName}',
-                        style: Get.theme.kTitleStyle
-                            .copyWith(color: Get.theme.btnTextCol),
-                      ),
-                    
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2, bottom: 20),
-                    child: Obx(
-                      () => Text(
-                        '${controller.donecount.value}/${controller.notdone.value + controller.donecount.value} Tasks pending',
-                        style: Get.theme.kSubTitle
-                            .copyWith(color: Get.theme.colorPrimaryDark.withOpacity(0.6)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              bottom: TabBar(
-                  onTap: (value) => {
-                        controller.tabIndex.value = value,
-                      },
-                  isScrollable: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  physics: const BouncingScrollPhysics(),
-                  indicatorColor: Get.theme.colorPrimaryDark, 
-                  labelColor: Get.theme.colorPrimaryDark,
-                  labelStyle: Get.theme.kTitleStyle,
-                  unselectedLabelStyle: Get.theme.kNormalStyle,
-                  unselectedLabelColor: Get.theme.btnTextCol.withOpacity(0.2),
-                  tabs: [
-                    Tab(
-                        icon: Row(
-                      children: [
-                        const Text(
-                          'Today',
-                        ),
-                        Obx(
-                          () => tabTaskIndicator(
-                              taskNum: controller.numOfTodayTasks.value,
-                              index: 0,
-                              controller: controller),
-                        )
-                      ],
-                    )),
-                    Tab(
-                      icon: Row(
-                        children: [
-                          const Text(
-                            'Upcoming',
-                          ),
-                          Obx(
-                            () => tabTaskIndicator(
-                                taskNum: controller.numOfUpcomingTasks.value,
-                                index: 1,
-                                controller: controller),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Tab(
-                      icon: Row(
-                        children: [
-                          const Text(
-                            'Created',
-                          ),
-                          Obx(
-                            () => tabTaskIndicator(
-                                taskNum: controller.numOfCreatedTasks.value,
-                                index: 2,
-                                controller: controller),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]),
-            ),
-          ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => {
               // Get.to(() => const CreateTaskPage(isEditTask: false)),
@@ -398,13 +273,13 @@ class HomePage extends StatelessWidget {
                           right: 14.0,
                           top: 10.0),
                       child: Form(
-                        key:controller.taskKey,
+                        key: controller.taskKey,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextFormField(
-                               validator: controller.validateTaskTitle,
+                              validator: controller.validateTaskTitle,
                               controller: controller.taskTitle,
                               decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -442,10 +317,11 @@ class HomePage extends StatelessWidget {
                               visible: !(controller.assignedUserName.value ==
                                   "Assign someone"),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   // assign to
-                      
+
                                   InkWell(
                                     onTap: () => {
                                       showDialog(
@@ -454,9 +330,11 @@ class HomePage extends StatelessWidget {
                                               Dialog(
                                                   shape: RoundedRectangleBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(8),
+                                                        BorderRadius.circular(
+                                                            8),
                                                   ),
-                                                  child: const ContactListPage()))
+                                                  child:
+                                                      const ContactListPage()))
                                     },
                                     child: Row(
                                       children: [
@@ -475,13 +353,15 @@ class HomePage extends StatelessWidget {
                                           ),
                                         ),
                                         Obx(() => Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 8.0, bottom: 4),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0, bottom: 4),
                                                   child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       SizedBox(
                                                         height: 16,
@@ -490,7 +370,8 @@ class HomePage extends StatelessWidget {
                                                           style: Get
                                                               .theme.kSubTitle
                                                               .copyWith(
-                                                                  color: Get.theme
+                                                                  color: Get
+                                                                      .theme
                                                                       .kLightGrayColor),
                                                         ),
                                                       ),
@@ -503,7 +384,8 @@ class HomePage extends StatelessWidget {
                                                           style: Get.theme
                                                               .kPrimaryTxtStyle
                                                               .copyWith(
-                                                                  color: Get.theme
+                                                                  color: Get
+                                                                      .theme
                                                                       .kBadgeColor),
                                                         ),
                                                       ),
@@ -530,14 +412,14 @@ class HomePage extends StatelessWidget {
                                             // child:  ContactListPage()))
                                             //     }
                                             //     )
-                      
+
                                             ),
                                       ],
                                     ),
                                   ),
-                      
+
                                   // Due Date
-                      
+
                                   InkWell(
                                     onTap: () => {
                                       DatePicker.showDateTimePicker(context,
@@ -557,7 +439,8 @@ class HomePage extends StatelessWidget {
                                               type: MaterialType.transparency,
                                               child: DottedBorder(
                                                 borderType: BorderType.Circle,
-                                                color: Get.theme.kLightGrayColor,
+                                                color:
+                                                    Get.theme.kLightGrayColor,
                                                 radius: Radius.circular(27.0),
                                                 dashPattern: [3, 3],
                                                 strokeWidth: 1,
@@ -565,10 +448,11 @@ class HomePage extends StatelessWidget {
                                                   padding:
                                                       const EdgeInsets.all(6.0),
                                                   child: Icon(
-                                                    Icons.calendar_month_outlined,
+                                                    Icons
+                                                        .calendar_month_outlined,
                                                     size: 18,
-                                                    color:
-                                                        Get.theme.kLightGrayColor,
+                                                    color: Get
+                                                        .theme.kLightGrayColor,
                                                   ),
                                                 ),
                                               )
@@ -588,13 +472,15 @@ class HomePage extends StatelessWidget {
                                               ),
                                         ),
                                         Obx(() => Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 8.0, bottom: 4),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0, bottom: 4),
                                                   child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       SizedBox(
                                                         height: 16,
@@ -603,7 +489,8 @@ class HomePage extends StatelessWidget {
                                                           style: Get
                                                               .theme.kSubTitle
                                                               .copyWith(
-                                                                  color: Get.theme
+                                                                  color: Get
+                                                                      .theme
                                                                       .kLightGrayColor),
                                                         ),
                                                       ),
@@ -650,11 +537,11 @@ class HomePage extends StatelessWidget {
                                 ],
                               ),
                             ),
-                      
-                             SizedBox(
+
+                            SizedBox(
                               height: 8,
                             ),
-                               
+
                             Visibility(
                                 visible:
                                     (controller.attachmentsA.value.length > 0),
@@ -662,15 +549,16 @@ class HomePage extends StatelessWidget {
                                     // height: 20,
                                     child: Column(
                                   children: [
-                                     SizedBox(
-                              // height: 20,
-                              child: Text(
-                                'Attachments',
-                                style: Get.theme.kSubTitle.copyWith(
-                                    color: Color(0xff707070), fontSize: 16),
-                              ),
-                            ),
-                               SizedBox(height: 15),
+                                    SizedBox(
+                                      // height: 20,
+                                      child: Text(
+                                        'Attachments',
+                                        style: Get.theme.kSubTitle.copyWith(
+                                            color: Color(0xff707070),
+                                            fontSize: 16),
+                                      ),
+                                    ),
+                                    SizedBox(height: 15),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 2.0),
                                       child: Row(
@@ -738,7 +626,7 @@ class HomePage extends StatelessWidget {
                                     ),
                                   ],
                                 ))),
-                      
+
                             Visibility(
                               visible:
                                   (controller1.participants.value.isNotEmpty),
@@ -751,7 +639,8 @@ class HomePage extends StatelessWidget {
                                     Text(
                                       'Participants',
                                       style: Get.theme.kSubTitle.copyWith(
-                                          color: Color(0xff707070), fontSize: 16),
+                                          color: Color(0xff707070),
+                                          fontSize: 16),
                                     ),
                                     SizedBox(
                                       height: 8,
@@ -771,7 +660,7 @@ class HomePage extends StatelessWidget {
                                           //     overlayBorderThickness: 1.7,
                                           //     leftFraction: 0.72,
                                           //     size: 26),
-                      
+
                                           InkWell(
                                               onTap: () => {
                                                     showDialog(
@@ -782,7 +671,8 @@ class HomePage extends StatelessWidget {
                                                   },
                                               child: DottedBorder(
                                                 borderType: BorderType.Circle,
-                                                color: Get.theme.kLightGrayColor,
+                                                color:
+                                                    Get.theme.kLightGrayColor,
                                                 radius: Radius.circular(27.0),
                                                 dashPattern: [3, 3],
                                                 strokeWidth: 1,
@@ -792,48 +682,61 @@ class HomePage extends StatelessWidget {
                                                   child: Icon(
                                                     Icons.add,
                                                     size: 15,
-                                                    color:
-                                                        Get.theme.kLightGrayColor,
+                                                    color: Get
+                                                        .theme.kLightGrayColor,
                                                   ),
                                                 ),
                                               )),
-                      
+
                                           SizedBox(
                                             width: 4,
                                           ),
-                                        Obx(
-                                () => SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.720,
-                                  child: ListView.builder(
-                                    itemCount: controller
-                                        .participantsANew.value.length,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(left:3.0),
-                                        child: SizedBox(
-                                          child: Material(
-                                            type: MaterialType.transparency,
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Get.theme.colorPrimaryDark,
-                                              radius: 14,
-                                              child: Text(
-                                                  '${controller.participantsANew[index]['name'].substring(0, 2)}',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 10)),
+                                          Obx(
+                                            () => SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.04,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.720,
+                                              child: ListView.builder(
+                                                itemCount: controller
+                                                    .participantsANew
+                                                    .value
+                                                    .length,
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                itemBuilder: (context, index) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 3.0),
+                                                    child: SizedBox(
+                                                      child: Material(
+                                                        type: MaterialType
+                                                            .transparency,
+                                                        child: CircleAvatar(
+                                                          backgroundColor: Get
+                                                              .theme
+                                                              .colorPrimaryDark,
+                                                          radius: 14,
+                                                          child: Text(
+                                                              '${controller.participantsANew[index]['name'].substring(0, 2)}',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize:
+                                                                      10)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
                                           // Obx(
                                           //   () => SizedBox(
                                           //     height:
@@ -875,7 +778,7 @@ class HomePage extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 15),
-                      
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -884,9 +787,9 @@ class HomePage extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Visibility(
-                                        visible:
-                                            (controller.assignedUserName.value ==
-                                                "Assign someone"),
+                                        visible: (controller
+                                                .assignedUserName.value ==
+                                            "Assign someone"),
                                         child: Row(
                                           children: [
                                             InkWell(
@@ -910,8 +813,8 @@ class HomePage extends StatelessWidget {
                                                 children: [
                                                   Icon(
                                                     Icons.person,
-                                                    color:
-                                                        Get.theme.kLightGrayColor,
+                                                    color: Get
+                                                        .theme.kLightGrayColor,
                                                   ),
                                                 ],
                                               ),
@@ -928,14 +831,16 @@ class HomePage extends StatelessWidget {
                                                   print(
                                                       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
                                                 }, onConfirm: (date) {
-                                                  controller.dateSelected = date;
+                                                  controller.dateSelected =
+                                                      date;
                                                   controller
                                                       .updateSelectedDate();
                                                 }, currentTime: DateTime.now())
                                               },
                                               child: Icon(
                                                 Icons.calendar_month_outlined,
-                                                color: Get.theme.kLightGrayColor,
+                                                color:
+                                                    Get.theme.kLightGrayColor,
                                               ),
                                             ),
                                             SizedBox(
@@ -962,8 +867,8 @@ class HomePage extends StatelessWidget {
                                                         .putFile(
                                                             File(image!.path))
                                                         .then((value) async {
-                                                      controller
-                                                          .attachmentsA.value = [
+                                                      controller.attachmentsA
+                                                          .value = [
                                                         await value.ref
                                                             .getDownloadURL()
                                                       ];
@@ -973,8 +878,8 @@ class HomePage extends StatelessWidget {
                                                   },
                                                   child: Icon(
                                                     Icons.attach_file,
-                                                    color:
-                                                        Get.theme.kLightGrayColor,
+                                                    color: Get
+                                                        .theme.kLightGrayColor,
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -1005,20 +910,17 @@ class HomePage extends StatelessWidget {
                                       SizedBox(
                                         width: 20.0,
                                       ),
-                                      
-                                        Visibility(
-                              visible:
-                                  (!controller1.participants.value.isNotEmpty),
-                                        
+                                      Visibility(
+                                        visible: (!controller1
+                                            .participants.value.isNotEmpty),
                                         child: InkWell(
-                                                onTap: () => {
-                                                      showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              const ContactListDialogPage())
-                                                    },
-                                          
+                                          onTap: () => {
+                                            showDialog(
+                                                context: context,
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    const ContactListDialogPage())
+                                          },
                                           child: Icon(
                                             Icons.people_alt_outlined,
                                             color: Get.theme.kLightGrayColor,
@@ -1029,12 +931,9 @@ class HomePage extends StatelessWidget {
                                   ),
                                 ),
                                 InkWell(
-                                    onTap: () => 
-                                      {controller.checkTaskValidation()},
+                                    onTap: () =>
+                                        {controller.checkTaskValidation()},
 
-                                      
-
-                                      
                                     // {controller.createNewTask()},
                                     child: Text('Create'))
                               ],
@@ -1044,8 +943,7 @@ class HomePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                      )
-                      ))
+                      )))
             },
             backgroundColor: Get.theme.colorPrimaryDark,
             child: const Icon(
@@ -1055,13 +953,181 @@ class HomePage extends StatelessWidget {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          body: TabBarView(
-              physics: const NeverScrollableScrollPhysics(),
+          body: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return [
+                SliverAppBar(
+                  pinned: true,
+                  expandedHeight: 200,
+                  elevation: 0,
+                  backgroundColor: Colors.white,
+                  flexibleSpace: FlexibleSpaceBar(
+                    collapseMode: CollapseMode.pin,
+                    expandedTitleScale: 1.2,
+                    titlePadding: EdgeInsets.all(0),
+                    centerTitle: true,
+                    title: TabBar(
+                        onTap: (value) => {
+                              controller.tabIndex.value = value,
+                            },
+                        isScrollable: true,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        physics: const BouncingScrollPhysics(),
+                        indicatorColor: Get.theme.colorPrimaryDark,
+                        labelColor: Get.theme.colorPrimaryDark,
+                        labelStyle: Get.theme.kTitleStyle,
+                        unselectedLabelStyle: Get.theme.kNormalStyle,
+                        unselectedLabelColor:
+                            Get.theme.btnTextCol.withOpacity(0.2),
+                        tabs: [
+                          Tab(
+                              icon: Row(
+                            children: [
+                              Text(
+                                'Today',
+                                style: TextStyle(
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            0.017),
+                              ),
+                              Obx(
+                                () => tabTaskIndicator(
+                                    context: context,
+                                    taskNum: controller.numOfTodayTasks.value,
+                                    index: 0,
+                                    controller: controller),
+                              )
+                            ],
+                          )),
+                          Tab(
+                            icon: Row(
+                              children: [
+                                Text(
+                                  'Upcoming',
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              0.017),
+                                ),
+                                Obx(
+                                  () => tabTaskIndicator(
+                                      context: context,
+                                      taskNum:
+                                          controller.numOfUpcomingTasks.value,
+                                      index: 1,
+                                      controller: controller),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Tab(
+                            icon: Row(
+                              children: [
+                                Text(
+                                  'Created',
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              0.017),
+                                ),
+                                Obx(
+                                  () => tabTaskIndicator(
+                                      context: context,
+                                      taskNum:
+                                          controller.numOfCreatedTasks.value,
+                                      index: 2,
+                                      controller: controller),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ]),
+                    background: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, top: 10),
+                          child: IconButton(
+                            onPressed: () =>
+                                {Get.to(() => const ProfilePage())},
+                            icon: Hero(
+                              tag: 'profile',
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: CircleAvatar(
+                                  backgroundColor: Get.theme.colorPrimaryDark,
+                                  radius: 30,
+                                  child: Icon(
+                                    Icons.person,
+                                    color: Get.theme.colorPrimary,
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.030,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 35),
+                              child: Text(
+                                'Morning, ${FirebaseAuth.instance.currentUser!.displayName}',
+                                style: Get.theme.kTitleStyle
+                                    .copyWith(color: Get.theme.btnTextCol),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 2, bottom: 20),
+                              child: Obx(
+                                () => Text(
+                                  '${controller.donecount.value}/${controller.notdone.value + controller.donecount.value} Tasks pending',
+                                  style: Get.theme.kSubTitle.copyWith(
+                                      color: Get.theme.colorPrimaryDark
+                                          .withOpacity(0.6)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: IconButton(
+                            onPressed: () => {
+                              Get.to(() => const NotificationPage())
+                              // basicDialog('title', 'message')
+                            },
+                            icon: Icon(
+                              Icons.notifications_outlined,
+                              color: Get.theme.btnTextCol,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ];
+            },
+            body: Stack(
               children: [
-                controller.streamToday(),
-                controller.streamUpdates(),
-                controller.streamCreated(),
-              ]),
+                TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      controller.streamToday(),
+                      controller.streamUpdates(),
+                      controller.streamCreated(),
+                    ]),
+              ],
+            ),
+          ),
           bottomNavigationBar: BottomAppBar(
             elevation: 20,
             shape: const CircularNotchedRectangle(),
@@ -1081,6 +1147,17 @@ class HomePage extends StatelessWidget {
                         Icon(Icons.menu_rounded, color: Get.theme.btnTextCol)),
                 Row(
                   children: [
+                    IconButton(
+                        onPressed: () => {
+                              // BasicDialog(
+                              //     title: 'title',
+                              //     message: 'message',
+                              //     button1: 'button1',
+                              //     tapFeatures: () => {}),
+                              Get.to(() => HomePage2())
+                            },
+                        icon: Icon(Icons.home,
+                            color: Get.theme.btnTextCol.withOpacity(0.3))),
                     IconButton(
                         onPressed: () => {
                               // BasicDialog(
@@ -1109,6 +1186,7 @@ class HomePage extends StatelessWidget {
 
   Widget tabTaskIndicator(
       {required int taskNum,
+      required BuildContext context,
       required int index,
       required HomePageController controller}) {
     return Obx(
@@ -1126,11 +1204,11 @@ class HomePage extends StatelessWidget {
         ),
         child: Text(
           '$taskNum',
-          style: Get.theme.kSubTitle.copyWith(
-            color: index == controller.tabIndex.value
-                ? Colors.white
-                : Get.theme.btnTextCol.withOpacity(0.3),
-          ),
+          style: TextStyle(
+              color: index == controller.tabIndex.value
+                  ? Colors.white
+                  : Get.theme.btnTextCol.withOpacity(0.3),
+              fontSize: MediaQuery.of(context).size.height * 0.017),
         ),
       ),
     );
