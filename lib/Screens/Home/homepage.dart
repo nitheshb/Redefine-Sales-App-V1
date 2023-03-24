@@ -16,6 +16,7 @@ import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
 import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
 import 'package:redefineerp/Screens/Home/homepage2.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
+import 'package:redefineerp/Screens/Home/homepage_gradient.dart';
 import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Profile/profile_page.dart';
 import 'package:redefineerp/Screens/Report/report_page.dart';
@@ -984,7 +985,7 @@ class HomePage extends StatelessWidget {
                               icon: Row(
                             children: [
                               Text(
-                                'Today',
+                                'All',
                                 style: TextStyle(
                                     fontSize:
                                         MediaQuery.of(context).size.height *
@@ -1003,7 +1004,7 @@ class HomePage extends StatelessWidget {
                             icon: Row(
                               children: [
                                 Text(
-                                  'Upcoming',
+                                  'Personal',
                                   style: TextStyle(
                                       fontSize:
                                           MediaQuery.of(context).size.height *
@@ -1024,7 +1025,7 @@ class HomePage extends StatelessWidget {
                             icon: Row(
                               children: [
                                 Text(
-                                  'Created',
+                                  'Business',
                                   style: TextStyle(
                                       fontSize:
                                           MediaQuery.of(context).size.height *
@@ -1154,7 +1155,7 @@ class HomePage extends StatelessWidget {
                               //     message: 'message',
                               //     button1: 'button1',
                               //     tapFeatures: () => {}),
-                              Get.to(() => HomePage2())
+                              Get.to(() => HomeGradientPage())
                             },
                         icon: Icon(Icons.home,
                             color: Get.theme.btnTextCol.withOpacity(0.3))),
