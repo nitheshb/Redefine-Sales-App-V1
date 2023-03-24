@@ -142,9 +142,9 @@ void updateSelectedDate() {
   
     // Get.reset();
     // Get.delete<TaskController>();
-    // print('hello ${participantsANew}');
+    print('hello ${participantsANew}');
 
-    // return;
+   
 
     _collection
         .add({
@@ -320,6 +320,8 @@ void updateSelectedDate() {
                                     //     overlayBorderThickness: 1.7,
                                     //     leftFraction: 0.72,
                                     //     size: 26),
+
+                                    
                                     SizedBox(
                                       child: Material(
                                         type: MaterialType.transparency,
