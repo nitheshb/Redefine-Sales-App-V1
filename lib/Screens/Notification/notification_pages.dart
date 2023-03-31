@@ -3,6 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Notification/notification_controller.dart';
+import 'package:redefineerp/themes/constant.dart';
+import 'package:redefineerp/themes/container.dart';
+import 'package:redefineerp/themes/spacing.dart';
+import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -13,74 +17,40 @@ class NotificationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put<NotificatonController>(NotificatonController());
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: const Icon(
-              Icons.arrow_back_rounded,
-              color: Colors.black,
-            )),
-        title: Text('Notifications',
-            style: Get.theme.kTitleStyle.copyWith(color: Get.theme.btnTextCol)),
-        actions: [
-          TextButton(
-              onPressed: () => {},
-              child: Text(
-                'Mark all as read',
-                style: Get.theme.kSubTitle
-                    .copyWith(color: Get.theme.btnTextCol.withOpacity(0.3)),
-              ))
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: Text(
-              'Today',
-              style: Get.theme.kNormalStyle
-                  .copyWith(color: Get.theme.btnTextCol.withOpacity(0.6)),
-            ),
+      
+      body: SingleChildScrollView(
+        child: Container(
+              padding: FxSpacing.fromLTRB(
+                      20, FxSpacing.safeAreaTop(context) + 16, 20, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+               titleRow(),
+              // Expanded(child: streamNotifications()),
+         streamNotifications()
+            ],
           ),
-          Container(
-            width: Get.size.width,
-            height: 2,
-            color: Get.theme.btnTextCol.withOpacity(0.2),
-          ),
-          Expanded(child: streamNotifications()),
-          // notificationCard(
-          //     title: 'Mahendra Mangal',
-          //     messageType: 'Completed: ',
-          //     message:
-          //         "Collect insurance documents from Mr.Rajesh Sales Plan for New Product",
-          //     time: "5 Min ago."),
-          // notificationCard(
-          //     title: 'Vivek Dhillon',
-          //     messageType: 'Assigned: ',
-          //     message:
-          //         "Collect insurance documents from Mr.Rajesh Sales Plan for New Product",
-          //     time: "1 Hour ago."),
-          // notificationCard(
-          //     title: 'Mahendra Mangal',
-          //     messageType: 'Commented on: ',
-          //     message: "Check Screen for Todo",
-          //     mentionText: '@nitesh Please make sure that you’re collecting ',
-          //     time: "5 Min ago."),
-          // notificationCard(
-          //     title: 'Overdue!',
-          //     messageType: 'Alert: ',
-          //     warning: true,
-          //     message:
-          //         "Collect insurance documents from Mr.Rajesh Sales Plan for New Product",
-          //     time: "Yesterday"),
-        ],
+        ),
       ),
     );
   }
-
+Widget titleRow() {
+    return Row(
+      children: [
+        FxContainer(
+          width: 10,
+          height: 24,
+          color: Get.theme.primaryContainer,
+          borderRadiusAll: 2,
+        ),
+        FxSpacing.width(8),
+        FxText.titleMedium(
+          "My Notifications",
+          fontWeight: 600,
+        ),
+      ],
+    );
+  }
   Widget streamNotifications() {
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -149,8 +119,29 @@ class NotificationPage extends StatelessWidget {
       required String time,
       String? mentionText,
       bool warning = false}) {
+        return   Padding(
+          padding: const EdgeInsets.only(bottom:2.0),
+          child: FxContainer(
+              color: Constant.softColors.green.color,
+              child: Row(
+          children: [
+            FxText.bodySmall(
+              title,
+              color: Constant.softColors.green.onColor,
+              fontWeight: 700,
+            ),
+            FxText.bodySmall(
+              ' added assinged new task',
+              color: Constant.softColors.green.onColor,
+              fontWeight: 600,
+              fontSize: 11,
+            )
+          ],
+              ),
+            ),
+        );
     return ListTile(
-      contentPadding: const EdgeInsets.all(20),
+      contentPadding: const EdgeInsets.all(4),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

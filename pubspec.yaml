@@ -37,6 +37,8 @@ dependencies:
   firebase_messaging: ^14.2.6
   firebase_storage: ^11.0.15
   supabase_flutter: 
+  flutter_feather_icons:
+  flutx:
   flutter:
     sdk: flutter
   flutter_custom_clippers: ^2.0.0
@@ -44,9 +46,11 @@ dependencies:
   flutter_svg: ^1.0.3
   get: ^4.6.5
   get_storage: ^2.0.3
-  google_fonts: ^4.0.3
+  google_fonts:
+  intl:
   introduction_screen: ^3.0.2
   image_picker: ^0.8.6
+  syncfusion_flutter_charts:
   jiffy: ^6.1.0
   percent_indicator: ^4.0.1
 

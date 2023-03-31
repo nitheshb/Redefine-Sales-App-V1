@@ -1001,9 +1001,7 @@ class HomeGradientPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(height: 12),
-    
-
-   SingleChildScrollView(
+            SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 child:

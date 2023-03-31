@@ -9,6 +9,26 @@ import 'package:redefineerp/Screens/Profile/profile_controller.dart';
 ProfileController profileController = Get.put(ProfileController());
 
 extension ThemeExtension on ThemeData {
+
+
+//  Color get  primary => Color(0xff1c8c8c);
+   Color get  primary => Color(0xff6350A9);
+   Color get        onPrimary=> Color(0xffffffff);
+    Color get       primaryContainer=> Color(0xffE7DDFF);
+    Color get       onPrimaryContainer=> Color(0xff025e5e);
+    Color get       secondary=> Color(0xfff15f5f);
+     Color get      onSecondary=> Color(0xffffffff);
+     Color get      secondaryContainer=> Color(0xfff8d6d6);
+     Color get      onSecondaryContainer=> Color(0xff570202);
+     Color get      Background=> Color(0xffFFFBFF);
+
+     Color get      onBackground=> Color(0xff686868);
+     
+     Color get      ErrorContainer=> Color(0xffFFD9D4);
+     Color get      onErrorContainer=> Color.fromARGB(255, 146, 104, 104);
+
+
+          
   Color get colorPrimary => brightness == Brightness.dark
       ? const Color.fromARGB(255, 29, 29, 29)
       : const Color(0xFFFFFFFF);

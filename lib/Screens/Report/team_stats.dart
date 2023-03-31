@@ -5,6 +5,7 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Profile/profile_page.dart';
 import 'package:redefineerp/themes/themes.dart';
 
@@ -74,42 +75,59 @@ class _TeamStatsState extends State<TeamStats> {
               ),
 
               Row(
-      
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 2, top: 4),
-                    child: IconButton(
-                       
-                      onPressed: () => {Get.to(() => const ProfilePage())},
-                      icon: Hero(
-                        tag: 'profile',
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: CircleAvatar(
-                            backgroundColor: Color(0xffBDFDE2),
-                            radius: 30,
-                            child: Icon(
-                              Icons.person,
-                              color: Colors.black38,
-                              size: 20,
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 2, top: 0, bottom: 9),
+                        child: IconButton(
+                           
+                          onPressed: () => {Get.to(() => const ProfilePage())},
+                          icon: Hero(
+                            tag: 'profile',
+                            child: Material(
+                              type: MaterialType.transparency,
+                              child: CircleAvatar(
+                                backgroundColor: Color(0xffBDFDE2),
+                                radius: 30,
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.black38,
+                                  size: 20,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                   Padding(
-                    padding: const EdgeInsets.only(top: 2),
+                       Padding(
+                    padding: const EdgeInsets.only(top: 0, bottom: 10),
                     child: 
                     Text(
-                        'Hola, ${FirebaseAuth.instance.currentUser!.displayName}',
+                        'Hola, ${FirebaseAuth.instance.currentUser!.displayName!.toUpperCase()}',
                         style: Get.theme.kTitleStyle
                             .copyWith(color: Get.theme.btnTextCol),
                       ),
                     
                                    ),
+                    ],
+                  ),
+                  
 
-                                   Container()
+                                    Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: IconButton(
+                            onPressed: () => {
+                              Get.to(() => const NotificationPage())
+                              // basicDialog('title', 'message')
+                            },
+                            icon: Icon(
+                              Icons.notifications_outlined,
+                              color: Get.theme.btnTextCol,
+                            ),
+                          ),
+                        ),
                   
                 ],
               ),

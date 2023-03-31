@@ -35,8 +35,6 @@ import 'package:redefineerp/Widgets/datewidget.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:redefineerp/Widgets/task_sheet_widget.dart';
-import 'package:redefineerp/themes/container.dart';
-import 'package:redefineerp/themes/spacing.dart';
 import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:intl/intl.dart';
@@ -70,16 +68,14 @@ class HomePage extends StatelessWidget {
     statusBarBrightness: Brightness.light, // For iOS (dark icons)
   ),
         elevation: 0.0,
-      title: titleRow(),
+      title:   FxText.titleLarge(
+                      "TaskMan",
+                      fontWeight: 600,
+                    ),
       actions: [
         IconButton(
-          icon: Icon(Icons.search, 
-                          color: Get.theme.btnTextCol.withOpacity(0.3)
-          ),
-          onPressed: () {
-                              Get.to(() => const SearchPage());
-
-          },
+          icon: Icon(Icons.search),
+          onPressed: () {},
         ),
        
         IconButton(
@@ -89,30 +85,27 @@ class HomePage extends StatelessWidget {
                             
                             },
 
-        icon: Icon(Icons.notifications),
-                          color: Get.theme.btnTextCol.withOpacity(0.3)
-        
-        ),
-        //  IconButton(
+        icon: Icon(Icons.notifications),),
+         IconButton(
                            
-        //                   onPressed: () => {Get.to(() => const ProfilePage())},
-        //                   icon: Hero(
-        //                     tag: 'profile',
-        //                     child: Material(
-        //                       type: MaterialType.transparency,
-        //                       child: CircleAvatar(
-        //                         backgroundColor: Color(0xffe6e7fd),
-        //                         radius: 30,
-        //                         child: Icon(
-        //                           Icons.person,
-        //                           color: Colors.black38,
-        //                           size: 20,
-        //                         ),
-        //                       ),
-        //                     ),
-        //                   ),
-        //                 ),
-        // // PopupMenuButton(
+                          onPressed: () => {Get.to(() => const ProfilePage())},
+                          icon: Hero(
+                            tag: 'profile',
+                            child: Material(
+                              type: MaterialType.transparency,
+                              child: CircleAvatar(
+                                backgroundColor: Color(0xffe6e7fd),
+                                radius: 30,
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.black38,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+        // PopupMenuButton(
         //   itemBuilder: (BuildContext context) => [
         //     PopupMenuItem(
         //       child: Text('Settings'),
@@ -797,8 +790,8 @@ class HomePage extends StatelessWidget {
             color: Color(0xff33264b),
           ),
         ),
-        // floatingActionButtonLocation:
-        //     FloatingActionButtonLocation.,
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.centerDocked,
       
       body: DefaultTabController(
       length: 3,
@@ -922,38 +915,203 @@ preferredSize: Size.fromHeight(48.0),
             ),
           ];
         },
-        body: controller.streamToday()
-        // body: TabBarView(
-        //   children: [
-        //       controller.streamToday(),
-        //       controller.streamUpdates(),
-        //       controller.streamCreated(),
-        //     ],
-        // ),
+        body: TabBarView(
+          children: [
+              controller.streamToday(),
+              controller.streamUpdates(),
+              controller.streamCreated(),
+            ],
+        ),
       ),
     ),
-  );}
+        bottomNavigationBar: BottomAppBar(
+          color: Color(0xffffffff),
+          elevation: 20,
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 5,
+          // onTap: controller.bottomBarOnTap,
+          // currentIndex: controller.bottomBarIndex.value,
+          // selectedItemColor: Get.theme.colorPrimaryDark,
+          // unselectedItemColor: Get.theme.btnTextCol.withOpacity(0.3),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                  onPressed: () => {
+                        bottomSheetWidget(ReportPage(), transparentBg: true),
+                      },
+                  icon:
+                      Icon(Icons.menu_rounded, color: Get.theme.btnTextCol)),
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () => {
+                            // BasicDialog(
+                            //     title: 'title',
+                            //     message: 'message',
+                            //     button1: 'button1',
+                            //     tapFeatures: () => {}),
+                            Get.to(() => HomeGradientPage())
+                          },
+                      icon: Icon(Icons.home,
+                          color: Get.theme.btnTextCol.withOpacity(0.3))),
+                  IconButton(
+                      onPressed: () => {
+                            // BasicDialog(
+                            //     title: 'title',
+                            //     message: 'message',
+                            //     button1: 'button1',
+                            //     tapFeatures: () => {}),
+                            Get.to(() => const SearchPage())
+                          },
+                      icon: Icon(Icons.search_outlined,
+                          color: Get.theme.btnTextCol.withOpacity(0.3))),
+                  IconButton(
+                    onPressed: () => {
+                      snackBarMsg('Task Done!', enableMsgBtn: true),
+                    },
+                    icon: Icon(Icons.filter_list_rounded,
+                        color: Get.theme.btnTextCol.withOpacity(0.3)),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ));
+  }
 
- 
-Widget titleRow() {
-    return Row(
-      children: [
-        FxContainer(
-          width: 10,
-          height: 24,
-          color: Get.theme.primaryContainer,
-          borderRadiusAll: 2,
+  Widget tabTaskIndicator(
+      {required int taskNum,
+      required BuildContext context,
+      required int index,
+      required HomePageController controller}) {
+    return Obx(
+      () => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+        margin: const EdgeInsets.symmetric(horizontal: 3),
+        decoration: BoxDecoration(
+          color: index == controller.tabIndex.value
+              ? Get.theme.colorPrimaryDark
+              : null,
+          borderRadius: BorderRadius.circular(12),
+          border: index != controller.tabIndex.value
+              ? Border.all(width: 2.0, color: Get.theme.curveBG)
+              : null,
         ),
-        FxSpacing.width(8),
-        FxText.titleLarge(
-          "TaskMan",
-          fontWeight: 600,
-          // color: Get.theme.primary,
-
+        child: Text(
+          '$taskNum',
+          style: TextStyle(
+              color: index == controller.tabIndex.value
+                  ? Colors.white
+                  : Get.theme.btnTextCol.withOpacity(0.3),
+              fontSize: MediaQuery.of(context).size.height * 0.017),
         ),
-      ],
+      ),
     );
   }
+}
+
+Widget firstTab() {
+  return SingleChildScrollView(
+    physics: const BouncingScrollPhysics(),
+    child: Column(
+      children: [
+        // taskCheckBox(
+        //     taskPriority: 1,
+        //     taskPriorityNum: 2,
+        //     selected: false,
+        //     task:
+        //         'Collect insurance documents from Mr.Rajesh Sales Plan for New Product',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+        // taskCheckBox(
+        //     taskPriority: 2,
+        //     taskPriorityNum: 2,
+        //     selected: false,
+        //     task: 'Sales Plan for New Product',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+        // taskCheckBox(
+        //     taskPriority: 3,
+        //     taskPriorityNum: 0,
+        //     selected: false,
+        //     task: 'Check Screens for Todo',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+        // taskCheckBox(
+        //     taskPriority: 3,
+        //     taskPriorityNum: 0,
+        //     selected: false,
+        //     task: 'Check Screens for Todo',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+        // taskCheckBox(
+        //     taskPriority: 3,
+        //     taskPriorityNum: 0,
+        //     selected: false,
+        //     task: 'Check Screens for Todo',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+        // taskCheckBox(
+        //     taskPriority: 3,
+        //     taskPriorityNum: 0,
+        //     selected: false,
+        //     task: 'Check Screens for Todo',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+      ],
+    ),
+  );
+}
+
+Widget secondTab() {
+  return SingleChildScrollView(
+    physics: const BouncingScrollPhysics(),
+    child: Column(
+      children: [
+        DateWidget('Tommorow'),
+        // taskCheckBox(
+        //     taskPriority: 1,
+        //     taskPriorityNum: 4,
+        //     selected: true,
+        //     task: 'Preparing the images that will be used in the email A',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+        // DateWidget('14 Aug'),
+        // taskCheckBox(
+        //     taskPriority: 3,
+        //     taskPriorityNum: 0,
+        //     selected: false,
+        //     task: 'Make sure the product is working',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+        // taskCheckBox(
+        //     taskPriority: 1,
+        //     taskPriorityNum: 4,
+        //     selected: false,
+        //     task: 'Writing a description for the blog post A',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+        // taskCheckBox(
+        //     taskPriority: 3,
+        //     taskPriorityNum: 0,
+        //     selected: false,
+        //     task: 'Preparing the email structure',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+        // DateWidget('15 Aug'),
+        // taskCheckBox(
+        //     taskPriority: 3,
+        //     taskPriorityNum: 0,
+        //     selected: false,
+        //     task: 'Finding the winner of the test',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+      ],
+    ),
+  );
+}
+
 Widget _bottomSheet(ScrollController controller) {
   return SingleChildScrollView(
     physics: ClampingScrollPhysics(),
@@ -974,4 +1132,50 @@ Widget _bottomSheet(ScrollController controller) {
     ),
   );
 }
+
+Widget thirdTab() {
+  return SingleChildScrollView(
+    physics: const BouncingScrollPhysics(),
+    child: Column(
+      children: [
+        headerBg(
+            title: 'Gif Design for page loading',
+            createdOn: 'Created: 12 August | 11:00 PM',
+            taskPriority: 1,
+            taskPriorityNum: 2),
+        miniMessage('Marked as done, pending for review'),
+        DateWidget('Due Tommorow'),
+        // taskCheckBox(
+        //     taskPriority: 2,
+        //     taskPriorityNum: 4,
+        //     selected: false,
+        //     task: 'Completing the post in the new product page',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assigner: Mr. Tejesh'),
+        // DateWidget('14 Aug'),
+        // taskCheckBox(
+        //     taskPriority: 1,
+        //     taskPriorityNum: 2,
+        //     selected: false,
+        //     task: 'Going throuh bug report list',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assignee: Mr. Anshu'),
+        // taskCheckBox(
+        //     taskPriority: 3,
+        //     taskPriorityNum: 4,
+        //     selected: false,
+        //     task: 'Updating & Testing the colour selection',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assignee: Mr. Tejesh'),
+        // DateWidget('15 Aug'),
+        // taskCheckBox(
+        //     taskPriority: 3,
+        //     taskPriorityNum: 0,
+        //     selected: false,
+        //     task: 'Presentation Regarding',
+        //     createdOn: 'Created: 12 August | 11:00 PM',
+        //     assigner: 'Assignee: Mr. Tejesh'),
+      ],
+    ),
+  );
 }
