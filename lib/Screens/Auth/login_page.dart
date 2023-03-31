@@ -13,6 +13,7 @@ import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Widgets/task_sheet_widget.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/methods/methods.dart';
+import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class LoginPage extends StatelessWidget {
@@ -61,11 +62,12 @@ class LoginPage extends StatelessWidget {
                 sizeBox(20, 0),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
-                  child: Text(
-                    'Login',
-                    style: Get.theme.kTabTextLg,
-                    textAlign: TextAlign.start,
-                  ),
+                  child: FxText.titleLarge(
+          "Login",
+          fontWeight: 700,
+          // color: Get.theme.primary,
+
+        ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20),
@@ -109,7 +111,7 @@ class LoginPage extends StatelessWidget {
                         hintText: '***********',
                         focusedBorder: OutlineInputBorder(
                             borderSide:
-                                BorderSide(color: Get.theme.colorPrimaryDark)),
+                                BorderSide(color: Get.theme.primary)),
                         border: const OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -123,7 +125,7 @@ class LoginPage extends StatelessWidget {
                               ? const Icon(Icons.remove_red_eye_outlined)
                               : Icon(
                                   Icons.remove_red_eye,
-                                  color: Get.theme.colorPrimaryDark,
+                                  color:  Get.theme.primary,
                                 ),
                         ),
                       ),
@@ -189,12 +191,12 @@ class LoginPage extends StatelessWidget {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: Get.theme.colorPrimaryDark,
+                          color: Get.theme.primary,
                         ),
                         alignment: Alignment.center,
                         child: Text("Login",
                             style: Get.theme.kNormalStyle
-                                .copyWith(color: Colors.white))),
+                                .copyWith(color: Get.theme.onPrimary))),
                   ),
                 )
               ],

@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:redefineerp/Screens/Home/homepage.dart';
+import 'package:redefineerp/Screens/SuperHomePage/SuperHomePage.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/methods/methods.dart';
@@ -70,7 +70,7 @@ startTimer() {
               .update({"user_fcmtoken": localFcmToken}).then((_) {
             debugPrint("success!");
           });
-          Get.offAll(() => HomePage());
+          Get.offAll(() => SuperHomePage());
         } else {
           snackBarMsg('Error: Invalid credentials');
           debugPrint("Login Failed");
