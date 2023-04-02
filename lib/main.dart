@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
       initialBinding: ControllerBindings(),
       themeMode: ThemeService().theme,
       debugShowCheckedModeBanner: false,
-      home: currentUser == null ? const OnBoardingPage() : SuperHomePage(),
+      home: currentUser == null ? OnBoardingPage() : SuperHomePage(),
     );
   }
 }

@@ -1,143 +1,211 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
+import 'package:redefineerp/Screens/OnBoarding/onboard_controller.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class OnBoardingPage extends StatelessWidget {
-  const OnBoardingPage({Key? key}) : super(key: key);
+  OnBoardingPage({Key? key}) : super(key: key);
+
+  OnboardController _onboardController = Get.put(OnboardController());
+
+  final List<String> _images = [
+    'assets/images/mood_dairy_image.png',
+    'assets/images/relax_image.png',
+    'assets/images/welcome.png'
+  ];
+  final List<String> title = [
+    'Welcome',
+    'Welcome',
+    'Welcome',
+  ];
+
+  final List<String> caption = [
+    'Work together with your Team members in Real-time.',
+    'Monitor task completion, identify potential roadblocks, and make real-time adjustments.',
+    'Share contracts, blueprints, and so much more.'
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: IntroductionScreen(
-        pages: [
-          PageViewModel(
-            title: 'Easy Time Management',
-            bodyWidget: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'With management based on priority and daily tasks, it will give you convenience in managing and determining the tasks that must be done first',
-                  textAlign: TextAlign.center,
-                  style: Get.theme.kNormalStyle
-                      .copyWith(color: Get.theme.btnTextCol.withOpacity(0.5)),
-                ),
-                getStartedBtn(context),
-              ],
-            ),
-            image: SvgPicture.asset('assets/images/Page1.svg'),
-            decoration: const PageDecoration(
-              titleTextStyle: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+    return Scaffold(
+      backgroundColor: Color(0xFFf4eae2),
+      body: SafeArea(
+          child: Column(
+        children: [
+          Stack(
+            children: [
+              Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.010,
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Obx(
+                      () => _onboardController.currentPage.value == 0
+                          ? SizedBox()
+                          : IconButton(
+                              onPressed: () {
+                                _onboardController.pageController.previousPage(
+                                    duration: Duration(seconds: 1),
+                                    curve: Curves.easeInQuad);
+                              },
+                              icon: Icon(Icons.arrow_back_ios_new)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.65,
+                    child: PageView.builder(
+                      scrollDirection: Axis.horizontal,
+                      controller: _onboardController.pageController,
+                      onPageChanged: _onboardController.onPageChnaged,
+                      itemCount: 3,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.050,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                title[index],
+                                style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.070),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                caption[index],
+                                style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.040),
+                              ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 1,
+                              child: Image.asset(
+                                _images[index],
+                                height:
+                                    MediaQuery.of(context).size.height * 0.360,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-              contentMargin: EdgeInsets.all(37),
-              imageAlignment: Alignment.bottomCenter,
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.44),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 1,
+              height: MediaQuery.of(context).size.height * 0.030,
+              child: ListView.builder(
+                itemCount: 3,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Obx(
+                            () => Container(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.020,
+                              width: MediaQuery.of(context).size.width * 0.020,
+                              decoration: BoxDecoration(
+                                color: _onboardController.currentPage.value ==
+                                        index
+                                    ? Get.theme.colorPrimaryDark
+                                    : Colors.grey,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.020,
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
-          PageViewModel(
-            title: 'Increase Work Effectiveness',
-            image: SvgPicture.asset('assets/images/Page2.svg'),
-            bodyWidget: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Time management and the determination of more important tasks will give your job statistics better and always improve',
-                  textAlign: TextAlign.center,
-                  style: Get.theme.kNormalStyle
-                      .copyWith(color: Get.theme.btnTextCol.withOpacity(0.5)),
-                ),
-                getStartedBtn(context),
-              ],
-            ),
-            decoration: const PageDecoration(
-              titleTextStyle: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-              contentMargin: EdgeInsets.all(37),
-              imageAlignment: Alignment.bottomCenter,
-            ),
+          Obx(
+            () => _onboardController.currentPage.value == 2
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: getStartedBtn(context),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        _onboardController.pageController.nextPage(
+                            duration: Duration(seconds: 1),
+                            curve: Curves.easeInQuad);
+                      },
+                      child: CircleAvatar(
+                        radius: MediaQuery.of(context).size.height * 0.0350,
+                        backgroundColor: Get.theme.colorPrimaryDark,
+                        child: const Center(
+                          child: Icon(
+                            Icons.arrow_forward_ios_outlined,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
           ),
-          PageViewModel(
-            title: 'Reminder Notification',
-            image: SvgPicture.asset('assets/images/Page3.svg'),
-            bodyWidget: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'The advantage of this application is that it also provides reminders for you so you don\'t forget to keep doing your assignments well and according to the time you have set',
-                  textAlign: TextAlign.center,
-                  style: Get.theme.kNormalStyle
-                      .copyWith(color: Get.theme.btnTextCol.withOpacity(0.5)),
-                ),
-                getStartedBtn(context),
-              ],
-            ),
-            decoration: const PageDecoration(
-              titleTextStyle: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-              contentMargin: EdgeInsets.all(37),
-              imageAlignment: Alignment.bottomCenter,
-            ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.020,
           ),
         ],
-        // globalHeader: Row(
-        //   children: [
-        //     Container(
-        //       child: TextButton(
-        //         child: Text('skip'),
-        //         onPressed: () {},
-        //       ),
-        //     ),
-        //     Container(),
-        //   ],
-        // ),
-        dotsDecorator: DotsDecorator(activeColor: Get.theme.colorPrimaryDark),
-        showNextButton: false,
-        showDoneButton: false,
-        showSkipButton: true,
-        onSkip: () => {saveOpenInfo(), Get.off(() => LoginPage())},
-        skip: Text(
-          "Skip",
-          style: Get.theme.kNormalStyle
-              .copyWith(color: Get.theme.colorPrimaryDark),
-        ),
-        skipOrBackFlex: 1,
-        dotsFlex: 3,
-        nextFlex: 1,
-        controlsPosition: const Position(left: 0, right: 0, top: 5),
-      ),
+      )),
     );
   }
+}
 
-  Widget getStartedBtn(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 30),
-      child: TextButton(
-          style: TextButton.styleFrom(
-              backgroundColor: Get.theme.colorPrimaryDark,
-              fixedSize: Size(MediaQuery.of(context).size.width, 20)),
-          onPressed: () => {saveOpenInfo(), Get.offAll(() =>  LoginPage())},
-          child: Text(
-            'Get Started',
-            style: Get.theme.kNormalStyle.copyWith(color: Colors.white),
-          )),
-    );
-  }
+Widget getStartedBtn(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 30),
+    child: TextButton(
+        style: TextButton.styleFrom(
+            backgroundColor: Get.theme.colorPrimaryDark,
+            fixedSize: Size(MediaQuery.of(context).size.width, 20)),
+        onPressed: () => {saveOpenInfo(), Get.offAll(() => LoginPage())},
+        child: Text(
+          'Get Started',
+          style: Get.theme.kNormalStyle.copyWith(color: Colors.white),
+        )),
+  );
+}
 
-  void saveOpenInfo() {
-    if (GetStorage().read('opened') ?? true) {
-      GetStorage().write('opened', false);
-    }
-    debugPrint('Opened value: ${GetStorage().read('opened')}');
+void saveOpenInfo() {
+  if (GetStorage().read('opened') ?? true) {
+    GetStorage().write('opened', false);
   }
+  debugPrint('Opened value: ${GetStorage().read('opened')}');
 }
