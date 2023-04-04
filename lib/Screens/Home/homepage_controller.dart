@@ -50,15 +50,6 @@ class HomePageController extends GetxController {
   final scrollController = ScrollController();
   TextEditingController searchText = TextEditingController();
   RxBool search = false.obs;
-  String? seacrhInput(value) {
-    if (value == '') {
-      search.value = false;
-    } else {
-      search.value = true;
-    }
-    print(search.value);
-    return null;
-  }
 
   RxDouble currentoffset = 0.0.obs;
 

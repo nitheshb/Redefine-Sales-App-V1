@@ -78,7 +78,19 @@ class HomePage extends StatelessWidget {
           title: controller.expande.value == true
               ? TextField(
                   controller: controller.searchText,
-                  onChanged: controller.seacrhInput,
+                  onChanged: (v) {
+                    if (v == '') {
+                      searchController.searchResultsWidget.value =
+                          searchController.searchResults('');
+                      controller.search.value = false;
+                    } else {
+                      controller.search.value = true;
+                    }
+                    searchController.searchResultsWidget.value =
+                        searchController.searchResults(v);
+
+                    print(searchController.searchResultsWidget.value);
+                  },
                   decoration: InputDecoration(
                       prefixIcon: IconButton(
                           onPressed: () {
@@ -134,6 +146,7 @@ class HomePage extends StatelessWidget {
                   // ),
                 ],
         ),
+
         floatingActionButton: FloatingActionButton(
           onPressed: () => {
             showModalBottomSheet(
@@ -877,106 +890,115 @@ class HomePage extends StatelessWidget {
                       expandedHeight: controller.search.value == true
                           ? 10
                           : controller.expande.value == true
-                              ? 140
+                              ? 69
                               : 190,
                       bottom: PreferredSize(
-                        preferredSize: const Size.fromHeight(48.0),
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2.0, right: 4.0),
-                                child: ActionChip(
-                                    elevation: 0,
-                                    padding:
-                                        const EdgeInsets.fromLTRB(6, 1, 6, 1),
-                                    backgroundColor: 0 == 0
-                                        ? Get.theme.primaryContainer
-                                        : Colors.transparent,
-                                    label: FxText.bodySmall(
-                                      "All Tasks",
-                                      fontSize: 11,
-                                      fontWeight: 700,
-                                      color: 0 == 0
-                                          ? Get.theme.onPrimaryContainer
-                                          : Get.theme.colorScheme.onBackground,
+                        preferredSize: const Size.fromHeight(8.0),
+                        child: controller.expande.value == true
+                            ? SizedBox()
+                            : SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2.0, right: 4.0),
+                                      child: ActionChip(
+                                          elevation: 0,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 1, 6, 1),
+                                          backgroundColor: 0 == 0
+                                              ? Get.theme.primaryContainer
+                                              : Colors.transparent,
+                                          label: FxText.bodySmall(
+                                            "All Tasks",
+                                            fontSize: 11,
+                                            fontWeight: 700,
+                                            color: 0 == 0
+                                                ? Get.theme.onPrimaryContainer
+                                                : Get.theme.colorScheme
+                                                    .onBackground,
+                                          ),
+                                          onPressed: () => {print('hello')}),
                                     ),
-                                    onPressed: () => {print('hello')}),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2.0, right: 4.0),
-                                child: ActionChip(
-                                    elevation: 0,
-                                    padding:
-                                        const EdgeInsets.fromLTRB(6, 1, 6, 1),
-                                    backgroundColor: 1 == 0
-                                        ? Get.theme.primaryContainer
-                                        : Colors.transparent,
-                                    label: FxText.bodySmall(
-                                      "Personal",
-                                      fontSize: 11,
-                                      fontWeight: 700,
-                                      color: 1 == 0
-                                          ? Get.theme.onPrimaryContainer
-                                          : Get.theme.onBackground,
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2.0, right: 4.0),
+                                      child: ActionChip(
+                                          elevation: 0,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 1, 6, 1),
+                                          backgroundColor: 1 == 0
+                                              ? Get.theme.primaryContainer
+                                              : Colors.transparent,
+                                          label: FxText.bodySmall(
+                                            "Personal",
+                                            fontSize: 11,
+                                            fontWeight: 700,
+                                            color: 1 == 0
+                                                ? Get.theme.onPrimaryContainer
+                                                : Get.theme.onBackground,
+                                          ),
+                                          onPressed: () => {print('hello')}),
                                     ),
-                                    onPressed: () => {print('hello')}),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2.0, right: 4.0),
-                                child: ActionChip(
-                                    elevation: 0,
-                                    padding:
-                                        const EdgeInsets.fromLTRB(6, 1, 6, 1),
-                                    backgroundColor: 1 == 0
-                                        ? Get.theme.primaryContainer
-                                        : Colors.transparent,
-                                    label: FxText.bodySmall(
-                                      "Business",
-                                      fontSize: 11,
-                                      fontWeight: 700,
-                                      color: 1 == 0
-                                          ? Get.theme.onPrimaryContainer
-                                          : Get.theme.onBackground,
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2.0, right: 4.0),
+                                      child: ActionChip(
+                                          elevation: 0,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 1, 6, 1),
+                                          backgroundColor: 1 == 0
+                                              ? Get.theme.primaryContainer
+                                              : Colors.transparent,
+                                          label: FxText.bodySmall(
+                                            "Business",
+                                            fontSize: 11,
+                                            fontWeight: 700,
+                                            color: 1 == 0
+                                                ? Get.theme.onPrimaryContainer
+                                                : Get.theme.onBackground,
+                                          ),
+                                          onPressed: () => {print('hello')}),
                                     ),
-                                    onPressed: () => {print('hello')}),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 2.0, right: 4.0),
-                                child: ActionChip(
-                                    elevation: 0,
-                                    padding:
-                                        const EdgeInsets.fromLTRB(6, 1, 6, 1),
-                                    backgroundColor: 1 == 0
-                                        ? Get.theme.primaryContainer
-                                        : Colors.transparent,
-                                    label: FxText.bodySmall(
-                                      "Participants",
-                                      fontSize: 11,
-                                      fontWeight: 700,
-                                      color: 1 == 0
-                                          ? Get.theme.onPrimaryContainer
-                                          : Get.theme.onBackground,
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2.0, right: 4.0),
+                                      child: ActionChip(
+                                          elevation: 0,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 1, 6, 1),
+                                          backgroundColor: 1 == 0
+                                              ? Get.theme.primaryContainer
+                                              : Colors.transparent,
+                                          label: FxText.bodySmall(
+                                            "Participants",
+                                            fontSize: 11,
+                                            fontWeight: 700,
+                                            color: 1 == 0
+                                                ? Get.theme.onPrimaryContainer
+                                                : Get.theme.onBackground,
+                                          ),
+                                          onPressed: () => {print('hello')}),
                                     ),
-                                    onPressed: () => {print('hello')}),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
                       ),
                     ),
                   )
                 ];
               },
-              body: controller.streamToday()
+              body: controller.expande.value == true
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.89,
+                      child:
+                          Obx(() => searchController.searchResultsWidget.value),
+                    )
+                  : controller.streamToday()
               // body: TabBarView(
               //   children: [
               //       controller.streamToday(),
