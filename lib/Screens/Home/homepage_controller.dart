@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Screens/Task/task_manager.dart';
@@ -47,6 +48,17 @@ class HomePageController extends GetxController {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   final scrollController = ScrollController();
+  TextEditingController searchText = TextEditingController();
+  RxBool search = false.obs;
+  String? seacrhInput(value) {
+    if (value == '') {
+      search.value = false;
+    } else {
+      search.value = true;
+    }
+    print(search.value);
+    return null;
+  }
 
   RxDouble currentoffset = 0.0.obs;
 
@@ -101,11 +113,15 @@ class HomePageController extends GetxController {
   var participantsANew = [].obs;
   var attachmentsA = [].obs;
 
+  RxBool expande = false.obs;
+
   get http => null;
   String? validateTaskTitle(value) {
     if (value == '') {
+      validationSuccess.value = false;
       return 'Please enter task title';
     } else {
+      validationSuccess.value = true;
       return null;
     }
   }
@@ -114,6 +130,8 @@ class HomePageController extends GetxController {
     selectedDateTime.value =
         DateFormat('dd-MM-yyyy kk:mm').format(dateSelected);
   }
+
+  RxBool validationSuccess = false.obs;
 
   checkTaskValidation() {
     final validator = taskKey.currentState!.validate();
@@ -133,6 +151,7 @@ class HomePageController extends GetxController {
       } else {
         createNewTask();
         print(assignedUserName);
+        validationSuccess.value = false;
       }
     }
   }
@@ -141,8 +160,6 @@ class HomePageController extends GetxController {
     // Get.reset();
     // Get.delete<TaskController>();
     print('hello ${participantsANew}');
-
-   
 
     _collection
         .add({
@@ -318,7 +335,6 @@ class HomePageController extends GetxController {
                                     //     leftFraction: 0.72,
                                     //     size: 26),
 
-                                    
                                     SizedBox(
                                       child: Material(
                                         type: MaterialType.transparency,

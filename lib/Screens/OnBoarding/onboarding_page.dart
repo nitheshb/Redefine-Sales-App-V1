@@ -48,7 +48,9 @@ class OnBoardingPage extends StatelessWidget {
                     alignment: Alignment.topLeft,
                     child: Obx(
                       () => _onboardController.currentPage.value == 0
-                          ? SizedBox()
+                          ? SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.05,
+                            )
                           : IconButton(
                               onPressed: () {
                                 _onboardController.pageController.previousPage(
@@ -96,10 +98,10 @@ class OnBoardingPage extends StatelessWidget {
                             ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 1,
+                              height:
+                                  MediaQuery.of(context).size.height * 0.360,
                               child: Image.asset(
                                 _images[index],
-                                height:
-                                    MediaQuery.of(context).size.height * 0.360,
                               ),
                             ),
                           ],
@@ -135,7 +137,7 @@ class OnBoardingPage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: _onboardController.currentPage.value ==
                                         index
-                                    ? Get.theme.colorPrimaryDark
+                                    ? Color(0xFF0e1e2d)
                                     : Colors.grey,
                                 shape: BoxShape.circle,
                               ),
@@ -154,9 +156,41 @@ class OnBoardingPage extends StatelessWidget {
           ),
           Obx(
             () => _onboardController.currentPage.value == 2
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: getStartedBtn(context),
+                ? InkWell(
+                    onTap: () =>
+                        {saveOpenInfo(), Get.offAll(() => LoginPage())},
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      // child: getStartedBtn(context),
+
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.060,
+                        width: MediaQuery.of(context).size.width * 0.60,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Color(0xFF0e1e2d),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  MediaQuery.of(context).size.width * 0.060),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Get Started',
+                                style: Get.theme.kNormalStyle
+                                    .copyWith(color: Colors.white),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   )
                 : Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -168,12 +202,10 @@ class OnBoardingPage extends StatelessWidget {
                       },
                       child: CircleAvatar(
                         radius: MediaQuery.of(context).size.height * 0.0350,
-                        backgroundColor: Get.theme.colorPrimaryDark,
+                        backgroundColor: Color(0xFF0e1e2d),
                         child: const Center(
-                          child: Icon(
-                            Icons.arrow_forward_ios_outlined,
-                            color: Colors.white,
-                          ),
+                          child: Icon(Icons.arrow_forward_ios_outlined,
+                              color: Colors.white),
                         ),
                       ),
                     ),

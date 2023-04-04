@@ -282,7 +282,7 @@ class HomeGradientPage extends StatelessWidget {
                           controller: controller.taskTitle,
                           decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Task name...'),
+                              hintText: 'Task name..5555.'),
                           style: TextStyle(
                               fontSize: 19, fontWeight: FontWeight.w500),
                           autofocus: true,

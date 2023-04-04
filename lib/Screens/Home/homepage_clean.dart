@@ -53,70 +53,65 @@ class HomePage extends StatelessWidget {
 
     // TaskController controller1 = Get.put<TaskController>(TaskController());
     debugPrint("home called ${FirebaseAuth.instance.currentUser}");
-     // Set the system status bar color
-   
+    // Set the system status bar color
+
     return Scaffold(
-      backgroundColor:Color(0xffffffff),
-      appBar: AppBar(
         backgroundColor: Color(0xffffffff),
-        systemOverlayStyle: SystemUiOverlayStyle(
-    // Status bar color
-    statusBarColor: Color(0xff000032), 
+        appBar: AppBar(
+          backgroundColor: Color(0xffffffff),
+          systemOverlayStyle: SystemUiOverlayStyle(
+            // Status bar color
+            statusBarColor: Color(0xff000032),
 
-    // Status bar brightness (optional)
-    statusBarIconBrightness: Brightness.light, // For Android (dark icons)
-    statusBarBrightness: Brightness.light, // For iOS (dark icons)
-  ),
-        elevation: 0.0,
-      title:   FxText.titleLarge(
-                      "TaskMan",
-                      fontWeight: 600,
+            // Status bar brightness (optional)
+            statusBarIconBrightness:
+                Brightness.light, // For Android (dark icons)
+            statusBarBrightness: Brightness.light, // For iOS (dark icons)
+          ),
+          elevation: 0.0,
+          title: FxText.titleLarge(
+            "TaskMan",
+            fontWeight: 600,
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {},
+            ),
+
+            IconButton(
+              onPressed: () => {Get.to(() => const NotificationPage())},
+              icon: Icon(Icons.notifications),
+            ),
+            IconButton(
+              onPressed: () => {Get.to(() => const ProfilePage())},
+              icon: Hero(
+                tag: 'profile',
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: CircleAvatar(
+                    backgroundColor: Color(0xffe6e7fd),
+                    radius: 30,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.black38,
+                      size: 20,
                     ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search),
-          onPressed: () {},
+                  ),
+                ),
+              ),
+            ),
+            // PopupMenuButton(
+            //   itemBuilder: (BuildContext context) => [
+            //     PopupMenuItem(
+            //       child: Text('Settings'),
+            //     ),
+            //   ],
+            // ),
+          ],
         ),
-       
-        IconButton(
-
-                          onPressed: () => {
-                              Get.to(() => const NotificationPage())
-                            
-                            },
-
-        icon: Icon(Icons.notifications),),
-         IconButton(
-                           
-                          onPressed: () => {Get.to(() => const ProfilePage())},
-                          icon: Hero(
-                            tag: 'profile',
-                            child: Material(
-                              type: MaterialType.transparency,
-                              child: CircleAvatar(
-                                backgroundColor: Color(0xffe6e7fd),
-                                radius: 30,
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.black38,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-        // PopupMenuButton(
-        //   itemBuilder: (BuildContext context) => [
-        //     PopupMenuItem(
-        //       child: Text('Settings'),
-        //     ),
-        //   ],
-        // ),
-      ],
-    ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => {
-            
             showModalBottomSheet(
                 shape: RoundedRectangleBorder(
                     borderRadius:
@@ -141,7 +136,7 @@ class HomePage extends StatelessWidget {
                             controller: controller.taskTitle,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: 'Task name...'),
+                                hintText: 'Task name...555'),
                             style: TextStyle(
                                 fontSize: 19, fontWeight: FontWeight.w500),
                             autofocus: true,
@@ -175,8 +170,7 @@ class HomePage extends StatelessWidget {
                             visible: !(controller.assignedUserName.value ==
                                 "Assign someone"),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // assign to
 
@@ -188,11 +182,9 @@ class HomePage extends StatelessWidget {
                                             Dialog(
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          8),
+                                                      BorderRadius.circular(8),
                                                 ),
-                                                child:
-                                                    const ContactListPage()))
+                                                child: const ContactListPage()))
                                   },
                                   child: Row(
                                     children: [
@@ -211,48 +203,39 @@ class HomePage extends StatelessWidget {
                                         ),
                                       ),
                                       Obx(() => Padding(
-                                                padding:
-                                                    const EdgeInsets.only(
-                                                        left: 8.0, bottom: 4),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 16,
-                                                      child: Text(
-                                                        'Assigned to',
-                                                        style: Get
-                                                            .theme.kSubTitle
-                                                            .copyWith(
-                                                                color: Get
-                                                                    .theme
-                                                                    .kLightGrayColor),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 22,
-                                                      child: Text(
-                                                        controller
-                                                            .assignedUserName
-                                                            .value,
-                                                        style: Get.theme
-                                                            .kPrimaryTxtStyle
-                                                            .copyWith(
-                                                                color: Get
-                                                                    .theme
-                                                                    .kBadgeColor),
-                                                      ),
-                                                    ),
-                                                  ],
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0, bottom: 4),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  height: 16,
+                                                  child: Text(
+                                                    'Assigned to',
+                                                    style: Get.theme.kSubTitle
+                                                        .copyWith(
+                                                            color: Get.theme
+                                                                .kLightGrayColor),
+                                                  ),
                                                 ),
-                                              )
-                                        
-
-                                          ),
+                                                SizedBox(
+                                                  height: 22,
+                                                  child: Text(
+                                                    controller
+                                                        .assignedUserName.value,
+                                                    style: Get
+                                                        .theme.kPrimaryTxtStyle
+                                                        .copyWith(
+                                                            color: Get.theme
+                                                                .kBadgeColor),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )),
                                     ],
                                   ),
                                 ),
@@ -278,8 +261,7 @@ class HomePage extends StatelessWidget {
                                             type: MaterialType.transparency,
                                             child: DottedBorder(
                                               borderType: BorderType.Circle,
-                                              color:
-                                                  Get.theme.kLightGrayColor,
+                                              color: Get.theme.kLightGrayColor,
                                               radius: Radius.circular(27.0),
                                               dashPattern: [3, 3],
                                               strokeWidth: 1,
@@ -287,11 +269,10 @@ class HomePage extends StatelessWidget {
                                                 padding:
                                                     const EdgeInsets.all(6.0),
                                                 child: Icon(
-                                                  Icons
-                                                      .calendar_month_outlined,
+                                                  Icons.calendar_month_outlined,
                                                   size: 18,
-                                                  color: Get
-                                                      .theme.kLightGrayColor,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
                                                 ),
                                               ),
                                             )
@@ -311,15 +292,13 @@ class HomePage extends StatelessWidget {
                                             ),
                                       ),
                                       Obx(() => Padding(
-                                                padding:
-                                                    const EdgeInsets.only(
-                                                        left: 8.0, bottom: 4),
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0, bottom: 4),
                                                 child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     SizedBox(
                                                       height: 16,
@@ -328,8 +307,7 @@ class HomePage extends StatelessWidget {
                                                         style: Get
                                                             .theme.kSubTitle
                                                             .copyWith(
-                                                                color: Get
-                                                                    .theme
+                                                                color: Get.theme
                                                                     .kLightGrayColor),
                                                       ),
                                                     ),
@@ -409,8 +387,8 @@ class HomePage extends StatelessWidget {
                                             storageReference
                                                 .putFile(File(image!.path))
                                                 .then((value) async {
-                                              controller.attachmentsA.value
-                                                  .add(await value.ref
+                                              controller.attachmentsA.value.add(
+                                                  await value.ref
                                                       .getDownloadURL());
                                               print(
                                                   'Image URL: ${controller.attachmentsA.value}');
@@ -478,8 +456,7 @@ class HomePage extends StatelessWidget {
                                   Text(
                                     'Participants',
                                     style: Get.theme.kSubTitle.copyWith(
-                                        color: Color(0xff707070),
-                                        fontSize: 16),
+                                        color: Color(0xff707070), fontSize: 16),
                                   ),
                                   SizedBox(
                                     height: 8,
@@ -510,8 +487,7 @@ class HomePage extends StatelessWidget {
                                                 },
                                             child: DottedBorder(
                                               borderType: BorderType.Circle,
-                                              color:
-                                                  Get.theme.kLightGrayColor,
+                                              color: Get.theme.kLightGrayColor,
                                               radius: Radius.circular(27.0),
                                               dashPattern: [3, 3],
                                               strokeWidth: 1,
@@ -521,8 +497,8 @@ class HomePage extends StatelessWidget {
                                                 child: Icon(
                                                   Icons.add,
                                                   size: 15,
-                                                  color: Get
-                                                      .theme.kLightGrayColor,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
                                                 ),
                                               ),
                                             )),
@@ -545,8 +521,7 @@ class HomePage extends StatelessWidget {
                                                   .participantsANew
                                                   .value
                                                   .length,
-                                              scrollDirection:
-                                                  Axis.horizontal,
+                                              scrollDirection: Axis.horizontal,
                                               itemBuilder: (context, index) {
                                                 return Padding(
                                                   padding:
@@ -566,8 +541,7 @@ class HomePage extends StatelessWidget {
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .white,
-                                                                fontSize:
-                                                                    10)),
+                                                                fontSize: 10)),
                                                       ),
                                                     ),
                                                   ),
@@ -626,9 +600,9 @@ class HomePage extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Visibility(
-                                      visible: (controller
-                                              .assignedUserName.value ==
-                                          "Assign someone"),
+                                      visible:
+                                          (controller.assignedUserName.value ==
+                                              "Assign someone"),
                                       child: Row(
                                         children: [
                                           InkWell(
@@ -652,8 +626,8 @@ class HomePage extends StatelessWidget {
                                               children: [
                                                 Icon(
                                                   Icons.person,
-                                                  color: Get
-                                                      .theme.kLightGrayColor,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
                                                 ),
                                               ],
                                             ),
@@ -670,16 +644,13 @@ class HomePage extends StatelessWidget {
                                                 print(
                                                     'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
                                               }, onConfirm: (date) {
-                                                controller.dateSelected =
-                                                    date;
-                                                controller
-                                                    .updateSelectedDate();
+                                                controller.dateSelected = date;
+                                                controller.updateSelectedDate();
                                               }, currentTime: DateTime.now())
                                             },
                                             child: Icon(
                                               Icons.calendar_month_outlined,
-                                              color:
-                                                  Get.theme.kLightGrayColor,
+                                              color: Get.theme.kLightGrayColor,
                                             ),
                                           ),
                                           SizedBox(
@@ -706,8 +677,8 @@ class HomePage extends StatelessWidget {
                                                       .putFile(
                                                           File(image!.path))
                                                       .then((value) async {
-                                                    controller.attachmentsA
-                                                        .value = [
+                                                    controller
+                                                        .attachmentsA.value = [
                                                       await value.ref
                                                           .getDownloadURL()
                                                     ];
@@ -717,8 +688,8 @@ class HomePage extends StatelessWidget {
                                                 },
                                                 child: Icon(
                                                   Icons.attach_file,
-                                                  color: Get
-                                                      .theme.kLightGrayColor,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
                                                 ),
                                               ),
                                               SizedBox(
@@ -756,8 +727,7 @@ class HomePage extends StatelessWidget {
                                         onTap: () => {
                                           showDialog(
                                               context: context,
-                                              builder: (BuildContext
-                                                      context) =>
+                                              builder: (BuildContext context) =>
                                                   const ContactListDialogPage())
                                         },
                                         child: Icon(
@@ -790,140 +760,122 @@ class HomePage extends StatelessWidget {
             color: Color(0xff33264b),
           ),
         ),
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.centerDocked,
-      
-      body: DefaultTabController(
-      length: 3,
-      child: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            
-            SliverAppBar(
-              backgroundColor: Color(0xffffffff),
-               snap: false,
-          pinned: true,
-              floating: true,
-              flexibleSpace:FlexibleSpaceBar(background: SlimTeamStats(()=>{})),
-              expandedHeight: 190,
-              
-             
-              bottom: PreferredSize(
-preferredSize: Size.fromHeight(48.0),
-                child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                child:
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                   Padding(
-                     padding: const EdgeInsets.only(left:2.0, right:4.0),
-                     child: ActionChip(
-                               elevation: 0,
-                               padding: const EdgeInsets.fromLTRB(6,1,6,1),
-                               
-                               backgroundColor: 0 == 0
-                                  ? Get.theme.primaryContainer
-                                   : Colors.transparent,
-                    
-                      label: FxText.bodySmall(
-                  "All Tasks",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: 0 == 0
-                      ? Get.theme.onPrimaryContainer
-                      : Get.theme.colorScheme.onBackground,
-                ),
-                               onPressed: ()=> {
-                                 print('hello')
-                               }),
-                   ),
-                    Padding(
-                     padding: const EdgeInsets.only(left:2.0, right:4.0),
-                     child: ActionChip(
-                               elevation: 0,
-                               padding: const EdgeInsets.fromLTRB(6,1,6,1),
-                               
-                               backgroundColor: 1 == 0
-                                  ? Get.theme.primaryContainer
-                                   : Colors.transparent,
-                    
-                      label: FxText.bodySmall(
-                  "Personal",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: 1 == 0
-                      ? Get.theme.onPrimaryContainer
-                      : Get.theme.onBackground,
-                ),
-                               onPressed: ()=> {
-                                 print('hello')
-                               }),
-                   ),
-                  Padding(
-                     padding: const EdgeInsets.only(left:2.0, right:4.0),
-                     child: ActionChip(
-                               elevation: 0,
-                               padding: const EdgeInsets.fromLTRB(6,1,6,1),
-                               
-                               backgroundColor: 1 == 0
-                                  ? Get.theme.primaryContainer
-                                   : Colors.transparent,
-                    
-                      label: FxText.bodySmall(
-                  "Business",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: 1 == 0
-                      ? Get.theme.onPrimaryContainer
-                      : Get.theme.onBackground,
-                ),
-                               onPressed: ()=> {
-                                 print('hello')
-                               }),
-                   ),                           
-                   Padding(
-                     padding: const EdgeInsets.only(left:2.0, right:4.0),
-                     child: ActionChip(
-                               elevation: 0,
-                               padding: const EdgeInsets.fromLTRB(6,1,6,1),
-                               
-                               backgroundColor: 1 == 0
-                                  ? Get.theme.primaryContainer
-                                   : Colors.transparent,
-                    
-                      label: FxText.bodySmall(
-                  "Participants",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: 1 == 0
-                      ? Get.theme.onPrimaryContainer
-                      : Get.theme.onBackground,
-                ),
-                               onPressed: ()=> {
-                                 print('hello')
-                               }),
-                   ),
-                                        ],
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        body: DefaultTabController(
+          length: 3,
+          child: NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  backgroundColor: Color(0xffffffff),
+                  snap: false,
+                  pinned: true,
+                  floating: true,
+                  flexibleSpace:
+                      FlexibleSpaceBar(background: SlimTeamStats(() => {})),
+                  expandedHeight: 190,
+                  bottom: PreferredSize(
+                    preferredSize: Size.fromHeight(48.0),
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 2.0, right: 4.0),
+                            child: ActionChip(
+                                elevation: 0,
+                                padding: const EdgeInsets.fromLTRB(6, 1, 6, 1),
+                                backgroundColor: 0 == 0
+                                    ? Get.theme.primaryContainer
+                                    : Colors.transparent,
+                                label: FxText.bodySmall(
+                                  "All Tasks",
+                                  fontSize: 11,
+                                  fontWeight: 700,
+                                  color: 0 == 0
+                                      ? Get.theme.onPrimaryContainer
+                                      : Get.theme.colorScheme.onBackground,
+                                ),
+                                onPressed: () => {print('hello')}),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 2.0, right: 4.0),
+                            child: ActionChip(
+                                elevation: 0,
+                                padding: const EdgeInsets.fromLTRB(6, 1, 6, 1),
+                                backgroundColor: 1 == 0
+                                    ? Get.theme.primaryContainer
+                                    : Colors.transparent,
+                                label: FxText.bodySmall(
+                                  "Personal",
+                                  fontSize: 11,
+                                  fontWeight: 700,
+                                  color: 1 == 0
+                                      ? Get.theme.onPrimaryContainer
+                                      : Get.theme.onBackground,
+                                ),
+                                onPressed: () => {print('hello')}),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 2.0, right: 4.0),
+                            child: ActionChip(
+                                elevation: 0,
+                                padding: const EdgeInsets.fromLTRB(6, 1, 6, 1),
+                                backgroundColor: 1 == 0
+                                    ? Get.theme.primaryContainer
+                                    : Colors.transparent,
+                                label: FxText.bodySmall(
+                                  "Business",
+                                  fontSize: 11,
+                                  fontWeight: 700,
+                                  color: 1 == 0
+                                      ? Get.theme.onPrimaryContainer
+                                      : Get.theme.onBackground,
+                                ),
+                                onPressed: () => {print('hello')}),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 2.0, right: 4.0),
+                            child: ActionChip(
+                                elevation: 0,
+                                padding: const EdgeInsets.fromLTRB(6, 1, 6, 1),
+                                backgroundColor: 1 == 0
+                                    ? Get.theme.primaryContainer
+                                    : Colors.transparent,
+                                label: FxText.bodySmall(
+                                  "Participants",
+                                  fontSize: 11,
+                                  fontWeight: 700,
+                                  color: 1 == 0
+                                      ? Get.theme.onPrimaryContainer
+                                      : Get.theme.onBackground,
+                                ),
+                                onPressed: () => {print('hello')}),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-          
-           
+              ];
+            },
+            body: TabBarView(
+              children: [
+                controller.streamToday(),
+                controller.streamUpdates(),
+                controller.streamCreated(),
+              ],
             ),
-          ];
-        },
-        body: TabBarView(
-          children: [
-              controller.streamToday(),
-              controller.streamUpdates(),
-              controller.streamCreated(),
-            ],
+          ),
         ),
-      ),
-    ),
         bottomNavigationBar: BottomAppBar(
           color: Color(0xffffffff),
           elevation: 20,
@@ -940,8 +892,7 @@ preferredSize: Size.fromHeight(48.0),
                   onPressed: () => {
                         bottomSheetWidget(ReportPage(), transparentBg: true),
                       },
-                  icon:
-                      Icon(Icons.menu_rounded, color: Get.theme.btnTextCol)),
+                  icon: Icon(Icons.menu_rounded, color: Get.theme.btnTextCol)),
               Row(
                 children: [
                   IconButton(
