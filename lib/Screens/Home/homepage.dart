@@ -893,7 +893,7 @@ class HomePage extends StatelessWidget {
                               ? 69
                               : 190,
                       bottom: PreferredSize(
-                        preferredSize: const Size.fromHeight(8.0),
+                        preferredSize: const Size.fromHeight(48.0),
                         child: controller.expande.value == true
                             ? SizedBox()
                             : SingleChildScrollView(
