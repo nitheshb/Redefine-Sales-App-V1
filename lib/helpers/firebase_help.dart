@@ -9,7 +9,7 @@ class DbQuery {
         .where("uid", isEqualTo: uid)
         .get();
     print("uid is $uid");
-    if (!LoggedInUserDetails.docs.isEmpty) {
+    if (LoggedInUserDetails.docs.isNotEmpty) {
       return LoggedInUserDetails.docs.toList();
     } else {
       return null;
@@ -22,7 +22,7 @@ class DbQuery {
         .where('department', isEqualTo: deptName)
         .get();
 
-    if (!usersList.docs.isEmpty) {
+    if (usersList.docs.isNotEmpty) {
       return usersList.docs.toList();
     } else {
       return null;
@@ -44,10 +44,11 @@ class DbQuery {
             // .where("department", arrayContainsAny: [deptName.toString().toLowerCase()])
             .snapshots();
       } else {
-        return FirebaseFirestore.instance.collection('users').where(
-                "department",
+        return FirebaseFirestore.instance
+            .collection('users')
+            .where("department",
                 arrayContainsAny: [sortByDeptName.toString().toLowerCase()])
-                .where('orgId', isEqualTo: "maahomes")
+            .where('orgId', isEqualTo: "maahomes")
             // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
             .snapshots();
       }
@@ -66,7 +67,7 @@ class DbQuery {
         .where('Assigned by(email)', isEqualTo: SignedInUserEmail)
         .get();
 
-    if (!userTaskList.docs.isEmpty) {
+    if (userTaskList.docs.isNotEmpty) {
       return userTaskList.docs.toList();
     } else {
       return null;
