@@ -32,9 +32,9 @@ class LoginPage extends StatelessWidget {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
+        // resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -63,11 +63,10 @@ class LoginPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: FxText.titleLarge(
-          "Login",
-          fontWeight: 700,
-          // color: Get.theme.primary,
-
-        ),
+                    "Login",
+                    fontWeight: 700,
+                    // color: Get.theme.primary,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(20),
@@ -110,8 +109,7 @@ class LoginPage extends StatelessWidget {
                         labelText: 'Password',
                         hintText: '***********',
                         focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Get.theme.primary)),
+                            borderSide: BorderSide(color: Get.theme.primary)),
                         border: const OutlineInputBorder(),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -125,7 +123,7 @@ class LoginPage extends StatelessWidget {
                               ? const Icon(Icons.remove_red_eye_outlined)
                               : Icon(
                                   Icons.remove_red_eye,
-                                  color:  Get.theme.primary,
+                                  color: Get.theme.primary,
                                 ),
                         ),
                       ),
@@ -198,7 +196,7 @@ class LoginPage extends StatelessWidget {
                             style: Get.theme.kNormalStyle
                                 .copyWith(color: Get.theme.onPrimary))),
                   ),
-                )
+                ),
               ],
             ),
           ),
