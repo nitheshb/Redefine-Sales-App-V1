@@ -26,6 +26,7 @@ import 'package:redefineerp/Screens/Report/team_stats.dart';
 import 'package:redefineerp/Screens/Search/search_task.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
+import 'package:redefineerp/Screens/Task/task_manager.dart';
 import 'package:redefineerp/Utilities/basicdialog.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
@@ -41,13 +42,32 @@ import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:intl/intl.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final storageReference =
       FirebaseStorage.instance.ref().child('images/image.jpg');
 
   ImagePicker picker = ImagePicker();
 
+  var businessMode = true;
+
+   flipMode() {
+    setState(() {
+      businessMode = !businessMode;
+    });
+  }
+
+  void initState() {
+    // time = filterTime.first;
+    businessMode = true;
+  }
+
   XFile? image;
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<HomePageController>(HomePageController());
@@ -121,7 +141,7 @@ class HomePage extends StatelessWidget {
         // ),
       ],
     ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.extended(
           onPressed: () => {
             
             showModalBottomSheet(
@@ -792,10 +812,20 @@ class HomePage extends StatelessWidget {
                     )))
           },
           backgroundColor: Color(0xffBDA1EF),
-          child: const Icon(
-            Icons.add,
-            color: Color(0xff33264b),
-          ),
+          label: Text('Add Task'),
+          icon:       const Icon(
+                Icons.add,
+                // color: Color(0xff33264b),
+              ),
+          // child: Row(
+          //   children: [
+          //     Text('Aedd Task'),
+          //     const Icon(
+          //       Icons.add,
+          //       color: Color(0xff33264b),
+          //     ),
+          //   ],
+          // ),
         ),
         // floatingActionButtonLocation:
         //     FloatingActionButtonLocation.,
@@ -811,12 +841,10 @@ class HomePage extends StatelessWidget {
                snap: false,
           pinned: true,
               floating: true,
-              flexibleSpace:FlexibleSpaceBar(background: SlimTeamStats(()=>{})),
+              flexibleSpace:FlexibleSpaceBar(background: SlimTeamStats(flipMode,businessMode, controller.numOfTodayTasks, controller.myBusinessTotal)),
               expandedHeight: 190,
-              
-             
               bottom: PreferredSize(
-preferredSize: Size.fromHeight(48.0),
+                preferredSize: Size.fromHeight(48.0),
                 child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
@@ -825,8 +853,62 @@ preferredSize: Size.fromHeight(48.0),
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                   Padding(
-                     padding: const EdgeInsets.only(left:2.0, right:4.0),
+  if(businessMode)...[ Padding(
+                     padding: const EdgeInsets.only(left:6.0, right:4.0),
+                     child: ActionChip(
+                               elevation: 0,
+                               padding: const EdgeInsets.fromLTRB(6,1,6,1),
+                               
+                               backgroundColor: 0 == 0
+                                  ? Get.theme.primaryContainer
+                                   : Colors.transparent,
+                    
+                      label: FxText.bodySmall(
+                  "My Tasks",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: 0 == 0
+                      ? Get.theme.onPrimaryContainer
+                      : Get.theme.colorScheme.onBackground,
+                                ),
+                               onPressed: ()=> {
+                                 print('hello')
+                               }),
+                   ),
+                   
+
+                   Visibility(
+                    visible:false,
+                      maintainSize: true, 
+  maintainAnimation: true,
+  maintainState: true,
+                     child: Padding(
+                       padding: const EdgeInsets.only(left:2.0, right:4.0),
+                       child: ActionChip(
+                                 elevation: 0,
+                                 padding: const EdgeInsets.fromLTRB(6,1,6,1),
+                                 
+                                 backgroundColor: 0 == 0
+                                    ? Get.theme.primaryContainer
+                                     : Colors.transparent,
+                      
+                        label: FxText.bodySmall(
+                                     "My Tasks adfafafaf adffafafafdas adfafafaf adfadfafafafaff",
+                                     fontSize: 11,
+                                     fontWeight: 700,
+                                     color: 0 == 0
+                        ? Get.theme.onPrimaryContainer
+                        : Get.theme.colorScheme.onBackground,
+                                  ),
+                                 onPressed: ()=> {
+                                   print('hello')
+                                 }),
+                     ),
+                   ),
+                   
+                   ]
+                 else...[  Padding(
+                     padding: const EdgeInsets.only(left:8.0, right:4.0),
                      child: ActionChip(
                                elevation: 0,
                                padding: const EdgeInsets.fromLTRB(6,1,6,1),
@@ -842,7 +924,7 @@ preferredSize: Size.fromHeight(48.0),
                   color: 0 == 0
                       ? Get.theme.onPrimaryContainer
                       : Get.theme.colorScheme.onBackground,
-                ),
+                                ),
                                onPressed: ()=> {
                                  print('hello')
                                }),
@@ -858,13 +940,13 @@ preferredSize: Size.fromHeight(48.0),
                                    : Colors.transparent,
                     
                       label: FxText.bodySmall(
-                  "Personal",
+                  "Assigned to me",
                   fontSize: 11,
                   fontWeight: 700,
                   color: 1 == 0
                       ? Get.theme.onPrimaryContainer
                       : Get.theme.onBackground,
-                ),
+                                ),
                                onPressed: ()=> {
                                  print('hello')
                                }),
@@ -880,17 +962,17 @@ preferredSize: Size.fromHeight(48.0),
                                    : Colors.transparent,
                     
                       label: FxText.bodySmall(
-                  "Business",
+                  "Created by me",
                   fontSize: 11,
                   fontWeight: 700,
                   color: 1 == 0
                       ? Get.theme.onPrimaryContainer
                       : Get.theme.onBackground,
-                ),
+                                ),
                                onPressed: ()=> {
                                  print('hello')
                                }),
-                   ),                           
+                   ),
                    Padding(
                      padding: const EdgeInsets.only(left:2.0, right:4.0),
                      child: ActionChip(
@@ -908,11 +990,13 @@ preferredSize: Size.fromHeight(48.0),
                   color: 1 == 0
                       ? Get.theme.onPrimaryContainer
                       : Get.theme.onBackground,
-                ),
+                                ),
                                onPressed: ()=> {
                                  print('hello')
                                }),
                    ),
+                   ],                           
+                   
                                         ],
                   ),
                 ),
@@ -922,7 +1006,71 @@ preferredSize: Size.fromHeight(48.0),
             ),
           ];
         },
-        body: controller.streamToday()
+        // body: controller.streamToday()
+        body: 
+                       StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('spark_assignedTasks')
+            .where("due_date",
+                isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+            .where("status", isEqualTo: "InProgress")
+            .where("to_uid", isEqualTo: controller.currentUser!.uid)
+            .snapshots(),
+        builder: (context, snapshot) {
+        //     if (!snapshot.hasData) {
+        //   return CircularProgressIndicator();
+        // }
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text("Something went wrong! 😣..."),
+            );
+          } else if (snapshot.hasData) {
+
+            // lets seperate between business vs personal 
+
+         
+            var TotalTasks = snapshot.data!.docs.toList();
+            var personalTasks = [];
+            if(!businessMode){
+           personalTasks= TotalTasks.where((element) => element["by_uid"] != FirebaseAuth.instance.currentUser!.uid).toList();
+            }else{
+             personalTasks= TotalTasks.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid).toList(); 
+            }
+
+          // return Text('Full Data');
+             return Column(
+                  children: [
+                    Expanded(
+                      child: MediaQuery.removePadding(
+                        context: context,
+                        removeTop: true,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: personalTasks.length,
+                              itemBuilder: (context, index) {
+                                late QueryDocumentSnapshot<Object?>? taskData =
+                                    personalTasks[index];
+                                print("qwdqwdw ${taskData!.id}");
+
+                                // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
+                                // print(
+                                //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
+                                // print("due date is ${taskData!.get('due data')}");
+                                // return Text("hello");
+                                return controller.CardSetup(context,taskData);  }),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+             
+            }else{
+              return Text('No Data');
+            }}),
+               
         // body: TabBarView(
         //   children: [
         //       controller.streamToday(),
@@ -934,7 +1082,6 @@ preferredSize: Size.fromHeight(48.0),
     ),
   );}
 
- 
 Widget titleRow() {
     return Row(
       children: [
@@ -954,6 +1101,7 @@ Widget titleRow() {
       ],
     );
   }
+
 Widget _bottomSheet(ScrollController controller) {
   return SingleChildScrollView(
     physics: ClampingScrollPhysics(),

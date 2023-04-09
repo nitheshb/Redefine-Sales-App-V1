@@ -9,15 +9,19 @@ import 'package:redefineerp/Screens/SuperHomePage/SuperHomePage.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/methods/methods.dart';
+import 'package:supabase/supabase.dart';
 
 class AuthController extends GetxController {
+  //   final SupabaseClient supabaseClient;
+  // AuthController(this.supabaseClient);
+  // AuthController()
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   final formKey = GlobalKey<FormState>();
   var showPass = true.obs;
   RxInt activeIndex = 0.obs;
 
-  final User? currentUser = FirebaseAuth.instance.currentUser;
+  final  currentUser = FirebaseAuth.instance.currentUser;
   bool isLoading = false;
   String? localFcmToken;
 
