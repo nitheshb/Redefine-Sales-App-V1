@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:async/async.dart' show StreamGroup, StreamZip;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rxdart/rxdart.dart';
 
 class DbQuery {
   static DbQuery get instanace => DbQuery();
@@ -15,6 +18,31 @@ class DbQuery {
       return null;
     }
   }
+
+  final CollectionReference usersRef = FirebaseFirestore.instance.collection('spark_assignedTasks');
+  final CollectionReference tasksTableRef = FirebaseFirestore.instance.collection('spark_assignedTasks');
+
+  final currentUser = FirebaseAuth.instance.currentUser;
+
+    Stream<List<QuerySnapshot>> getStreamCombineTasks() {
+        var stream1 = usersRef.where("due_date",
+                isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+            .where("status", isEqualTo: "InProgress")
+            .where("to_uid", isEqualTo: currentUser!.uid).snapshots();
+
+            // created by this user
+         var stream2 = usersRef.where("due_date",
+                isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+            .where("status", isEqualTo: "InProgress")
+            .where("by_uid", isEqualTo: currentUser!.uid).snapshots();
+
+                // created by this user
+         var stream3 = usersRef.where("due_date",
+                isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+            .where("status", isEqualTo: "InProgress")
+            .where("particpantsA", arrayContains: currentUser!.uid).snapshots();    
+        return StreamZip([stream1, stream2, stream3]);
+    }
 
   getUsersByDept(deptName) async {
     QuerySnapshot usersList = await FirebaseFirestore.instance
@@ -72,5 +100,10 @@ class DbQuery {
     } else {
       return null;
     }
+  }
+
+  getAddParticipants(id, iDa)async {
+    // particpantsA
+      await tasksTableRef.doc(id).update({"particpantsIdA": FieldValue.arrayUnion(iDa), "particpantsA": FieldValue.arrayUnion([]) });
   }
 }

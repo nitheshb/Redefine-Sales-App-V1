@@ -7,6 +7,7 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Profile/profile_page.dart';
 import 'package:redefineerp/themes/constant.dart';
@@ -17,9 +18,10 @@ import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class SlimTeamStats extends StatefulWidget {
-  VoidCallback flipMode;
+  var flipMode;
    var businessMode,numOfTodayTasks, myBusinessTotal ;
   SlimTeamStats(this.flipMode, this.businessMode, this.numOfTodayTasks, this.myBusinessTotal);
+ 
   @override
   State<SlimTeamStats> createState() => _SlimTeamStatsState();
 }
@@ -35,6 +37,7 @@ class _SlimTeamStatsState extends State<SlimTeamStats> {
   var isDay = true;
   var isWeek = false;
   var isMonth = false;
+        final controller = Get.put<HomePageController>(HomePageController());
    
   @override
   Widget build(BuildContext context) {
@@ -75,9 +78,9 @@ Widget statusBarItems(title) {
     FirebaseAuth auth = FirebaseAuth.instance;
   return  Expanded(
               child: InkWell(
-                          onTap: () => widget.flipMode(),
+                          onTap: () =>{controller.flipMode(title)},
                 child: FxContainer.bordered(
-                  color: (title== "Personal" && widget.businessMode) ?  Get.theme.primaryContainer: (title== "Business" && !widget.businessMode) ?  Get.theme.primaryContainer: Colors.transparent,
+                  color: (title== "Personal" && controller.businessMode.value) ?  Get.theme.primaryContainer: (title== "Business" && !controller.businessMode.value) ?  Get.theme.primaryContainer: Colors.transparent,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

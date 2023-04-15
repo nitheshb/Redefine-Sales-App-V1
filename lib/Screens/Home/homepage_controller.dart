@@ -30,7 +30,10 @@ class HomePageController extends GetxController {
     getToken();
 
     updateSelectedDate();
-    client = GetIt.instance<SupabaseClient>();
+
+
+
+
        final subscription = client
         .from('maahomes_TM_Tasks')
         .stream(primaryKey: ['id'])
@@ -88,6 +91,10 @@ class HomePageController extends GetxController {
   var myPersonalTotal = 0.obs;
   var myBusinessTotal = 0.obs;
 
+    var totalTasksStreamData = [].obs;
+
+  var myTaskTypeCategory = 'allBusinessTasks'.obs;
+
   var currentUser;
 
   int tempDueDate = 0;
@@ -120,6 +127,9 @@ class HomePageController extends GetxController {
   var assignedUserFcmToken = ''.obs;
   var taskPriority = 'Basic'.obs;
 
+ var personalData = [].obs;
+  var businessData = [].obs;
+  var businessMode = true.obs;
 
   var participantsANew = [].obs;
   var attachmentsA = [].obs;
@@ -138,6 +148,44 @@ class HomePageController extends GetxController {
         DateFormat('dd-MM-yyyy kk:mm').format(dateSelected);
   }
 
+  flipMode(title){
+    print('am here ${title}');
+    if(title== 'Business'){
+  businessMode.value = false;
+setTaskTypeFun('allBusinessTasks');
+    }else {
+      businessMode.value = true;
+   
+      setTaskTypeFun('personalTasks');
+      
+    }
+   
+}
+void setTaskTypeFun(value){
+
+  myTaskTypeCategory.value = value;
+filterTaskPerCat(value);
+  print('iam insied it ${value}');
+}
+
+void filterTaskPerCat (value){
+    if(value == 'creatdByMe') {
+                          totalTasksStreamData.value = businessData.where((element) => (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+                      } else if(value == 'assignedToMe') {
+                          totalTasksStreamData.value = businessData.where((element) => (element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+                     
+                     print('assinged to count ${totalTasksStreamData.value.length}');
+                      } else if(value == 'participants') {
+                          totalTasksStreamData.value = businessData.where((element) => (element["by_uid"] != FirebaseAuth.instance.currentUser!.uid && element["to_uid"] != FirebaseAuth.instance.currentUser!.uid)).toList();
+                      }else if(value=='personalTasks'){
+                        print('i was here yo yo');
+                      totalTasksStreamData.value=   personalData;
+                      //  totalTasksStreamData.value = businessData.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid && element["to_uid"] == FirebaseAuth.instance.currentUser!.uid).toList();
+                         print('participants ${totalTasksStreamData.value.length}');
+                      }else{
+                         totalTasksStreamData.value = businessData;
+                      }
+}
   checkTaskValidation() {
     final validator = taskKey.currentState!.validate();
 
@@ -159,6 +207,8 @@ class HomePageController extends GetxController {
       }
     }
   }
+
+
 
   void createNewTask() async{
     // Get.reset();
@@ -211,10 +261,21 @@ class HomePageController extends GetxController {
               snackBarMsg('Task Created!', enableMsgBtn: false),
               sendPushMessage('Task Assigned for you:', taskTitle.text,
                   assignedUserFcmToken.value),
+
+                  // assinged to 
+                  DbSupa.instance.saveNotification(assignedUserUid.value, 'Task Assigned for you', taskId),
+
+                  //send to followers
+participantsANew.value.map((follerId)=>{
+                  DbSupa.instance.saveNotification(assignedUserUid.value, 'Ur Following New Task', taskId),
+
+})
+
               taskTitle.clear(),
               taskDescription.clear(),
               dateinput.clear(),
               assignedUserName = 'Assign someone'.obs,
+              
             })
         .catchError((error) => {
               print("Failed to create task: $error"),

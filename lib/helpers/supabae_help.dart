@@ -15,6 +15,7 @@ class DbSupa {
   static DbSupa get instance => DbSupa._();
   
   late final SupabaseClient _supabaseClient;
+       var supabaseClient = GetIt.instance<SupabaseClient>();
 
   DbSupa._();
 
@@ -37,6 +38,13 @@ final client = GetIt.instance<SupabaseClient>();
   } else {
     print('Task inserted successfully');
   }
+}
+
+void saveNotification (userId, content, taskId) {
+
+     supabaseClient
+    .from('taskman_notification')
+    .insert({'user_id': userId , 'content': content, 'task_id': taskId, });
 }
 }
 

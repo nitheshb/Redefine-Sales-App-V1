@@ -36,6 +36,7 @@ import 'package:redefineerp/Widgets/datewidget.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:redefineerp/Widgets/task_sheet_widget.dart';
+import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/themes/container.dart';
 import 'package:redefineerp/themes/spacing.dart';
 import 'package:redefineerp/themes/textFile.dart';
@@ -53,18 +54,20 @@ class _HomePageState extends State<HomePage> {
 
   ImagePicker picker = ImagePicker();
 
-  var businessMode = true;
+  // var businessMode = true;
 
-   flipMode() {
-    setState(() {
-      businessMode = !businessMode;
-    });
-  }
+  //  flipMode() {
+  //   setState(() {
+  //     businessMode = !businessMode;
+      
+  //   });
+   
+  // }
 
-  void initState() {
-    // time = filterTime.first;
-    businessMode = true;
-  }
+  // void initState() {
+  //   // time = filterTime.first;
+  //   businessMode = true;
+  // }
 
   XFile? image;
 
@@ -237,7 +240,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ),
                                       ),
-                                      Obx(() => Padding(
+                                    Padding(
                                                 padding:
                                                     const EdgeInsets.only(
                                                         left: 8.0, bottom: 4),
@@ -277,9 +280,6 @@ class _HomePageState extends State<HomePage> {
                                                   ],
                                                 ),
                                               )
-                                        
-
-                                          ),
                                     ],
                                   ),
                                 ),
@@ -841,7 +841,7 @@ class _HomePageState extends State<HomePage> {
                snap: false,
           pinned: true,
               floating: true,
-              flexibleSpace:FlexibleSpaceBar(background: SlimTeamStats(flipMode,businessMode, controller.numOfTodayTasks, controller.myBusinessTotal)),
+              flexibleSpace: Obx(()=>FlexibleSpaceBar(background: SlimTeamStats(controller.flipMode,controller.businessMode.value, controller.numOfTodayTasks, controller.myBusinessTotal))),
               expandedHeight: 190,
               bottom: PreferredSize(
                 preferredSize: Size.fromHeight(48.0),
@@ -849,11 +849,11 @@ class _HomePageState extends State<HomePage> {
                 physics: const BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 child:
-                  Row(
+                Obx(() => Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-  if(businessMode)...[ Padding(
+  if(controller.businessMode.value)...[ Padding(
                      padding: const EdgeInsets.only(left:6.0, right:4.0),
                      child: ActionChip(
                                elevation: 0,
@@ -907,13 +907,13 @@ class _HomePageState extends State<HomePage> {
                    ),
                    
                    ]
-                 else...[  Padding(
+                 else...[  Obx(() => Padding(
                      padding: const EdgeInsets.only(left:8.0, right:4.0),
                      child: ActionChip(
                                elevation: 0,
                                padding: const EdgeInsets.fromLTRB(6,1,6,1),
                                
-                               backgroundColor: 0 == 0
+                               backgroundColor:controller.myTaskTypeCategory.value == 'allBusinessTasks'
                                   ? Get.theme.primaryContainer
                                    : Colors.transparent,
                     
@@ -921,43 +921,50 @@ class _HomePageState extends State<HomePage> {
                   "All Tasks",
                   fontSize: 11,
                   fontWeight: 700,
-                  color: 0 == 0
-                      ? Get.theme.onPrimaryContainer
-                      : Get.theme.colorScheme.onBackground,
-                                ),
-                               onPressed: ()=> {
-                                 print('hello')
-                               }),
-                   ),
-                    Padding(
-                     padding: const EdgeInsets.only(left:2.0, right:4.0),
-                     child: ActionChip(
-                               elevation: 0,
-                               padding: const EdgeInsets.fromLTRB(6,1,6,1),
-                               
-                               backgroundColor: 1 == 0
-                                  ? Get.theme.primaryContainer
-                                   : Colors.transparent,
-                    
-                      label: FxText.bodySmall(
-                  "Assigned to me",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: 1 == 0
+                  color: controller.myTaskTypeCategory.value == 'allBusinessTasks'
                       ? Get.theme.onPrimaryContainer
                       : Get.theme.onBackground,
                                 ),
                                onPressed: ()=> {
-                                 print('hello')
+                                 controller.setTaskTypeFun('allBusinessTasks')
                                }),
-                   ),
-                  Padding(
+                   ),),
+                   Obx(() => Padding(
+                     padding: const EdgeInsets.only(left:2.0, right:4.0),
+                     child: InkWell(
+                      onTap:()=>{
+                        controller.setTaskTypeFun('assignedToMe')
+                      },
+                       child: ActionChip(
+                                 elevation: 0,
+                                 padding: const EdgeInsets.fromLTRB(6,1,6,1),
+                               
+                                 backgroundColor: controller.myTaskTypeCategory.value == 'assignedToMe'
+                                    ? Get.theme.primaryContainer
+                                     : Colors.transparent,
+                                         
+                        label: FxText.bodySmall(
+                                       "Assigned to me",
+                                       fontSize: 11,
+                                       fontWeight: 700,
+                                       color: controller.myTaskTypeCategory.value == 'assignedToMe'
+                        ? Get.theme.onPrimaryContainer
+                        : Get.theme.onBackground,
+                                  ),
+                                 onPressed: ()=> {
+                                   print('hello ${controller.myTaskTypeCategory.value == 'assignedToMe'}'),
+                        controller.setTaskTypeFun('assignedToMe')
+
+                                 }),
+                     ),
+                   ),),
+              Obx(() =>  Padding(
                      padding: const EdgeInsets.only(left:2.0, right:4.0),
                      child: ActionChip(
                                elevation: 0,
                                padding: const EdgeInsets.fromLTRB(6,1,6,1),
                                
-                               backgroundColor: 1 == 0
+                               backgroundColor: controller.myTaskTypeCategory == 'creatdByMe'
                                   ? Get.theme.primaryContainer
                                    : Colors.transparent,
                     
@@ -965,21 +972,22 @@ class _HomePageState extends State<HomePage> {
                   "Created by me",
                   fontSize: 11,
                   fontWeight: 700,
-                  color: 1 == 0
+                  color: controller.myTaskTypeCategory == 'creatdByMe'
                       ? Get.theme.onPrimaryContainer
                       : Get.theme.onBackground,
                                 ),
                                onPressed: ()=> {
-                                 print('hello')
+                                 print('hello'),
+                                   controller.setTaskTypeFun('creatdByMe')
                                }),
-                   ),
-                   Padding(
+                   ),),
+            Obx(() =>  Padding(
                      padding: const EdgeInsets.only(left:2.0, right:4.0),
                      child: ActionChip(
                                elevation: 0,
                                padding: const EdgeInsets.fromLTRB(6,1,6,1),
                                
-                               backgroundColor: 1 == 0
+                               backgroundColor: controller.myTaskTypeCategory == 'participants'
                                   ? Get.theme.primaryContainer
                                    : Colors.transparent,
                     
@@ -987,20 +995,22 @@ class _HomePageState extends State<HomePage> {
                   "Participants",
                   fontSize: 11,
                   fontWeight: 700,
-                  color: 1 == 0
+                  color: controller.myTaskTypeCategory == 'participants'
                       ? Get.theme.onPrimaryContainer
                       : Get.theme.onBackground,
                                 ),
                                onPressed: ()=> {
-                                 print('hello')
+                                
+                                 controller.setTaskTypeFun('participants'),
+                                  print('hello ${controller.myTaskTypeCategory == 'participants'}'),
                                }),
-                   ),
+                   ),),
                    ],                           
                    
                                         ],
                   ),
                 ),
-              ),
+              ),),
           
            
             ),
@@ -1008,14 +1018,17 @@ class _HomePageState extends State<HomePage> {
         },
         // body: controller.streamToday()
         body: 
-                       StreamBuilder<QuerySnapshot>(
+                     StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('spark_assignedTasks')
             .where("due_date",
                 isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
             .where("status", isEqualTo: "InProgress")
-            .where("to_uid", isEqualTo: controller.currentUser!.uid)
+            // .where("to_uid", isEqualTo: controller.currentUser!.uid)
+            //  .where("particpantsA", arrayContains: controller.currentUser!.uid)
+            .where('particpantsIdA', arrayContains: controller.currentUser!.uid)
             .snapshots(),
+        // stream: DbQuery.instanace.getStreamCombineTasks(),
         builder: (context, snapshot) {
         //     if (!snapshot.hasData) {
         //   return CircularProgressIndicator();
@@ -1029,16 +1042,26 @@ class _HomePageState extends State<HomePage> {
             // lets seperate between business vs personal 
 
          
+         
             var TotalTasks = snapshot.data!.docs.toList();
-            var personalTasks = [];
-            if(!businessMode){
-           personalTasks= TotalTasks.where((element) => element["by_uid"] != FirebaseAuth.instance.currentUser!.uid).toList();
+       
+             print('pub dev is ${TotalTasks}');
+            if(!controller.businessMode.value){
+              // business list
+
+              
+                      controller.businessData.value= TotalTasks.where((element) => (element["by_uid"] != element["to_uid"]) && (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid || element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList(); 
+                        // controller.totalTasksStreamData.value = businessData;
+                      
+
             }else{
-             personalTasks= TotalTasks.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid).toList(); 
+             controller.personalData.value= TotalTasks.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid && element["to_uid"] == FirebaseAuth.instance.currentUser!.uid).toList(); 
             }
 
+          // particpantsIdA
+
           // return Text('Full Data');
-             return Column(
+             return Obx(() => Column(
                   children: [
                     Expanded(
                       child: MediaQuery.removePadding(
@@ -1049,11 +1072,14 @@ class _HomePageState extends State<HomePage> {
                           child: ListView.builder(
                               shrinkWrap: true,
                               physics: const BouncingScrollPhysics(),
-                              itemCount: personalTasks.length,
+                              itemCount: controller.totalTasksStreamData.length,
                               itemBuilder: (context, index) {
                                 late QueryDocumentSnapshot<Object?>? taskData =
-                                    personalTasks[index];
+                                    controller.totalTasksStreamData[index];
                                 print("qwdqwdw ${taskData!.id}");
+
+                                var iDa  = [taskData!['to_uid'], taskData!['by_uid']];
+                                DbQuery.instanace.getAddParticipants(taskData!.id, iDa);
 
                                 // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
                                 // print(
@@ -1065,7 +1091,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ],
-                );
+                ));
              
             }else{
               return Text('No Data');
