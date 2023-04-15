@@ -4,7 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_it/get_it.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+
 import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Screens/Task/task_manager.dart';
@@ -16,10 +18,14 @@ import 'package:redefineerp/Widgets/datewidget.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:redefineerp/helpers/supabae_help.dart';
 import 'package:redefineerp/main.dart';
 import 'package:redefineerp/themes/themes.dart';
+import 'package:supabase/supabase.dart';
 
 class HomePageController extends GetxController {
+
+  var client;
   @override
   void onInit() async {
     await fetchdata();
@@ -27,7 +33,21 @@ class HomePageController extends GetxController {
 
     updateSelectedDate();
 
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+
+
+
+       final subscription = client
+        .from('maahomes_TM_Tasks')
+        .stream(primaryKey: ['id'])
+        .listen((event) {
+      // Update the taskList with the new data
+    print('i was changed ${event}');
+    });
+
+    // Add the subscription to the ever-growing list of subscriptions
+    // ever(subscription, (_) {});
+
+    FirebaseAuth.instance.authStateChanges().listen((user) {
       currentUser = user;
     });
     print('my user is yo yo ${currentUser}');
@@ -58,6 +78,7 @@ class HomePageController extends GetxController {
   var dummy = true.obs;
 
   var donecount = 0.obs;
+  
   var index = 0.obs;
   var notdone = 0.obs;
   var url = "".obs;
@@ -68,6 +89,15 @@ class HomePageController extends GetxController {
   var numOfTodayTasks = 0.obs;
   var numOfUpcomingTasks = 0.obs;
   var numOfCreatedTasks = 0.obs;
+
+  var myTodayTotalC = 0.obs;
+  var myTodayTotal =[];
+  var myPersonalTotal = 0.obs;
+  var myBusinessTotal = 0.obs;
+
+    var totalTasksStreamData = [].obs;
+
+  var myTaskTypeCategory = 'allBusinessTasks'.obs;
 
   var currentUser;
 
@@ -101,6 +131,10 @@ class HomePageController extends GetxController {
   var assignedUserFcmToken = ''.obs;
   var taskPriority = 'Basic'.obs;
 
+ var personalData = [].obs;
+  var businessData = [].obs;
+  var businessMode = true.obs;
+
   var participantsANew = [].obs;
   var attachmentsA = [].obs;
 
@@ -122,7 +156,46 @@ class HomePageController extends GetxController {
         DateFormat('dd-MM-yyyy kk:mm').format(dateSelected);
   }
 
-  RxBool validationSuccess = false.obs;
+  flipMode(title){
+    print('am here ${title}');
+    if(title== 'Business'){
+  businessMode.value = false;
+setTaskTypeFun('allBusinessTasks');
+    }else {
+      businessMode.value = true;
+   
+      setTaskTypeFun('personalTasks');
+      
+    }
+   
+}
+void setTaskTypeFun(value){
+
+  myTaskTypeCategory.value = value;
+filterTaskPerCat(value);
+  print('iam insied it ${value}');
+}
+
+void filterTaskPerCat (value){
+    if(value == 'creatdByMe') {
+                          totalTasksStreamData.value = businessData.where((element) => (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+                      } else if(value == 'assignedToMe') {
+                          totalTasksStreamData.value = businessData.where((element) => (element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+                     
+                     print('assinged to count ${totalTasksStreamData.value.length}');
+                      } else if(value == 'participants') {
+                          totalTasksStreamData.value = businessData.where((element) => (element["by_uid"] != FirebaseAuth.instance.currentUser!.uid && element["to_uid"] != FirebaseAuth.instance.currentUser!.uid)).toList();
+                      }else if(value=='personalTasks'){
+                        print('i was here yo yo');
+                      totalTasksStreamData.value=   personalData;
+                      //  totalTasksStreamData.value = businessData.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid && element["to_uid"] == FirebaseAuth.instance.currentUser!.uid).toList();
+                         print('participants ${totalTasksStreamData.value.length}');
+                      }else{
+                         totalTasksStreamData.value = businessData;
+                      }
+}
+
+
 
   checkTaskValidation() {
     final validator = taskKey.currentState!.validate();
@@ -147,10 +220,36 @@ class HomePageController extends GetxController {
     }
   }
 
-  void createNewTask() {
+
+
+  void createNewTask() async{
     // Get.reset();
     // Get.delete<TaskController>();
     print('hello ${participantsANew}');
+
+
+   
+//        var y = DbSupa.instance.createTask({
+//           'task_title': taskTitle.text,
+//           'task_desc': taskDescription.text,
+//           'created_on': DateTime.now().millisecondsSinceEpoch,
+//           'due_date': dateSelected.millisecondsSinceEpoch,
+//           'by_email': auth.currentUser?.email,
+//           'by_name': auth.currentUser?.displayName,
+//           'by_uid': auth.currentUser?.uid,
+//           'to_name': assignedUserName.value,
+//           'to_uid': assignedUserUid.value,
+//           'priority': taskPriority.value,
+//           'atttachmentsA': attachmentsA.value,
+//           'to_email': assignedUserEmail.value,
+//           'dept': assignedUserDepartment.value,
+//           'status': "InProgress",
+//           'particpantsA': participantsANew.value,
+//         });
+
+
+
+// return;
 
     _collection
         .add({
@@ -176,10 +275,21 @@ class HomePageController extends GetxController {
               snackBarMsg('Task Created!', enableMsgBtn: false),
               sendPushMessage('Task Assigned for you:', taskTitle.text,
                   assignedUserFcmToken.value),
+
+                  // assinged to 
+                  DbSupa.instance.saveNotification(assignedUserUid.value, 'Task Assigned for you', taskId),
+
+                  //send to followers
+participantsANew.value.map((follerId)=>{
+                  DbSupa.instance.saveNotification(assignedUserUid.value, 'Ur Following New Task', taskId),
+
+})
+
               taskTitle.clear(),
               taskDescription.clear(),
               dateinput.clear(),
               assignedUserName = 'Assign someone'.obs,
+              
             })
         .catchError((error) => {
               print("Failed to create task: $error"),
@@ -252,7 +362,210 @@ class HomePageController extends GetxController {
     });
   }
 
+    void updateMyGetXVariable( snapshot) {
+    // myGetXVariable.clear();
+    // documents.forEach((document) {
+    //   Map<String, dynamic> data = document.data();
+    //   myGetXVariable.add(data);
+    // });
+          //     numOfTodayTasks.value = snapshot.data!.docs.length;
+
+          //            for (var doc in snapshot.data!.docs) {
+          //   debugPrint("DOCS FOR TO_EM: $doc");
+          //   if(doc['by_uid'] != currentUser?.uid){
+          //     myBusinessTotal.value = myBusinessTotal.value +1;
+          //   }
+          //   if (doc['status'] == "Done") {
+          //     donecount.value = donecount.value + 1;
+          //     debugPrint("DONE COUNT== ${donecount.value}");
+          //   } else if (doc['status'] == "InProgress") {
+          //     notdone.value = notdone.value + 1;
+          //     debugPrint("Not done COUNT== ${notdone.value}");
+          //   }
+          // }
+  }
   Widget streamToday() {
+    //   return StreamBuilder(
+    //   stream: client.from('maahomes_TM_Tasks').stream(primaryKey: ['id']).execute(),
+    //   builder: (context, snapshot) {
+    //     if (!snapshot.hasData) {
+    //       return CircularProgressIndicator();
+    //     }
+
+    //     final messages = snapshot.data!;
+    //     print('checking messs ${messages}');
+    //     return Text('hello');
+
+    //     // return ListView.builder(
+    //     //   itemCount: messages.length,
+    //     //   itemBuilder: (context, index) {
+    //     //     final message = messages[index];
+
+    //     //     return ListTile(
+    //     //       title: Text(message['title']),
+    //     //     );
+    //     //   },
+    //     // );
+    //   },
+    // );
+   
+        return StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('spark_assignedTasks')
+                .where("due_date",
+                    isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+                .where("status", isEqualTo: "InProgress")
+                .where("to_uid", isEqualTo: currentUser?.uid)
+                .snapshots(),
+            builder: (context, snapshot) {
+            //     if (!snapshot.hasData) {
+            //   return CircularProgressIndicator();
+            // }
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text("Something went wrong! 😣..."),
+                );
+              } else if (snapshot.hasData) {
+                print('no of todo is ${snapshot.data?.docs.length}');
+                return Column(
+                  children: [
+                    Expanded(
+                      child: MediaQuery.removePadding(
+                        context: context,
+                        removeTop: true,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: snapshot.data?.docs.length,
+                              itemBuilder: (context, index) {
+                                late QueryDocumentSnapshot<Object?>? taskData =
+                                    snapshot.data?.docs[index];
+                                print("qwdqwdw ${taskData?.id}");
+
+                                // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
+                                // print(
+                                //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
+                                // print("due date is ${taskData!.get('due data')}");
+                                // return Text("hello");
+                                return taskCheckBox(context,
+                                    taskPriority: taskData!['priority'] == "Basic"
+                                        ? 3
+                                        : taskData['priority'] == "Medium"
+                                            ? 2
+                                            : taskData['priority'] == "High"
+                                                ? 1
+                                                : 4,
+                                    taskPriorityNum: taskData['priority'] == "Basic"
+                                        ? 3
+                                        : taskData['priority'] == "Medium"
+                                            ? 2
+                                            : taskData['priority'] == "High"
+                                                ? 1
+                                                : 4,
+                                    selected: false,
+                                    due:
+                                        "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}",
+                                    task: taskData["task_title"],
+                                    createdOn:
+                                        '${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
+                                    assigner: 'Assigner: ${taskData['by_name']}',
+                                    participants: Row(
+                                      children: [
+                                        // Generator.buildOverlaysProfile(
+                                        //     images: [
+                                        //       'assets/images/icon.jpg',
+                                        //       'assets/images/icon.jpg',
+                                        //     ],
+                                        //     enabledOverlayBorder: true,
+                                        //     overlayBorderColor: Color(0xfff0f0f0),
+                                        //     overlayBorderThickness: 1.7,
+                                        //     leftFraction: 0.72,
+                                        //     size: 26),
+
+                                        
+                                        SizedBox(
+                                          child: Material(
+                                            type: MaterialType.transparency,
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Get.theme.colorPrimaryDark,
+                                              radius: 14,
+                                              child: Text(
+                                                  '${taskData['by_name'].substring(0, 2)}',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10)),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Text(
+                                          " 0 comments",
+                                          style: Get.theme.kPrimaryTxtStyle,
+                                        ),
+                                        Text(
+                                          " . 0 Files",
+                                          style: Get.theme.kPrimaryTxtStyle,
+                                        )
+                                      ],
+                                    ), onTap: () {
+                                  var comments = [];
+                                  try {
+                                    comments = taskData['comments'];
+                                  } catch (e) {
+                                    comments = [];
+                                  }
+                                  ;
+                                  Get.to(() => TaskManager(
+                                        task: taskData["task_title"],
+                                        status: taskData['status'],
+                                        docId: taskData.reference.id,
+                                        comments: comments,
+                                        // url: taskData['url'],
+                                        due:
+                                            "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
+                                                .toString(),
+                                        createdOn:
+                                            "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}"
+                                                .toString(),
+                                        taskPriority: taskData['priority'],
+                                        selected: false,
+                                        assigner: taskData['by_name'],
+                                      ));
+                                });
+                              }),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return Center(
+                  child: Column(
+                    children: const [
+                      Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      SizedBox(height: 50),
+                      Center(
+                        child: Text("Tasks Loading..."),
+                      )
+                    ],
+                  ),
+                );
+              }
+            });
+      
+  
+  }
+
+
+Widget streamBusiness() {
+
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('spark_assignedTasks')
@@ -262,13 +575,16 @@ class HomePageController extends GetxController {
             .where("to_uid", isEqualTo: currentUser?.uid)
             .snapshots(),
         builder: (context, snapshot) {
+        //     if (!snapshot.hasData) {
+        //   return CircularProgressIndicator();
+        // }
           if (snapshot.hasError) {
             return const Center(
               child: Text("Something went wrong! 😣..."),
             );
           } else if (snapshot.hasData) {
             print('no of todo is ${snapshot.data?.docs.length}');
-            // numOfTodayTasks.value = snapshot.data!.docs.length;
+            myBusinessTotal.value = snapshot.data!.docs.length;
             return Column(
               children: [
                 Expanded(
@@ -401,6 +717,89 @@ class HomePageController extends GetxController {
           }
         });
   }
+
+ Widget CardSetup(context, taskData){
+    return taskCheckBox(context,
+                                    taskPriority: taskData!['priority'] == "Basic"
+                                        ? 3
+                                        : taskData['priority'] == "Medium"
+                                            ? 2
+                                            : taskData['priority'] == "High"
+                                                ? 1
+                                                : 4,
+                                    taskPriorityNum: taskData['priority'] == "Basic"
+                                        ? 3
+                                        : taskData['priority'] == "Medium"
+                                            ? 2
+                                            : taskData['priority'] == "High"
+                                                ? 1
+                                                : 4,
+                                    selected: false,
+                                    due:
+                                        "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}",
+                                    task: taskData["task_title"],
+                                    createdOn:
+                                        '${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
+                                    assigner: 'Assigner: ${taskData['by_name']}',
+                                    participants: Row(
+                                      children: [
+                            
+                                        
+                                        SizedBox(
+                                          child: Material(
+                                            type: MaterialType.transparency,
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Get.theme.colorPrimaryDark,
+                                              radius: 14,
+                                              child: Text(
+                                                  '${taskData['by_name'].substring(0, 2)}',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10)),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Text(
+                                          " 0 comments",
+                                          style: Get.theme.kPrimaryTxtStyle,
+                                        ),
+                                        Text(
+                                          " . 0 Files",
+                                          style: Get.theme.kPrimaryTxtStyle,
+                                        )
+                                      ],
+                                    ), onTap: () {
+                                  var comments = [];
+                                  try {
+                                    comments = taskData['comments'];
+                                  } catch (e) {
+                                    comments = [];
+                                  }
+                                  ;
+                                  Get.to(() => TaskManager(
+                                        task: taskData["task_title"],
+                                        status: taskData['status'],
+                                        docId: taskData.reference.id,
+                                        comments: comments,
+                                        // url: taskData['url'],
+                                        due:
+                                            "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
+                                                .toString(),
+                                        createdOn:
+                                            "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}"
+                                                .toString(),
+                                        taskPriority: taskData['priority'],
+                                        selected: false,
+                                        assigner: taskData['by_name'],
+                                      ));
+                                });
+                            
+  }
+
 
   Widget streamUpdates() {
     FirebaseAuth _auth = FirebaseAuth.instance;
