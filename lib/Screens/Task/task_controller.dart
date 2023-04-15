@@ -15,8 +15,10 @@ class TaskController extends GetxController {
   var selectedDateTime = ''.obs;
   final FirebaseAuth auth = FirebaseAuth.instance;
   var taskDocId = ''.obs;
-  var assignToId =''.obs;
-  var  assignToName = ''.obs;
+  var assignToId = ''.obs;
+  var assignToName = ''.obs;
+
+  RxBool isPlaying = false.obs;
 
   // below are old ones
   var assignedUserName = 'Assign someone'.obs;
@@ -26,19 +28,18 @@ class TaskController extends GetxController {
   var assignedUserFcmToken = ''.obs;
   var taskPriority = 'Basic'.obs;
 
-     var participantsList = [].obs;
-     var attachmentsA = [].obs;
+  var participantsList = [].obs;
+  var attachmentsA = [].obs;
 
   TextEditingController taskTitle = TextEditingController();
   TextEditingController taskDescription = TextEditingController();
   TextEditingController dateinput = TextEditingController();
   TextEditingController commentLine = TextEditingController();
 
-   GlobalKey<FormState> taskKey = GlobalKey<FormState>();
+  GlobalKey<FormState> taskKey = GlobalKey<FormState>();
   final _collection =
       FirebaseFirestore.instance.collection('spark_assignedTasks');
 
-      
   String? validateTaskTitle(value) {
     if (value == '') {
       return 'Please enter task title';
@@ -47,14 +48,17 @@ class TaskController extends GetxController {
     }
   }
 
-void addComments(id, type, txt)async{
-  print('new vlu is ${commentLine.text}');
-  await _collection.doc(id).update({"comments": FieldValue.arrayUnion([{"typ":type, "txt": commentLine.text}])});
-  commentLine.text = "" ;
-}
+  void addComments(id, type, txt) async {
+    print('new vlu is ${commentLine.text}');
+    await _collection.doc(id).update({
+      "comments": FieldValue.arrayUnion([
+        {"typ": type, "txt": commentLine.text}
+      ])
+    });
+    commentLine.text = "";
+  }
 
   void createNewTask() {
-  
     // Get.reset();
     // Get.delete<TaskController>();
 
@@ -77,24 +81,22 @@ void addComments(id, type, txt)async{
         })
         .then((value) => {
               print("Task Created ${value}"),
-              
               Get.back(),
               snackBarMsg('Task Created!', enableMsgBtn: false),
-               sendPushMessage('Task Assigned for you:', taskTitle.text,
+              sendPushMessage('Task Assigned for you:', taskTitle.text,
                   assignedUserFcmToken.value),
-                taskTitle.clear(),
-                taskDescription.clear(),
-                dateinput.clear(),
-                assignedUserName = 'Assign someone'.obs,
-              
-             
+              taskTitle.clear(),
+              taskDescription.clear(),
+              dateinput.clear(),
+              assignedUserName = 'Assign someone'.obs,
             })
-        .catchError((error) =>{
-          print("Failed to create task: $error"),
-          snackBarMsg('Failed to create task: $error', enableMsgBtn: false),
-        });
+        .catchError((error) => {
+              print("Failed to create task: $error"),
+              snackBarMsg('Failed to create task: $error', enableMsgBtn: false),
+            });
   }
- checkTaskValidation() {
+
+  checkTaskValidation() {
     final validator = taskKey.currentState!.validate();
 
     if (!validator) {
@@ -115,6 +117,7 @@ void addComments(id, type, txt)async{
       }
     }
   }
+
   void sendPushMessage(String body, String title, String token) async {
     try {
       await http.post(
@@ -149,17 +152,19 @@ void addComments(id, type, txt)async{
   @override
   void onInit() {
     updateSelectedDate();
+
     super.onInit();
   }
 
   void updateSelectedDate() {
     selectedDateTime.value =
         DateFormat('dd-MM-yyyy kk:mm').format(dateSelected);
-        
   }
 
-  void updateAssignTimeDb(docId){
-     _collection.doc(docId).update({"due_date": dateSelected.millisecondsSinceEpoch});
+  void updateAssignTimeDb(docId) {
+    _collection
+        .doc(docId)
+        .update({"due_date": dateSelected.millisecondsSinceEpoch});
   }
 
   void setTaskType(String task) {
@@ -170,19 +175,18 @@ void addComments(id, type, txt)async{
     } else
       taskType.value == 'mark';
   }
-   void setTaskId( task) {
-   taskDocId.value = task;
+
+  void setTaskId(task) {
+    taskDocId.value = task;
   }
 
-    void setAssignDetails(docId,  uid, name) {
-print('value is docId: ${taskDocId}');
-      if(taskDocId == docId){
- assignToId.value = uid;
-   assignToName.value = name;
-      }
-  
+  void setAssignDetails(docId, uid, name) {
+    print('value is docId: ${taskDocId}');
+    if (taskDocId == docId) {
+      assignToId.value = uid;
+      assignToName.value = name;
+    }
   }
-
 
   @override
   void onClose() {

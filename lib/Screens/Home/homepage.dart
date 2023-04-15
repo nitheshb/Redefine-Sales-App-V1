@@ -49,6 +49,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   final storageReference =
       FirebaseStorage.instance.ref().child('images/image.jpg');
 
@@ -75,47 +76,99 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final controller = Get.put<HomePageController>(HomePageController());
     final controller1 = Get.put<ContactController>(ContactController());
-
+    SearchController searchController =
+        Get.put<SearchController>(SearchController());
     // TaskController controller1 = Get.put<TaskController>(TaskController());
     debugPrint("home called ${FirebaseAuth.instance.currentUser}");
-     // Set the system status bar color
-   
-    return Scaffold(
-      backgroundColor:Color(0xffffffff),
-      appBar: AppBar(
-        backgroundColor: Color(0xffffffff),
-        systemOverlayStyle: SystemUiOverlayStyle(
-    // Status bar color
-    statusBarColor: Color(0xff000032), 
+    // Set the system status bar color
 
-    // Status bar brightness (optional)
-    statusBarIconBrightness: Brightness.light, // For Android (dark icons)
-    statusBarBrightness: Brightness.light, // For iOS (dark icons)
-  ),
-        elevation: 0.0,
-      title: titleRow(),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search, 
-                          color: Get.theme.btnTextCol.withOpacity(0.3)
+    return Obx(
+      () => Scaffold(
+        backgroundColor: const Color(0xffffffff),
+        appBar: AppBar(
+          backgroundColor: const Color(0xffffffff),
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            // Status bar color
+            statusBarColor: Color(0xff000032),
+
+            // Status bar brightness (optional)
+            statusBarIconBrightness:
+                Brightness.light, // For Android (dark icons)
+            statusBarBrightness: Brightness.light, // For iOS (dark icons)
           ),
-          onPressed: () {
-                              Get.to(() => const SearchPage());
+          elevation: 0.0,
+          title: controller.expande.value == true
+              ? TextField(
+                  controller: controller.searchText,
+                  onChanged: (v) {
+                    if (v == '') {
+                      searchController.searchResultsWidget.value =
+                          searchController.searchResults('');
+                      controller.search.value = false;
+                    } else {
+                      controller.search.value = true;
+                    }
+                    searchController.searchResultsWidget.value =
+                        searchController.searchResults(v);
 
-          },
+                    print(searchController.searchResultsWidget.value);
+                  },
+                  decoration: InputDecoration(
+                      prefixIcon: IconButton(
+                          onPressed: () {
+                            controller.search.value = false;
+                            controller.expande.value = false;
+                          },
+                          icon: Icon(Icons.arrow_back)),
+                      hintText: 'Search'),
+                )
+              : titleRow(),
+          actions: controller.expande.value == true
+              ? []
+              : [
+                  IconButton(
+                    icon: Icon(Icons.search,
+                        color: Get.theme.btnTextCol.withOpacity(0.3)),
+                    onPressed: () {
+                      // Get.to(() => const SearchPage());
+                      controller.expande.value = true;
+                      print(controller.expande.value);
+                    },
+                  ),
+
+                  IconButton(
+                      onPressed: () => {Get.to(() => const NotificationPage())},
+                      icon: const Icon(Icons.notifications),
+                      color: Get.theme.btnTextCol.withOpacity(0.3)),
+                  //  IconButton(
+
+                  //                   onPressed: () => {Get.to(() => const ProfilePage())},
+                  //                   icon: Hero(
+                  //                     tag: 'profile',
+                  //                     child: Material(
+                  //                       type: MaterialType.transparency,
+                  //                       child: CircleAvatar(
+                  //                         backgroundColor: Color(0xffe6e7fd),
+                  //                         radius: 30,
+                  //                         child: Icon(
+                  //                           Icons.person,
+                  //                           color: Colors.black38,
+                  //                           size: 20,
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 ),
+                  // // PopupMenuButton(
+                  //   itemBuilder: (BuildContext context) => [
+                  //     PopupMenuItem(
+                  //       child: Text('Settings'),
+                  //     ),
+                  //   ],
+                  // ),
+                ],
         ),
-       
-        IconButton(
 
-                          onPressed: () => {
-                              Get.to(() => const NotificationPage())
-                            
-                            },
-
-        icon: Icon(Icons.notifications),
-                          color: Get.theme.btnTextCol.withOpacity(0.3)
-        
-        ),
         //  IconButton(
                            
         //                   onPressed: () => {Get.to(() => const ProfilePage())},
@@ -145,10 +198,10 @@ class _HomePageState extends State<HomePage> {
       ],
     ),
         floatingActionButton: FloatingActionButton.extended(
+
           onPressed: () => {
-            
             showModalBottomSheet(
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                     borderRadius:
                         BorderRadius.vertical(top: Radius.circular(9.0))),
                 backgroundColor: Colors.white,
@@ -169,18 +222,19 @@ class _HomePageState extends State<HomePage> {
                           TextFormField(
                             validator: controller.validateTaskTitle,
                             controller: controller.taskTitle,
-                            decoration: InputDecoration(
+                            onChanged: controller.validateTaskTitle,
+                            decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Task name...'),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 19, fontWeight: FontWeight.w500),
                             autofocus: true,
                           ),
                           TextField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 border: InputBorder.none,
                                 hintText: 'Description'),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.w400),
                             onSubmitted: (value) {
                               Navigator.pop(context);
@@ -205,8 +259,7 @@ class _HomePageState extends State<HomePage> {
                             visible: !(controller.assignedUserName.value ==
                                 "Assign someone"),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // assign to
 
@@ -218,11 +271,9 @@ class _HomePageState extends State<HomePage> {
                                             Dialog(
                                                 shape: RoundedRectangleBorder(
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          8),
+                                                      BorderRadius.circular(8),
                                                 ),
-                                                child:
-                                                    const ContactListPage()))
+                                                child: const ContactListPage()))
                                   },
                                   child: Row(
                                     children: [
@@ -235,11 +286,12 @@ class _HomePageState extends State<HomePage> {
                                             radius: 17,
                                             child: Text(
                                                 '${controller.assignedUserName.value.substring(0, 2)}',
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     color: Colors.white)),
                                           ),
                                         ),
                                       ),
+
                                     Padding(
                                                 padding:
                                                     const EdgeInsets.only(
@@ -280,6 +332,7 @@ class _HomePageState extends State<HomePage> {
                                                   ],
                                                 ),
                                               )
+
                                     ],
                                   ),
                                 ),
@@ -305,20 +358,19 @@ class _HomePageState extends State<HomePage> {
                                             type: MaterialType.transparency,
                                             child: DottedBorder(
                                               borderType: BorderType.Circle,
-                                              color:
-                                                  Get.theme.kLightGrayColor,
-                                              radius: Radius.circular(27.0),
+                                              color: Get.theme.kLightGrayColor,
+                                              radius:
+                                                  const Radius.circular(27.0),
                                               dashPattern: [3, 3],
                                               strokeWidth: 1,
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(6.0),
                                                 child: Icon(
-                                                  Icons
-                                                      .calendar_month_outlined,
+                                                  Icons.calendar_month_outlined,
                                                   size: 18,
-                                                  color: Get
-                                                      .theme.kLightGrayColor,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
                                                 ),
                                               ),
                                             )
@@ -338,15 +390,13 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                       ),
                                       Obx(() => Padding(
-                                                padding:
-                                                    const EdgeInsets.only(
-                                                        left: 8.0, bottom: 4),
+                                                padding: const EdgeInsets.only(
+                                                    left: 8.0, bottom: 4),
                                                 child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
                                                   crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     SizedBox(
                                                       height: 16,
@@ -355,8 +405,7 @@ class _HomePageState extends State<HomePage> {
                                                         style: Get
                                                             .theme.kSubTitle
                                                             .copyWith(
-                                                                color: Get
-                                                                    .theme
+                                                                color: Get.theme
                                                                     .kLightGrayColor),
                                                       ),
                                                     ),
@@ -404,7 +453,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
 
-                          SizedBox(
+                          const SizedBox(
                             height: 8,
                           ),
 
@@ -420,11 +469,11 @@ class _HomePageState extends State<HomePage> {
                                     child: Text(
                                       'Attachments',
                                       style: Get.theme.kSubTitle.copyWith(
-                                          color: Color(0xff707070),
+                                          color: const Color(0xff707070),
                                           fontSize: 16),
                                     ),
                                   ),
-                                  SizedBox(height: 15),
+                                  const SizedBox(height: 15),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 2.0),
                                     child: Row(
@@ -436,8 +485,8 @@ class _HomePageState extends State<HomePage> {
                                             storageReference
                                                 .putFile(File(image!.path))
                                                 .then((value) async {
-                                              controller.attachmentsA.value
-                                                  .add(await value.ref
+                                              controller.attachmentsA.value.add(
+                                                  await value.ref
                                                       .getDownloadURL());
                                               print(
                                                   'Image URL: ${controller.attachmentsA.value}');
@@ -446,7 +495,7 @@ class _HomePageState extends State<HomePage> {
                                           child: DottedBorder(
                                             // borderType: BorderType.Circle,
                                             color: Get.theme.kLightGrayColor,
-                                            radius: Radius.circular(27.0),
+                                            radius: const Radius.circular(27.0),
                                             dashPattern: [6, 8],
                                             strokeWidth: 1.5,
                                             child: Padding(
@@ -505,10 +554,10 @@ class _HomePageState extends State<HomePage> {
                                   Text(
                                     'Participants',
                                     style: Get.theme.kSubTitle.copyWith(
-                                        color: Color(0xff707070),
+                                        color: const Color(0xff707070),
                                         fontSize: 16),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                   SizedBox(
@@ -537,9 +586,9 @@ class _HomePageState extends State<HomePage> {
                                                 },
                                             child: DottedBorder(
                                               borderType: BorderType.Circle,
-                                              color:
-                                                  Get.theme.kLightGrayColor,
-                                              radius: Radius.circular(27.0),
+                                              color: Get.theme.kLightGrayColor,
+                                              radius:
+                                                  const Radius.circular(27.0),
                                               dashPattern: [3, 3],
                                               strokeWidth: 1,
                                               child: Padding(
@@ -548,13 +597,13 @@ class _HomePageState extends State<HomePage> {
                                                 child: Icon(
                                                   Icons.add,
                                                   size: 15,
-                                                  color: Get
-                                                      .theme.kLightGrayColor,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
                                                 ),
                                               ),
                                             )),
 
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 4,
                                         ),
                                         Obx(
@@ -572,8 +621,7 @@ class _HomePageState extends State<HomePage> {
                                                   .participantsANew
                                                   .value
                                                   .length,
-                                              scrollDirection:
-                                                  Axis.horizontal,
+                                              scrollDirection: Axis.horizontal,
                                               itemBuilder: (context, index) {
                                                 return Padding(
                                                   padding:
@@ -590,11 +638,12 @@ class _HomePageState extends State<HomePage> {
                                                         radius: 14,
                                                         child: Text(
                                                             '${controller.participantsANew[index]['name'].substring(0, 2)}',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize:
-                                                                    10)),
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        10)),
                                                       ),
                                                     ),
                                                   ),
@@ -643,7 +692,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 15),
+                          const SizedBox(height: 15),
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -653,9 +702,9 @@ class _HomePageState extends State<HomePage> {
                                 child: Row(
                                   children: [
                                     Visibility(
-                                      visible: (controller
-                                              .assignedUserName.value ==
-                                          "Assign someone"),
+                                      visible:
+                                          (controller.assignedUserName.value ==
+                                              "Assign someone"),
                                       child: Row(
                                         children: [
                                           InkWell(
@@ -673,19 +722,19 @@ class _HomePageState extends State<HomePage> {
                                                                         8),
                                                           ),
                                                           child:
-                                                              ContactListPage()))
+                                                              const ContactListPage()))
                                             },
                                             child: Row(
                                               children: [
                                                 Icon(
                                                   Icons.person,
-                                                  color: Get
-                                                      .theme.kLightGrayColor,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
                                                 ),
                                               ],
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 20.0,
                                           ),
                                           InkWell(
@@ -697,19 +746,16 @@ class _HomePageState extends State<HomePage> {
                                                 print(
                                                     'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
                                               }, onConfirm: (date) {
-                                                controller.dateSelected =
-                                                    date;
-                                                controller
-                                                    .updateSelectedDate();
+                                                controller.dateSelected = date;
+                                                controller.updateSelectedDate();
                                               }, currentTime: DateTime.now())
                                             },
                                             child: Icon(
                                               Icons.calendar_month_outlined,
-                                              color:
-                                                  Get.theme.kLightGrayColor,
+                                              color: Get.theme.kLightGrayColor,
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 20.0,
                                           ),
                                         ],
@@ -733,8 +779,8 @@ class _HomePageState extends State<HomePage> {
                                                       .putFile(
                                                           File(image!.path))
                                                       .then((value) async {
-                                                    controller.attachmentsA
-                                                        .value = [
+                                                    controller
+                                                        .attachmentsA.value = [
                                                       await value.ref
                                                           .getDownloadURL()
                                                     ];
@@ -744,11 +790,11 @@ class _HomePageState extends State<HomePage> {
                                                 },
                                                 child: Icon(
                                                   Icons.attach_file,
-                                                  color: Get
-                                                      .theme.kLightGrayColor,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
                                                 ),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 20.0,
                                               ),
                                             ],
@@ -773,7 +819,7 @@ class _HomePageState extends State<HomePage> {
                                         color: Get.theme.kLightGrayColor,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 20.0,
                                     ),
                                     Visibility(
@@ -783,8 +829,7 @@ class _HomePageState extends State<HomePage> {
                                         onTap: () => {
                                           showDialog(
                                               context: context,
-                                              builder: (BuildContext
-                                                      context) =>
+                                              builder: (BuildContext context) =>
                                                   const ContactListDialogPage())
                                         },
                                         child: Icon(
@@ -797,20 +842,46 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               InkWell(
-                                  onTap: () =>
-                                      {controller.checkTaskValidation()},
+                                  onTap: () => {
+                                        controller.validationSuccess.value =
+                                            false,
+                                        print(
+                                            controller.validationSuccess.value),
+                                        controller.checkTaskValidation()
+                                      },
 
                                   // {controller.createNewTask()},
-                                  child: Text('Create'))
+                                  child: Obx(
+                                    () => CircleAvatar(
+                                      radius:
+                                          MediaQuery.of(context).size.height *
+                                              0.030,
+                                      backgroundColor:
+                                          controller.validationSuccess.value ==
+                                                  true
+                                              ? Get.theme.primaryContainer
+                                              : Colors.grey,
+                                      child: Icon(
+                                        Icons.send,
+                                        color: controller
+                                                    .validationSuccess.value ==
+                                                true
+                                            ? Colors.blue
+                                            : const Color.fromARGB(
+                                                255, 62, 62, 62),
+                                      ),
+                                    ),
+                                  ))
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 16,
                           ),
                         ],
                       ),
                     )))
           },
+
           backgroundColor: Color(0xffBDA1EF),
           label: Text('Add Task'),
           icon:       const Icon(
@@ -1104,11 +1175,232 @@ class _HomePageState extends State<HomePage> {
         //       controller.streamCreated(),
         //     ],
         // ),
+
+          backgroundColor: const Color(0xffBDA1EF),
+          child: const Icon(
+            Icons.add,
+            color: Color(0xff33264b),
+          ),
+        ),
+        // floatingActionButtonLocation:
+        //     FloatingActionButtonLocation.,
+
+        body: DefaultTabController(
+          length: 3,
+          child: NestedScrollView(
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
+                return <Widget>[
+                  Obx(
+                    () => SliverAppBar(
+                      backgroundColor: const Color(0xffffffff),
+                      snap: false,
+                      pinned: true,
+                      floating: true,
+                      flexibleSpace: FlexibleSpaceBar(
+                          background: controller.expande.value == true
+                              ? controller.search.value == true
+                                  ? SizedBox()
+                                  : Wrap(
+                                      children: [
+                                        _filterChip(0,
+                                            title: 'All',
+                                            controller: searchController,
+                                            onTap: () => {
+                                                  searchController
+                                                      .selectedIndex.value = 0,
+                                                }),
+                                        _filterChip(1,
+                                            title: 'Done',
+                                            controller: searchController,
+                                            onTap: () => {
+                                                  searchController
+                                                      .selectedIndex.value = 1,
+                                                }),
+                                        _filterChip(2,
+                                            title: 'Pending',
+                                            controller: searchController,
+                                            onTap: () => {
+                                                  searchController
+                                                      .selectedIndex.value = 2,
+                                                }),
+                                        _filterChip(3,
+                                            title: 'Created',
+                                            controller: searchController,
+                                            onTap: () => {
+                                                  searchController
+                                                      .selectedIndex.value = 3,
+                                                }),
+                                        _filterChip(4,
+                                            title: 'Today',
+                                            controller: searchController,
+                                            onTap: () => {
+                                                  searchController
+                                                      .selectedIndex.value = 4,
+                                                }),
+                                      ],
+                                    )
+                              : SlimTeamStats(() => {})),
+                      expandedHeight: controller.search.value == true
+                          ? 10
+                          : controller.expande.value == true
+                              ? 69
+                              : 190,
+                      bottom: PreferredSize(
+                        preferredSize: const Size.fromHeight(48.0),
+                        child: controller.expande.value == true
+                            ? SizedBox()
+                            : SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2.0, right: 4.0),
+                                      child: ActionChip(
+                                          elevation: 0,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 1, 6, 1),
+                                          backgroundColor: 0 == 0
+                                              ? Get.theme.primaryContainer
+                                              : Colors.transparent,
+                                          label: FxText.bodySmall(
+                                            "All Tasks",
+                                            fontSize: 11,
+                                            fontWeight: 700,
+                                            color: 0 == 0
+                                                ? Get.theme.onPrimaryContainer
+                                                : Get.theme.colorScheme
+                                                    .onBackground,
+                                          ),
+                                          onPressed: () => {print('hello')}),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2.0, right: 4.0),
+                                      child: ActionChip(
+                                          elevation: 0,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 1, 6, 1),
+                                          backgroundColor: 1 == 0
+                                              ? Get.theme.primaryContainer
+                                              : Colors.transparent,
+                                          label: FxText.bodySmall(
+                                            "Personal",
+                                            fontSize: 11,
+                                            fontWeight: 700,
+                                            color: 1 == 0
+                                                ? Get.theme.onPrimaryContainer
+                                                : Get.theme.onBackground,
+                                          ),
+                                          onPressed: () => {print('hello')}),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2.0, right: 4.0),
+                                      child: ActionChip(
+                                          elevation: 0,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 1, 6, 1),
+                                          backgroundColor: 1 == 0
+                                              ? Get.theme.primaryContainer
+                                              : Colors.transparent,
+                                          label: FxText.bodySmall(
+                                            "Business",
+                                            fontSize: 11,
+                                            fontWeight: 700,
+                                            color: 1 == 0
+                                                ? Get.theme.onPrimaryContainer
+                                                : Get.theme.onBackground,
+                                          ),
+                                          onPressed: () => {print('hello')}),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 2.0, right: 4.0),
+                                      child: ActionChip(
+                                          elevation: 0,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              6, 1, 6, 1),
+                                          backgroundColor: 1 == 0
+                                              ? Get.theme.primaryContainer
+                                              : Colors.transparent,
+                                          label: FxText.bodySmall(
+                                            "Participants",
+                                            fontSize: 11,
+                                            fontWeight: 700,
+                                            color: 1 == 0
+                                                ? Get.theme.onPrimaryContainer
+                                                : Get.theme.onBackground,
+                                          ),
+                                          onPressed: () => {print('hello')}),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                      ),
+                    ),
+                  )
+                ];
+              },
+              body: controller.expande.value == true
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.89,
+                      child:
+                          Obx(() => searchController.searchResultsWidget.value),
+                    )
+                  : controller.streamToday()
+              // body: TabBarView(
+              //   children: [
+              //       controller.streamToday(),
+              //       controller.streamUpdates(),
+              //       controller.streamCreated(),
+              //     ],
+              // ),
+              ),
+        ),
       ),
-    ),
-  );}
+    );
+  }
+
+  Widget _filterChip(int index,
+      {required String title,
+      required SearchController controller,
+      required VoidCallback onTap}) {
+    return Padding(
+      padding: index == 0
+          ? const EdgeInsets.only(left: 20, right: 5, top: 8, bottom: 8)
+          : const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+      child: Obx(
+        () => ActionChip(
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+            shape: index != controller.selectedIndex.value
+                ? const StadiumBorder(side: BorderSide(color: Colors.black26))
+                : null,
+            backgroundColor: index == controller.selectedIndex.value
+                ? Get.theme.colorPrimaryDark
+                : Colors.white,
+            label: Text(
+              title,
+              style: Get.theme.kSubTitle.copyWith(
+                color: controller.selectedIndex.value == index
+                    ? Colors.white
+                    : Get.theme.kBadgeColor,
+              ),
+            ),
+            onPressed: onTap),
+
+      ),
+    );
+  }
+
 
 Widget titleRow() {
+
     return Row(
       children: [
         FxContainer(
@@ -1122,11 +1414,11 @@ Widget titleRow() {
           "TaskMan",
           fontWeight: 600,
           // color: Get.theme.primary,
-
         ),
       ],
     );
   }
+
 
 Widget _bottomSheet(ScrollController controller) {
   return SingleChildScrollView(
@@ -1144,8 +1436,10 @@ Widget _bottomSheet(ScrollController controller) {
           miniMessage('Marked as done, pending for review'),
           DateWidget('Due Tommorow'),
         ],
+
+        ),
+
       ),
-    ),
-  );
-}
+    );
+  }
 }

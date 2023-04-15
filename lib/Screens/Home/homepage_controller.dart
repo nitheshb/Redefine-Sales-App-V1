@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+
 import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Screens/Task/task_manager.dart';
@@ -66,6 +68,8 @@ class HomePageController extends GetxController {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   final scrollController = ScrollController();
+  TextEditingController searchText = TextEditingController();
+  RxBool search = false.obs;
 
   RxDouble currentoffset = 0.0.obs;
 
@@ -134,11 +138,15 @@ class HomePageController extends GetxController {
   var participantsANew = [].obs;
   var attachmentsA = [].obs;
 
+  RxBool expande = false.obs;
+
   get http => null;
   String? validateTaskTitle(value) {
     if (value == '') {
+      validationSuccess.value = false;
       return 'Please enter task title';
     } else {
+      validationSuccess.value = true;
       return null;
     }
   }
@@ -186,6 +194,9 @@ void filterTaskPerCat (value){
                          totalTasksStreamData.value = businessData;
                       }
 }
+
+
+
   checkTaskValidation() {
     final validator = taskKey.currentState!.validate();
 
@@ -204,6 +215,7 @@ void filterTaskPerCat (value){
       } else {
         createNewTask();
         print(assignedUserName);
+        validationSuccess.value = false;
       }
     }
   }
@@ -214,6 +226,7 @@ void filterTaskPerCat (value){
     // Get.reset();
     // Get.delete<TaskController>();
     print('hello ${participantsANew}');
+
 
    
 //        var y = DbSupa.instance.createTask({
@@ -237,6 +250,7 @@ void filterTaskPerCat (value){
 
 
 // return;
+
     _collection
         .add({
           'task_title': taskTitle.text,
@@ -628,7 +642,6 @@ Widget streamBusiness() {
                                     //     leftFraction: 0.72,
                                     //     size: 26),
 
-                                    
                                     SizedBox(
                                       child: Material(
                                         type: MaterialType.transparency,
