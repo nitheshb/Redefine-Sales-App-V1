@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
   ImagePicker picker = ImagePicker();
 
   // var businessMode = true;
-
+// 
   //  flipMode() {
   //   setState(() {
   //     businessMode = !businessMode;
