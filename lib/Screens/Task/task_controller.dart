@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/themes/themes.dart';
 
+import '../../helpers/supabae_help.dart';
+
 class TaskController extends GetxController {
   var taskType = 'mark'.obs;
   DateTime dateSelected = DateTime.now();
@@ -85,6 +87,8 @@ class TaskController extends GetxController {
               snackBarMsg('Task Created!', enableMsgBtn: false),
               sendPushMessage('Task Assigned for you:', taskTitle.text,
                   assignedUserFcmToken.value),
+              DbSupa.instance.saveNotification(
+                  assignedUserUid.value, "Task Assigned for you", value.id),
               taskTitle.clear(),
               taskDescription.clear(),
               dateinput.clear(),
