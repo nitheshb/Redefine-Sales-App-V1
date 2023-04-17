@@ -7,13 +7,13 @@ import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/Widgets/contact_card.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
+import 'package:redefineerp/helpers/supabae_help.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class ReassignToList extends StatelessWidget {
   const ReassignToList({Key? key, required this.docId}) : super(key: key);
 
-
-final String docId;
+  final String docId;
 
   @override
   Widget build(BuildContext context) {
@@ -177,25 +177,30 @@ final String docId;
                       jobTitle: taskData["roles"][0],
                       uid: taskData["uid"],
                       onTap: () async {
+                        try {
+                          controller.taskController.assignedUserName.value =
+                              taskData["name"];
+                          controller.taskController.assignedUserDepartment
+                              .value = taskData["department"][0];
+                          controller.taskController.assignedUserEmail.value =
+                              taskData["email"];
+                          controller.taskController.assignedUserUid.value =
+                              taskData["uid"];
+                          controller.taskController.assignedUserFcmToken.value =
+                              taskData["user_fcmtoken"];
 
-                   try{
-                            controller.taskController.assignedUserName.value =
-                                taskData["name"];
-                            controller.taskController.assignedUserDepartment
-                                .value = taskData["department"][0];
-                            controller.taskController.assignedUserEmail.value =
-                                taskData["email"];
-                            controller.taskController.assignedUserUid.value =
-                                taskData["uid"];
-                            controller.taskController.assignedUserFcmToken
-                                .value = taskData["user_fcmtoken"];
-
-                                // add to db
-                                controller.reAssignTo(docId, taskData["name"], taskData["uid"], taskData["user_fcmtoken"]);
-                            Get.back();}catch(e){
-                                        snackBarMsg('This user is not yet using TaskMan');
-                            }
-                          });
+                          // add to db
+                          controller.reAssignTo(docId, taskData["name"],
+                              taskData["uid"], taskData["user_fcmtoken"]);
+                          DbSupa.instance.saveNotification(
+                              taskData["uid"],
+                              "This task assigned to ${taskData["name"]}",
+                              docId);
+                          Get.back();
+                        } catch (e) {
+                          snackBarMsg('This user is not yet using TaskMan');
+                        }
+                      });
                 });
           } else {
             return Center(
