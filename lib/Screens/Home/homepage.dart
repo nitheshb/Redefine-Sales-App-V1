@@ -23,6 +23,7 @@ import 'package:redefineerp/Screens/Profile/profile_page.dart';
 import 'package:redefineerp/Screens/Report/report_page.dart';
 import 'package:redefineerp/Screens/Report/slim_team_stats.dart';
 import 'package:redefineerp/Screens/Report/team_stats.dart';
+import 'package:redefineerp/Screens/Search/search_controller.dart';
 import 'package:redefineerp/Screens/Search/search_task.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
@@ -195,8 +196,9 @@ class _HomePageState extends State<HomePage> {
         //     ),
         //   ],
         // ),
-      ],
-    ),
+      // ],
+    
+    // ),
         floatingActionButton: FloatingActionButton.extended(
 
           onPressed: () => {
@@ -845,8 +847,8 @@ class _HomePageState extends State<HomePage> {
                                   onTap: () => {
                                         controller.validationSuccess.value =
                                             false,
-                                        print(
-                                            controller.validationSuccess.value),
+                                        // print(
+                                        //     controller.validationSuccess.value),
                                         controller.checkTaskValidation()
                                       },
 
@@ -1097,7 +1099,7 @@ class _HomePageState extends State<HomePage> {
             .where("status", isEqualTo: "InProgress")
             // .where("to_uid", isEqualTo: controller.currentUser!.uid)
             //  .where("particpantsA", arrayContains: controller.currentUser!.uid)
-            .where('particpantsIdA', arrayContains: controller.currentUser!.uid)
+            .where('particpantsIdA', arrayContains: FirebaseAuth.instance.currentUser!.uid)
             .snapshots(),
         // stream: DbQuery.instanace.getStreamCombineTasks(),
         builder: (context, snapshot) {
@@ -1121,12 +1123,12 @@ class _HomePageState extends State<HomePage> {
               // business list
 
               
-                      controller.businessData.value= TotalTasks.where((element) => (element["by_uid"] != element["to_uid"]) && (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid || element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList(); 
+                      // controller.businessData.value= TotalTasks.where((element) => (element["by_uid"] != element["to_uid"]) && (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid || element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList(); 
                         // controller.totalTasksStreamData.value = businessData;
                       
 
             }else{
-             controller.personalData.value= TotalTasks.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid && element["to_uid"] == FirebaseAuth.instance.currentUser!.uid).toList(); 
+            //  controller.personalData.value= TotalTasks.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid && element["to_uid"] == FirebaseAuth.instance.currentUser!.uid).toList(); 
             }
 
           // particpantsIdA
@@ -1176,193 +1178,194 @@ class _HomePageState extends State<HomePage> {
         //     ],
         // ),
 
-          backgroundColor: const Color(0xffBDA1EF),
-          child: const Icon(
-            Icons.add,
-            color: Color(0xff33264b),
-          ),
+          // backgroundColor: const Color(0xffBDA1EF),
+          // child: const Icon(
+          //   Icons.add,
+          //   color: Color(0xff33264b),
+          // ),
         ),
         // floatingActionButtonLocation:
         //     FloatingActionButtonLocation.,
 
-        body: DefaultTabController(
-          length: 3,
-          child: NestedScrollView(
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
-                return <Widget>[
-                  Obx(
-                    () => SliverAppBar(
-                      backgroundColor: const Color(0xffffffff),
-                      snap: false,
-                      pinned: true,
-                      floating: true,
-                      flexibleSpace: FlexibleSpaceBar(
-                          background: controller.expande.value == true
-                              ? controller.search.value == true
-                                  ? SizedBox()
-                                  : Wrap(
-                                      children: [
-                                        _filterChip(0,
-                                            title: 'All',
-                                            controller: searchController,
-                                            onTap: () => {
-                                                  searchController
-                                                      .selectedIndex.value = 0,
-                                                }),
-                                        _filterChip(1,
-                                            title: 'Done',
-                                            controller: searchController,
-                                            onTap: () => {
-                                                  searchController
-                                                      .selectedIndex.value = 1,
-                                                }),
-                                        _filterChip(2,
-                                            title: 'Pending',
-                                            controller: searchController,
-                                            onTap: () => {
-                                                  searchController
-                                                      .selectedIndex.value = 2,
-                                                }),
-                                        _filterChip(3,
-                                            title: 'Created',
-                                            controller: searchController,
-                                            onTap: () => {
-                                                  searchController
-                                                      .selectedIndex.value = 3,
-                                                }),
-                                        _filterChip(4,
-                                            title: 'Today',
-                                            controller: searchController,
-                                            onTap: () => {
-                                                  searchController
-                                                      .selectedIndex.value = 4,
-                                                }),
-                                      ],
-                                    )
-                              : SlimTeamStats(() => {})),
-                      expandedHeight: controller.search.value == true
-                          ? 10
-                          : controller.expande.value == true
-                              ? 69
-                              : 190,
-                      bottom: PreferredSize(
-                        preferredSize: const Size.fromHeight(48.0),
-                        child: controller.expande.value == true
-                            ? SizedBox()
-                            : SingleChildScrollView(
-                                physics: const BouncingScrollPhysics(),
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 2.0, right: 4.0),
-                                      child: ActionChip(
-                                          elevation: 0,
-                                          padding: const EdgeInsets.fromLTRB(
-                                              6, 1, 6, 1),
-                                          backgroundColor: 0 == 0
-                                              ? Get.theme.primaryContainer
-                                              : Colors.transparent,
-                                          label: FxText.bodySmall(
-                                            "All Tasks",
-                                            fontSize: 11,
-                                            fontWeight: 700,
-                                            color: 0 == 0
-                                                ? Get.theme.onPrimaryContainer
-                                                : Get.theme.colorScheme
-                                                    .onBackground,
-                                          ),
-                                          onPressed: () => {print('hello')}),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 2.0, right: 4.0),
-                                      child: ActionChip(
-                                          elevation: 0,
-                                          padding: const EdgeInsets.fromLTRB(
-                                              6, 1, 6, 1),
-                                          backgroundColor: 1 == 0
-                                              ? Get.theme.primaryContainer
-                                              : Colors.transparent,
-                                          label: FxText.bodySmall(
-                                            "Personal",
-                                            fontSize: 11,
-                                            fontWeight: 700,
-                                            color: 1 == 0
-                                                ? Get.theme.onPrimaryContainer
-                                                : Get.theme.onBackground,
-                                          ),
-                                          onPressed: () => {print('hello')}),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 2.0, right: 4.0),
-                                      child: ActionChip(
-                                          elevation: 0,
-                                          padding: const EdgeInsets.fromLTRB(
-                                              6, 1, 6, 1),
-                                          backgroundColor: 1 == 0
-                                              ? Get.theme.primaryContainer
-                                              : Colors.transparent,
-                                          label: FxText.bodySmall(
-                                            "Business",
-                                            fontSize: 11,
-                                            fontWeight: 700,
-                                            color: 1 == 0
-                                                ? Get.theme.onPrimaryContainer
-                                                : Get.theme.onBackground,
-                                          ),
-                                          onPressed: () => {print('hello')}),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 2.0, right: 4.0),
-                                      child: ActionChip(
-                                          elevation: 0,
-                                          padding: const EdgeInsets.fromLTRB(
-                                              6, 1, 6, 1),
-                                          backgroundColor: 1 == 0
-                                              ? Get.theme.primaryContainer
-                                              : Colors.transparent,
-                                          label: FxText.bodySmall(
-                                            "Participants",
-                                            fontSize: 11,
-                                            fontWeight: 700,
-                                            color: 1 == 0
-                                                ? Get.theme.onPrimaryContainer
-                                                : Get.theme.onBackground,
-                                          ),
-                                          onPressed: () => {print('hello')}),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                      ),
-                    ),
-                  )
-                ];
-              },
-              body: controller.expande.value == true
-                  ? SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.89,
-                      child:
-                          Obx(() => searchController.searchResultsWidget.value),
-                    )
-                  : controller.streamToday()
-              // body: TabBarView(
-              //   children: [
-              //       controller.streamToday(),
-              //       controller.streamUpdates(),
-              //       controller.streamCreated(),
-              //     ],
-              // ),
-              ),
-        ),
+      //   body: DefaultTabController(
+      //     length: 3,
+      //     child: NestedScrollView(
+      //         headerSliverBuilder:
+      //             (BuildContext context, bool innerBoxIsScrolled) {
+      //           return <Widget>[
+      //             Obx(
+      //               () => SliverAppBar(
+      //                 backgroundColor: const Color(0xffffffff),
+      //                 snap: false,
+      //                 pinned: true,
+      //                 floating: true,
+      //                 flexibleSpace: FlexibleSpaceBar(
+      //                     background: controller.expande.value == true
+      //                         ? controller.search.value == true
+      //                             ? SizedBox()
+      //                             : Wrap(
+      //                                 children: [
+      //                                   _filterChip(0,
+      //                                       title: 'All',
+      //                                       controller: searchController,
+      //                                       onTap: () => {
+      //                                             searchController
+      //                                                 .selectedIndex.value = 0,
+      //                                           }),
+      //                                   _filterChip(1,
+      //                                       title: 'Done',
+      //                                       controller: searchController,
+      //                                       onTap: () => {
+      //                                             searchController
+      //                                                 .selectedIndex.value = 1,
+      //                                           }),
+      //                                   _filterChip(2,
+      //                                       title: 'Pending',
+      //                                       controller: searchController,
+      //                                       onTap: () => {
+      //                                             searchController
+      //                                                 .selectedIndex.value = 2,
+      //                                           }),
+      //                                   _filterChip(3,
+      //                                       title: 'Created',
+      //                                       controller: searchController,
+      //                                       onTap: () => {
+      //                                             searchController
+      //                                                 .selectedIndex.value = 3,
+      //                                           }),
+      //                                   _filterChip(4,
+      //                                       title: 'Today',
+      //                                       controller: searchController,
+      //                                       onTap: () => {
+      //                                             searchController
+      //                                                 .selectedIndex.value = 4,
+      //                                           }),
+      //                                 ],
+      //                               )
+      //                         : SlimTeamStats(() => {})),
+      //                 expandedHeight: controller.search.value == true
+      //                     ? 10
+      //                     : controller.expande.value == true
+      //                         ? 69
+      //                         : 190,
+      //                 bottom: PreferredSize(
+      //                   preferredSize: const Size.fromHeight(48.0),
+      //                   child: controller.expande.value == true
+      //                       ? SizedBox()
+      //                       : SingleChildScrollView(
+      //                           physics: const BouncingScrollPhysics(),
+      //                           scrollDirection: Axis.horizontal,
+      //                           child: Row(
+      //                             crossAxisAlignment: CrossAxisAlignment.start,
+      //                             mainAxisAlignment: MainAxisAlignment.start,
+      //                             children: [
+      //                               Padding(
+      //                                 padding: const EdgeInsets.only(
+      //                                     left: 2.0, right: 4.0),
+      //                                 child: ActionChip(
+      //                                     elevation: 0,
+      //                                     padding: const EdgeInsets.fromLTRB(
+      //                                         6, 1, 6, 1),
+      //                                     backgroundColor: 0 == 0
+      //                                         ? Get.theme.primaryContainer
+      //                                         : Colors.transparent,
+      //                                     label: FxText.bodySmall(
+      //                                       "All Tasks",
+      //                                       fontSize: 11,
+      //                                       fontWeight: 700,
+      //                                       color: 0 == 0
+      //                                           ? Get.theme.onPrimaryContainer
+      //                                           : Get.theme.colorScheme
+      //                                               .onBackground,
+      //                                     ),
+      //                                     onPressed: () => {print('hello')}),
+      //                               ),
+      //                               Padding(
+      //                                 padding: const EdgeInsets.only(
+      //                                     left: 2.0, right: 4.0),
+      //                                 child: ActionChip(
+      //                                     elevation: 0,
+      //                                     padding: const EdgeInsets.fromLTRB(
+      //                                         6, 1, 6, 1),
+      //                                     backgroundColor: 1 == 0
+      //                                         ? Get.theme.primaryContainer
+      //                                         : Colors.transparent,
+      //                                     label: FxText.bodySmall(
+      //                                       "Personal",
+      //                                       fontSize: 11,
+      //                                       fontWeight: 700,
+      //                                       color: 1 == 0
+      //                                           ? Get.theme.onPrimaryContainer
+      //                                           : Get.theme.onBackground,
+      //                                     ),
+      //                                     onPressed: () => {print('hello')}),
+      //                               ),
+      //                               Padding(
+      //                                 padding: const EdgeInsets.only(
+      //                                     left: 2.0, right: 4.0),
+      //                                 child: ActionChip(
+      //                                     elevation: 0,
+      //                                     padding: const EdgeInsets.fromLTRB(
+      //                                         6, 1, 6, 1),
+      //                                     backgroundColor: 1 == 0
+      //                                         ? Get.theme.primaryContainer
+      //                                         : Colors.transparent,
+      //                                     label: FxText.bodySmall(
+      //                                       "Business",
+      //                                       fontSize: 11,
+      //                                       fontWeight: 700,
+      //                                       color: 1 == 0
+      //                                           ? Get.theme.onPrimaryContainer
+      //                                           : Get.theme.onBackground,
+      //                                     ),
+      //                                     onPressed: () => {print('hello')}),
+      //                               ),
+      //                               Padding(
+      //                                 padding: const EdgeInsets.only(
+      //                                     left: 2.0, right: 4.0),
+      //                                 child: ActionChip(
+      //                                     elevation: 0,
+      //                                     padding: const EdgeInsets.fromLTRB(
+      //                                         6, 1, 6, 1),
+      //                                     backgroundColor: 1 == 0
+      //                                         ? Get.theme.primaryContainer
+      //                                         : Colors.transparent,
+      //                                     label: FxText.bodySmall(
+      //                                       "Participants",
+      //                                       fontSize: 11,
+      //                                       fontWeight: 700,
+      //                                       color: 1 == 0
+      //                                           ? Get.theme.onPrimaryContainer
+      //                                           : Get.theme.onBackground,
+      //                                     ),
+      //                                     onPressed: () => {print('hello')}),
+      //                               ),
+      //                             ],
+      //                           ),
+      //                         ),
+      //                 ),
+      //               ),
+      //             )
+      //           ];
+      //         },
+      //         body: controller.expande.value == true
+      //             ? SizedBox(
+      //                 height: MediaQuery.of(context).size.height * 0.89,
+      //                 child:
+      //                     Obx(() => searchController.searchResultsWidget.value),
+      //               )
+      //             : controller.streamToday()
+      //         // body: TabBarView(
+      //         //   children: [
+      //         //       controller.streamToday(),
+      //         //       controller.streamUpdates(),
+      //         //       controller.streamCreated(),
+      //         //     ],
+      //         // ),
+      //         ),
+      //   ),
       ),
+      )
     );
   }
 

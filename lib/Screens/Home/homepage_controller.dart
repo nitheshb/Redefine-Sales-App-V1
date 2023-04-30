@@ -26,6 +26,7 @@ import 'package:supabase/supabase.dart';
 class HomePageController extends GetxController {
 
   var client;
+  var validationSuccess = false.obs;
   @override
   void onInit() async {
     await fetchdata();
@@ -276,14 +277,14 @@ void filterTaskPerCat (value){
               sendPushMessage('Task Assigned for you:', taskTitle.text,
                   assignedUserFcmToken.value),
 
-                  // assinged to 
-                  DbSupa.instance.saveNotification(assignedUserUid.value, 'Task Assigned for you', taskId),
+//                   // assinged to 
+//                   DbSupa.instance.saveNotification(assignedUserUid.value, 'Task Assigned for you', taskId),
 
-                  //send to followers
-participantsANew.value.map((follerId)=>{
-                  DbSupa.instance.saveNotification(assignedUserUid.value, 'Ur Following New Task', taskId),
+//                   //send to followers
+// participantsANew.value.map((follerId)=>{
+//                   DbSupa.instance.saveNotification(assignedUserUid.value, 'Ur Following New Task', taskId),
 
-})
+// })
 
               taskTitle.clear(),
               taskDescription.clear(),
