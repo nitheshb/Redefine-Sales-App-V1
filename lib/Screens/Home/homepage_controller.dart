@@ -18,8 +18,10 @@ import 'package:redefineerp/Widgets/datewidget.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/helpers/supabae_help.dart';
 import 'package:redefineerp/main.dart';
+import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:supabase/supabase.dart';
 
@@ -33,9 +35,6 @@ class HomePageController extends GetxController {
     getToken();
 
     updateSelectedDate();
-
-
-
 
        final subscription = client
         .from('maahomes_TM_Tasks')
@@ -60,6 +59,7 @@ class HomePageController extends GetxController {
     print('yo yo');
     // Get called after widget is rendered on the screen
     await fetchdata();
+
     super.onReady();
   }
 
@@ -91,10 +91,22 @@ class HomePageController extends GetxController {
   var numOfUpcomingTasks = 0.obs;
   var numOfCreatedTasks = 0.obs;
 
+  var creatdByMe = [].obs;
+  var assignedToMe = [].obs;
+
+  var participants = [].obs;
+
+  var personalTasks = [].obs;
+
+
+
+
+
   var myTodayTotalC = 0.obs;
   var myTodayTotal =[];
   var myPersonalTotal = 0.obs;
   var myBusinessTotal = 0.obs;
+   var showingLists = [].obs;
 
     var totalTasksStreamData = [].obs;
 
@@ -136,6 +148,7 @@ class HomePageController extends GetxController {
   var businessData = [].obs;
   var businessMode = true.obs;
 
+
   var participantsANew = [].obs;
   var attachmentsA = [].obs;
 
@@ -160,10 +173,10 @@ class HomePageController extends GetxController {
   flipMode(title){
     print('am here ${title}');
     if(title== 'Business'){
-  businessMode.value = false;
+  businessMode.value = true;
 setTaskTypeFun('allBusinessTasks');
     }else {
-      businessMode.value = true;
+      businessMode.value = false;
    
       setTaskTypeFun('personalTasks');
       
@@ -177,22 +190,40 @@ filterTaskPerCat(value);
   print('iam insied it ${value}');
 }
 
-void filterTaskPerCat (value){
+void filterTaskPerCat (x){
+      if(!businessMode.value){
+           personalData.value= totalTasksStreamData.where((element) => element["by_uid"] ==  FirebaseAuth.instance.currentUser!.uid).toList();
+                          // assignedToMe.value = businessData.where((element) => (element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+       
+            }else{
+             businessData.value= totalTasksStreamData.where((element) => element["by_uid"] !=  FirebaseAuth.instance.currentUser!.uid).toList();
+                          // assignedToMe.value = businessData.where((element) => (element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+        
+          // personalData.value= totalTasksStreamData.value;
+         
+            }
+
+                          // creatdByMe.value = businessData.where((element) => (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+                          assignedToMe.value = businessData.where((element) => (element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+                          // participants.value = businessData.where((element) => (element["by_uid"] != FirebaseAuth.instance.currentUser!.uid && element["to_uid"] != FirebaseAuth.instance.currentUser!.uid)).toList();
+                          // personalTasks.value=   personalData;
+
+var value = myTaskTypeCategory.value;
     if(value == 'creatdByMe') {
-                          totalTasksStreamData.value = businessData.where((element) => (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+                          showingLists.value = businessData.where((element) => (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
                       } else if(value == 'assignedToMe') {
-                          totalTasksStreamData.value = businessData.where((element) => (element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+                          showingLists.value = businessData.where((element) => (element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
                      
-                     print('assinged to count ${totalTasksStreamData.value.length}');
+                     print('assinged to count ${showingLists.value.length}');
                       } else if(value == 'participants') {
-                          totalTasksStreamData.value = businessData.where((element) => (element["by_uid"] != FirebaseAuth.instance.currentUser!.uid && element["to_uid"] != FirebaseAuth.instance.currentUser!.uid)).toList();
+                          showingLists.value = businessData.where((element) => (element["by_uid"] != FirebaseAuth.instance.currentUser!.uid && element["to_uid"] != FirebaseAuth.instance.currentUser!.uid)).toList();
                       }else if(value=='personalTasks'){
                         print('i was here yo yo');
-                      totalTasksStreamData.value=   personalData;
+                      showingLists.value=   personalData;
                       //  totalTasksStreamData.value = businessData.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid && element["to_uid"] == FirebaseAuth.instance.currentUser!.uid).toList();
                          print('participants ${totalTasksStreamData.value.length}');
                       }else{
-                         totalTasksStreamData.value = businessData;
+                         showingLists.value = businessData;
                       }
 }
 
@@ -339,6 +370,7 @@ void filterTaskPerCat (value){
         .where("to_uid", isEqualTo: currentUser?.uid)
         .get()
         .then((QuerySnapshot querySnapshot) {
+        
       for (var doc in querySnapshot.docs) {
         debugPrint("DOCS FOR TO_EM: $doc");
         if (doc['status'] == "Done") {
@@ -384,6 +416,44 @@ void filterTaskPerCat (value){
           //     debugPrint("Not done COUNT== ${notdone.value}");
           //   }
           // }
+  }
+
+  Widget taskListsIs(context, TotalTasks){
+          totalTasksStreamData.value = TotalTasks;
+      filterTaskPerCat("Business");
+    // return FxText.titleSmall(
+    //                     //  personalTasks.length.toString(),
+    //                     showingLists.length.toString(),
+    //                     fontWeight: 700,
+    //                   );
+
+         return Obx(() => Column(
+                  children: [
+                    Expanded(
+                      child: MediaQuery.removePadding(
+                        context: context,
+                        removeTop: true,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: showingLists.length,
+                              itemBuilder: (context, index) {
+                                late QueryDocumentSnapshot<Object?>? taskData =
+                                    showingLists[index];
+                                print("qwdqwdw ${taskData!.id}");
+
+                                var iDa  = [taskData!['to_uid'], taskData!['by_uid']];
+                                DbQuery.instanace.getAddParticipants(taskData!.id, iDa);
+
+                           
+                                return CardSetup(context,taskData);  }),
+                        ),
+                      ),
+                    ),
+                  ],
+                ));
   }
   Widget streamToday() {
     //   return StreamBuilder(

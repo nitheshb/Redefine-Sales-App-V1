@@ -80,7 +80,7 @@ Widget statusBarItems(title) {
               child: InkWell(
                           onTap: () =>{controller.flipMode(title)},
                 child: FxContainer.bordered(
-                  color: (title== "Personal" && controller.businessMode.value) ?  Get.theme.primaryContainer: (title== "Business" && !controller.businessMode.value) ?  Get.theme.primaryContainer: Colors.transparent,
+                  color: (title== "Personal" && !controller.businessMode.value) ?  Get.theme.primaryContainer: (title== "Business" && controller.businessMode.value) ?  Get.theme.primaryContainer: Colors.transparent,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -926,7 +926,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-  if(controller.businessMode.value)...[ Padding(
+  if(!controller.businessMode.value)...[ Padding(
                      padding: const EdgeInsets.only(left:6.0, right:4.0),
                      child: ActionChip(
                                elevation: 0,
@@ -1017,7 +1017,7 @@ class _HomePageState extends State<HomePage> {
                                      : Colors.transparent,
                                          
                         label: FxText.bodySmall(
-                                       "Assigned to me",
+                                       "Assigned to me ",
                                        fontSize: 11,
                                        fontWeight: 700,
                                        color: controller.myTaskTypeCategory.value == 'assignedToMe'
@@ -1090,18 +1090,15 @@ class _HomePageState extends State<HomePage> {
           ];
         },
         // body: controller.streamToday()
-        body: 
-                     StreamBuilder<QuerySnapshot>(
+        body: Container(
+          child:  StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('spark_assignedTasks')
             .where("due_date",
                 isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
             .where("status", isEqualTo: "InProgress")
-            // .where("to_uid", isEqualTo: controller.currentUser!.uid)
-            //  .where("particpantsA", arrayContains: controller.currentUser!.uid)
-            .where('particpantsIdA', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+            .where("to_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
             .snapshots(),
-        // stream: DbQuery.instanace.getStreamCombineTasks(),
         builder: (context, snapshot) {
         //     if (!snapshot.hasData) {
         //   return CircularProgressIndicator();
@@ -1113,62 +1110,157 @@ class _HomePageState extends State<HomePage> {
           } else if (snapshot.hasData) {
 
             // lets seperate between business vs personal 
-
-         
-         
+print('sele values i s ${controller.businessMode.value}');
+      
             var TotalTasks = snapshot.data!.docs.toList();
-       
-             print('pub dev is ${TotalTasks}');
-            if(!controller.businessMode.value){
-              // business list
+            var personalTasks, businessTasks;
 
-              
-                      // controller.businessData.value= TotalTasks.where((element) => (element["by_uid"] != element["to_uid"]) && (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid || element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList(); 
-                        // controller.totalTasksStreamData.value = businessData;
+          // controller.totalTasksStreamData.value =TotalTasks;
+          controller.totalTasksStreamData.value = TotalTasks;
+
+          
+          //  personalTasks= TotalTasks.where((element) => element["by_uid"] ==  FirebaseAuth.instance.currentUser!.uid);
+          //  controller.personalData.value = personalTasks.toList();
+
+          //     businessTasks= TotalTasks.where((element) => element["by_uid"] !=  FirebaseAuth.instance.currentUser!.uid); 
+          
+          //   controller.businessData.value = businessTasks.toList();
+
+
+          //   if(!controller.businessMode.value){
+          //  personalTasks= TotalTasks.where((element) => element["by_uid"] ==  FirebaseAuth.instance.currentUser!.uid);
+          //  controller.personalData.value = personalTasks.toList();
+          //   }else{
+          //    personalTasks= TotalTasks.where((element) => element["by_uid"] !=  FirebaseAuth.instance.currentUser!.uid); 
+          
+          //   controller.businessData.value = personalTasks.toList();
+          //   }
+          
+            // if (doc['status'] == "Done") {
+            //   donecount.value = donecount.value + 1;
+            //   debugPrint("DONE COUNT== ${donecount.value}");
+            // } else if (doc['status'] == "InProgress") {
+            //   notdone.value = notdone.value + 1;
+            //   debugPrint("Not done COUNT== ${notdone.value}");
+            // }
+          // }
+// return   Countup(
+//               begin: 0,
+//               end: 300,
+//               duration: Duration(milliseconds: 300),
+//               separator: ',',
+//               style: TextStyle(
+//                 fontSize: 36,
+//               ),
+//             );
+
+return controller.taskListsIs(context, TotalTasks);
+              return Obx(() => FxText.titleSmall(
+                        //  personalTasks.length.toString(),
+                        controller.totalTasksStreamData.length.toString(),
+                        fontWeight: 700,
+                      ));
+         } else {
+            return Center(
+              child: Column(
+                children:  [
+                  Center(
+                    child:   FxText.titleSmall(
+                         "0",
+                        fontWeight: 700,
+                      )
+                  ),
+                  // SizedBox(height: 50),
+                  // Center(
+                  //   child: Text("Tasks Loading..."),
+                  // )
+                ],
+              ),
+            );
+          }
+        }),
+                      // Obx(()=> FxText.titleSmall(
+                      //   widget.numOfTodayTasks.toString(),
+                      //   fontWeight: 700,
+                      // )),
+        ),
+        // body: 
+        //              StreamBuilder<QuerySnapshot>(
+        // stream: FirebaseFirestore.instance
+        //     .collection('spark_assignedTasks')
+        //     .where("due_date",
+        //         isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+        //     .where("status", isEqualTo: "InProgress")
+        //     // .where("to_uid", isEqualTo: controller.currentUser!.uid)
+        //     //  .where("particpantsA", arrayContains: controller.currentUser!.uid)
+        //     // .where('particpantsIdA', arrayContains: FirebaseAuth.instance.currentUser!.uid)
+        //     .snapshots(),
+        // // stream: DbQuery.instanace.getStreamCombineTasks(),
+        // builder: (context, snapshot) {
+        // //     if (!snapshot.hasData) {
+        // //   return CircularProgressIndicator();
+        // // }
+        //   if (snapshot.hasError) {
+        //     return const Center(
+        //       child: Text("Something went wrong! 😣..."),
+        //     );
+        //   } else if (snapshot.hasData) {
+
+        //     // lets seperate between business vs personal 
+
+         
+         
+        //     var TotalTasks = snapshot.data!.docs.toList();
+       
+        //      print('pub dev is ${TotalTasks}');
+        //     if(!controller.businessMode.value){
+        //       // business list
+        //               controller.businessData.value= TotalTasks.where((element) => (element["by_uid"] != element["to_uid"]) && (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid || element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList(); 
+        //                 // controller.totalTasksStreamData.value = businessData;
                       
 
-            }else{
-            //  controller.personalData.value= TotalTasks.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid && element["to_uid"] == FirebaseAuth.instance.currentUser!.uid).toList(); 
-            }
+        //     }else{
+        //      controller.personalData.value= TotalTasks.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid && element["to_uid"] == FirebaseAuth.instance.currentUser!.uid).toList(); 
+        //     }
 
-          // particpantsIdA
+        //   // particpantsIdA
 
-          // return Text('Full Data');
-             return Obx(() => Column(
-                  children: [
-                    Expanded(
-                      child: MediaQuery.removePadding(
-                        context: context,
-                        removeTop: true,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: controller.totalTasksStreamData.length,
-                              itemBuilder: (context, index) {
-                                late QueryDocumentSnapshot<Object?>? taskData =
-                                    controller.totalTasksStreamData[index];
-                                print("qwdqwdw ${taskData!.id}");
+        //   // return Text('Full Data');
+        //      return Obx(() => Column(
+        //           children: [
+        //             Expanded(
+        //               child: MediaQuery.removePadding(
+        //                 context: context,
+        //                 removeTop: true,
+        //                 child: Padding(
+        //                   padding: const EdgeInsets.only(top: 10.0),
+        //                   child: ListView.builder(
+        //                       shrinkWrap: true,
+        //                       physics: const BouncingScrollPhysics(),
+        //                       itemCount: controller.totalTasksStreamData.length,
+        //                       itemBuilder: (context, index) {
+        //                         late QueryDocumentSnapshot<Object?>? taskData =
+        //                             controller.totalTasksStreamData[index];
+        //                         print("qwdqwdw ${taskData!.id}");
 
-                                var iDa  = [taskData!['to_uid'], taskData!['by_uid']];
-                                DbQuery.instanace.getAddParticipants(taskData!.id, iDa);
+        //                         var iDa  = [taskData!['to_uid'], taskData!['by_uid']];
+        //                         DbQuery.instanace.getAddParticipants(taskData!.id, iDa);
 
-                                // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
-                                // print(
-                                //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
-                                // print("due date is ${taskData!.get('due data')}");
-                                // return Text("hello");
-                                return controller.CardSetup(context,taskData);  }),
-                        ),
-                      ),
-                    ),
-                  ],
-                ));
+        //                         // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
+        //                         // print(
+        //                         //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
+        //                         // print("due date is ${taskData!.get('due data')}");
+        //                         // return Text("hello");
+        //                         return controller.CardSetup(context,taskData);  }),
+        //                 ),
+        //               ),
+        //             ),
+        //           ],
+        //         ));
              
-            }else{
-              return Text('No Data');
-            }}),
+        //     }else{
+        //       return Text('No Data');
+        //     }}),
                
         // body: TabBarView(
         //   children: [
