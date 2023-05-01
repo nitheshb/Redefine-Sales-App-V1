@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:rxdart/rxdart.dart ' as rxdart;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -82,7 +82,34 @@ class _HomePageState extends State<HomePage> {
     // TaskController controller1 = Get.put<TaskController>(TaskController());
     debugPrint("home called ${FirebaseAuth.instance.currentUser}");
     // Set the system status bar color
+// Create two streams for each query
+  final stream1 = FirebaseFirestore.instance
+            .collection('spark_assignedTasks')
+            // .where("due_date",
+            //     isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+            .where("status", isEqualTo: "InProgress")
+            // .where("particpantsIdA", arrayContains: FirebaseAuth.instance.currentUser!.uid)
+           .where("to_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
+          .where("by_uid", isNotEqualTo:  FirebaseAuth.instance.currentUser!.uid)
 
+            // .orWhere("by_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
+
+            .snapshots();
+final stream2 = FirebaseFirestore.instance
+            .collection('spark_assignedTasks')
+            .where("due_date",
+                isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+            .where("status", isEqualTo: "InProgress")
+            // .where("particpantsIdA", arrayContains: FirebaseAuth.instance.currentUser!.uid)
+            // .where("to_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
+            .where("by_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
+
+            .snapshots();
+
+// Combine the two streams using the RxCombineLatestStream from the rxdart package
+// final combinedStream = RxCombineLatestStream<QuerySnapshot>([stream1, stream2]);
+// final combinedStream = rxdart.CombineLatestStream( [stream1, stream2]);
+final combinedStream = rxdart.CombineLatestStream.list<QuerySnapshot>([stream1, stream2]);
     return Obx(
       () => Scaffold(
         backgroundColor: const Color(0xffffffff),
@@ -1091,14 +1118,18 @@ class _HomePageState extends State<HomePage> {
         },
         // body: controller.streamToday()
         body: Container(
-          child:  StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('spark_assignedTasks')
-            .where("due_date",
-                isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
-            .where("status", isEqualTo: "InProgress")
-            .where("to_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
-            .snapshots(),
+          child:  StreamBuilder<List<QuerySnapshot>>(
+        // stream: FirebaseFirestore.instance
+        //     .collection('spark_assignedTasks')
+        //     .where("due_date",
+        //         isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
+        //     .where("status", isEqualTo: "InProgress")
+        //     // .where("particpantsIdA", arrayContains: FirebaseAuth.instance.currentUser!.uid)
+        //     // .where("to_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
+        //     // .orWhere("by_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
+
+        //     .snapshots(),
+        stream: combinedStream,
         builder: (context, snapshot) {
         //     if (!snapshot.hasData) {
         //   return CircularProgressIndicator();
@@ -1109,10 +1140,16 @@ class _HomePageState extends State<HomePage> {
             );
           } else if (snapshot.hasData) {
 
+
+  List<DocumentSnapshot> mergedDocs = [];
+    snapshot.data!.forEach((querySnapshot) {
+      mergedDocs.addAll(querySnapshot.docs);
+    });
             // lets seperate between business vs personal 
 print('sele values i s ${controller.businessMode.value}');
       
-            var TotalTasks = snapshot.data!.docs.toList();
+            // var TotalTasks = snapshot.data!.docs.toList();
+            var TotalTasks = mergedDocs;
             var personalTasks, businessTasks;
 
           // controller.totalTasksStreamData.value =TotalTasks;

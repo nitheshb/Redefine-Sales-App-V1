@@ -192,11 +192,14 @@ filterTaskPerCat(value);
 
 void filterTaskPerCat (x){
       if(!businessMode.value){
-           personalData.value= totalTasksStreamData.where((element) => element["by_uid"] ==  FirebaseAuth.instance.currentUser!.uid).toList();
+          //  personalData.value= totalTasksStreamData.where((element) => element["by_uid"] ==  FirebaseAuth.instance.currentUser!.uid).toList();
+              personalData.value =  totalTasksStreamData.where((element) => (element["by_uid"] ==  FirebaseAuth.instance.currentUser!.uid) && element["to_uid"] ==  FirebaseAuth.instance.currentUser!.uid).toList();;
+
                           // assignedToMe.value = businessData.where((element) => (element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
        
             }else{
-             businessData.value= totalTasksStreamData.where((element) => element["by_uid"] !=  FirebaseAuth.instance.currentUser!.uid).toList();
+              businessData.value =  totalTasksStreamData.where((element) => (element["by_uid"] !=  FirebaseAuth.instance.currentUser!.uid) && element["to_uid"] ==  FirebaseAuth.instance.currentUser!.uid).toList();;
+            //  businessData.value= totalTasksStreamData.where((element) => element["by_uid"] !=  FirebaseAuth.instance.currentUser!.uid).toList();
                           // assignedToMe.value = businessData.where((element) => (element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
         
           // personalData.value= totalTasksStreamData.value;
@@ -210,7 +213,8 @@ void filterTaskPerCat (x){
 
 var value = myTaskTypeCategory.value;
     if(value == 'creatdByMe') {
-                          showingLists.value = businessData.where((element) => (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
+              showingLists.value =  totalTasksStreamData.where((element) => (element["by_uid"] ==  FirebaseAuth.instance.currentUser!.uid) && element["to_uid"] !=  FirebaseAuth.instance.currentUser!.uid).toList();;
+                          
                       } else if(value == 'assignedToMe') {
                           showingLists.value = businessData.where((element) => (element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
                      
