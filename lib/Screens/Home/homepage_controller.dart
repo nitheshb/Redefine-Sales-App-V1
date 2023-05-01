@@ -4,9 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get_it/get_it.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
-
 import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Screens/Task/task_manager.dart';
@@ -23,11 +21,8 @@ import 'package:redefineerp/helpers/supabae_help.dart';
 import 'package:redefineerp/main.dart';
 import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
-import 'package:supabase/supabase.dart';
 
 class HomePageController extends GetxController {
-
-  var client;
   var validationSuccess = false.obs;
   @override
   void onInit() async {
@@ -36,13 +31,13 @@ class HomePageController extends GetxController {
 
     updateSelectedDate();
 
-       final subscription = client
-        .from('maahomes_TM_Tasks')
-        .stream(primaryKey: ['id'])
-        .listen((event) {
-      // Update the taskList with the new data
-    print('i was changed ${event}');
-    });
+    //    final subscription = client
+    //     .from('maahomes_TM_Tasks')
+    //     .stream(primaryKey: ['id'])
+    //     .listen((event) {
+    //   // Update the taskList with the new data
+    // print('i was changed ${event}');
+    // });
 
     // Add the subscription to the ever-growing list of subscriptions
     // ever(subscription, (_) {});
@@ -79,7 +74,6 @@ class HomePageController extends GetxController {
   var dummy = true.obs;
 
   var donecount = 0.obs;
-  
   var index = 0.obs;
   var notdone = 0.obs;
   var url = "".obs;
@@ -256,36 +250,10 @@ var value = myTaskTypeCategory.value;
     }
   }
 
-
-
-  void createNewTask() async{
+  void createNewTask() {
     // Get.reset();
     // Get.delete<TaskController>();
     print('hello ${participantsANew}');
-
-
-   
-//        var y = DbSupa.instance.createTask({
-//           'task_title': taskTitle.text,
-//           'task_desc': taskDescription.text,
-//           'created_on': DateTime.now().millisecondsSinceEpoch,
-//           'due_date': dateSelected.millisecondsSinceEpoch,
-//           'by_email': auth.currentUser?.email,
-//           'by_name': auth.currentUser?.displayName,
-//           'by_uid': auth.currentUser?.uid,
-//           'to_name': assignedUserName.value,
-//           'to_uid': assignedUserUid.value,
-//           'priority': taskPriority.value,
-//           'atttachmentsA': attachmentsA.value,
-//           'to_email': assignedUserEmail.value,
-//           'dept': assignedUserDepartment.value,
-//           'status': "InProgress",
-//           'particpantsA': participantsANew.value,
-//         });
-
-
-
-// return;
 
     _collection
         .add({
@@ -306,7 +274,7 @@ var value = myTaskTypeCategory.value;
           'particpantsA': participantsANew.value,
         })
         .then((value) => {
-              print("Task Created ${value}"),
+              print("Task Created for home  ${value.id}$assignedUserUid }"),
               Get.back(),
               snackBarMsg('Task Created!', enableMsgBtn: false),
               sendPushMessage('Task Assigned for you:', taskTitle.text,
@@ -325,7 +293,6 @@ var value = myTaskTypeCategory.value;
               taskDescription.clear(),
               dateinput.clear(),
               assignedUserName = 'Assign someone'.obs,
-              
             })
         .catchError((error) => {
               print("Failed to create task: $error"),
@@ -460,187 +427,6 @@ var value = myTaskTypeCategory.value;
                 ));
   }
   Widget streamToday() {
-    //   return StreamBuilder(
-    //   stream: client.from('maahomes_TM_Tasks').stream(primaryKey: ['id']).execute(),
-    //   builder: (context, snapshot) {
-    //     if (!snapshot.hasData) {
-    //       return CircularProgressIndicator();
-    //     }
-
-    //     final messages = snapshot.data!;
-    //     print('checking messs ${messages}');
-    //     return Text('hello');
-
-    //     // return ListView.builder(
-    //     //   itemCount: messages.length,
-    //     //   itemBuilder: (context, index) {
-    //     //     final message = messages[index];
-
-    //     //     return ListTile(
-    //     //       title: Text(message['title']),
-    //     //     );
-    //     //   },
-    //     // );
-    //   },
-    // );
-   
-        return StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('spark_assignedTasks')
-                .where("due_date",
-                    isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
-                .where("status", isEqualTo: "InProgress")
-                .where("to_uid", isEqualTo: currentUser?.uid)
-                .snapshots(),
-            builder: (context, snapshot) {
-            //     if (!snapshot.hasData) {
-            //   return CircularProgressIndicator();
-            // }
-              if (snapshot.hasError) {
-                return const Center(
-                  child: Text("Something went wrong! 😣..."),
-                );
-              } else if (snapshot.hasData) {
-                print('no of todo is ${snapshot.data?.docs.length}');
-                return Column(
-                  children: [
-                    Expanded(
-                      child: MediaQuery.removePadding(
-                        context: context,
-                        removeTop: true,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              physics: const BouncingScrollPhysics(),
-                              itemCount: snapshot.data?.docs.length,
-                              itemBuilder: (context, index) {
-                                late QueryDocumentSnapshot<Object?>? taskData =
-                                    snapshot.data?.docs[index];
-                                print("qwdqwdw ${taskData?.id}");
-
-                                // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
-                                // print(
-                                //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
-                                // print("due date is ${taskData!.get('due data')}");
-                                // return Text("hello");
-                                return taskCheckBox(context,
-                                    taskPriority: taskData!['priority'] == "Basic"
-                                        ? 3
-                                        : taskData['priority'] == "Medium"
-                                            ? 2
-                                            : taskData['priority'] == "High"
-                                                ? 1
-                                                : 4,
-                                    taskPriorityNum: taskData['priority'] == "Basic"
-                                        ? 3
-                                        : taskData['priority'] == "Medium"
-                                            ? 2
-                                            : taskData['priority'] == "High"
-                                                ? 1
-                                                : 4,
-                                    selected: false,
-                                    due:
-                                        "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}",
-                                    task: taskData["task_title"],
-                                    createdOn:
-                                        '${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
-                                    assigner: 'Assigner: ${taskData['by_name']}',
-                                    participants: Row(
-                                      children: [
-                                        // Generator.buildOverlaysProfile(
-                                        //     images: [
-                                        //       'assets/images/icon.jpg',
-                                        //       'assets/images/icon.jpg',
-                                        //     ],
-                                        //     enabledOverlayBorder: true,
-                                        //     overlayBorderColor: Color(0xfff0f0f0),
-                                        //     overlayBorderThickness: 1.7,
-                                        //     leftFraction: 0.72,
-                                        //     size: 26),
-
-                                        
-                                        SizedBox(
-                                          child: Material(
-                                            type: MaterialType.transparency,
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Get.theme.colorPrimaryDark,
-                                              radius: 14,
-                                              child: Text(
-                                                  '${taskData['by_name'].substring(0, 2)}',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 10)),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        ),
-                                        Text(
-                                          " 0 comments",
-                                          style: Get.theme.kPrimaryTxtStyle,
-                                        ),
-                                        Text(
-                                          " . 0 Files",
-                                          style: Get.theme.kPrimaryTxtStyle,
-                                        )
-                                      ],
-                                    ), onTap: () {
-                                  var comments = [];
-                                  try {
-                                    comments = taskData['comments'];
-                                  } catch (e) {
-                                    comments = [];
-                                  }
-                                  ;
-                                  Get.to(() => TaskManager(
-                                        task: taskData["task_title"],
-                                        status: taskData['status'],
-                                        docId: taskData.reference.id,
-                                        comments: comments,
-                                        // url: taskData['url'],
-                                        due:
-                                            "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
-                                                .toString(),
-                                        createdOn:
-                                            "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}"
-                                                .toString(),
-                                        taskPriority: taskData['priority'],
-                                        selected: false,
-                                        assigner: taskData['by_name'],
-                                      ));
-                                });
-                              }),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                return Center(
-                  child: Column(
-                    children: const [
-                      Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      SizedBox(height: 50),
-                      Center(
-                        child: Text("Tasks Loading..."),
-                      )
-                    ],
-                  ),
-                );
-              }
-            });
-      
-  
-  }
-
-
-Widget streamBusiness() {
-
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('spark_assignedTasks')
@@ -650,16 +436,13 @@ Widget streamBusiness() {
             .where("to_uid", isEqualTo: currentUser?.uid)
             .snapshots(),
         builder: (context, snapshot) {
-        //     if (!snapshot.hasData) {
-        //   return CircularProgressIndicator();
-        // }
           if (snapshot.hasError) {
             return const Center(
               child: Text("Something went wrong! 😣..."),
             );
           } else if (snapshot.hasData) {
             print('no of todo is ${snapshot.data?.docs.length}');
-            myBusinessTotal.value = snapshot.data!.docs.length;
+            // numOfTodayTasks.value = snapshot.data!.docs.length;
             return Column(
               children: [
                 Expanded(
@@ -792,89 +575,6 @@ Widget streamBusiness() {
           }
         });
   }
-
- Widget CardSetup(context, taskData){
-    return taskCheckBox(context,
-                                    taskPriority: taskData!['priority'] == "Basic"
-                                        ? 3
-                                        : taskData['priority'] == "Medium"
-                                            ? 2
-                                            : taskData['priority'] == "High"
-                                                ? 1
-                                                : 4,
-                                    taskPriorityNum: taskData['priority'] == "Basic"
-                                        ? 3
-                                        : taskData['priority'] == "Medium"
-                                            ? 2
-                                            : taskData['priority'] == "High"
-                                                ? 1
-                                                : 4,
-                                    selected: false,
-                                    due:
-                                        "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}",
-                                    task: taskData["task_title"],
-                                    createdOn:
-                                        '${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
-                                    assigner: 'Assigner: ${taskData['by_name']}',
-                                    participants: Row(
-                                      children: [
-                            
-                                        
-                                        SizedBox(
-                                          child: Material(
-                                            type: MaterialType.transparency,
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Get.theme.colorPrimaryDark,
-                                              radius: 14,
-                                              child: Text(
-                                                  '${taskData['by_name'].substring(0, 2)}',
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 10)),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        ),
-                                        Text(
-                                          " 0 comments",
-                                          style: Get.theme.kPrimaryTxtStyle,
-                                        ),
-                                        Text(
-                                          " . 0 Files",
-                                          style: Get.theme.kPrimaryTxtStyle,
-                                        )
-                                      ],
-                                    ), onTap: () {
-                                  var comments = [];
-                                  try {
-                                    comments = taskData['comments'];
-                                  } catch (e) {
-                                    comments = [];
-                                  }
-                                  ;
-                                  Get.to(() => TaskManager(
-                                        task: taskData["task_title"],
-                                        status: taskData['status'],
-                                        docId: taskData.reference.id,
-                                        comments: comments,
-                                        // url: taskData['url'],
-                                        due:
-                                            "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
-                                                .toString(),
-                                        createdOn:
-                                            "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}"
-                                                .toString(),
-                                        taskPriority: taskData['priority'],
-                                        selected: false,
-                                        assigner: taskData['by_name'],
-                                      ));
-                                });
-                            
-  }
-
 
   Widget streamUpdates() {
     FirebaseAuth _auth = FirebaseAuth.instance;
@@ -1294,6 +994,95 @@ Widget streamBusiness() {
           }),
     );
   }
+Widget CardSetup(context, taskData){
+    return taskCheckBox(context,
+                                    taskPriority: taskData!['priority'] == "Basic"
+                                        ? 3
+                                        : taskData['priority'] == "Medium"
+                                            ? 2
+                                            : taskData['priority'] == "High"
+                                                ? 1
+                                                : 4,
+                                    taskPriorityNum: taskData['priority'] == "Basic"
+                                        ? 3
+                                        : taskData['priority'] == "Medium"
+                                            ? 2
+                                            : taskData['priority'] == "High"
+                                                ? 1
+                                                : 4,
+                                    selected: false,
+                                    due:
+                                        "${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}",
+                                    task: taskData["task_title"],
+                                    createdOn:
+                                        '${DateFormat('dd MMMM, hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}',
+                                    assigner: 'Assigner: ${taskData['by_name']}',
+                                    participants: Row(
+                                      children: [
+                            
+                                        
+                                        SizedBox(
+                                          child: Material(
+                                            type: MaterialType.transparency,
+                                            child: CircleAvatar(
+                                              backgroundColor:
+                                                  Get.theme.colorPrimaryDark,
+                                              radius: 14,
+                                              child: Text(
+                                                  '${taskData['by_name'].substring(0, 2)}',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10)),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Text(
+                                          " 0 comments",
+                                          style: Get.theme.kPrimaryTxtStyle,
+                                        ),
+                                        Text(
+                                          " . 0 Files",
+                                          style: Get.theme.kPrimaryTxtStyle,
+                                        )
+                                      ],
+                                    ), onTap: () {
+                                  var comments = [];
+                                  try {
+                                    comments = taskData['comments'];
+                                  } catch (e) {
+                                    comments = [];
+                                  }
+                                  ;
+                                  Get.to(() => TaskManager(
+                                        task: taskData["task_title"],
+                                        status: taskData['status'],
+                                        docId: taskData.reference.id,
+                                        comments: comments,
+                                        // url: taskData['url'],
+                                        due:
+                                            "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('due_date')))}"
+                                                .toString(),
+                                        createdOn:
+                                            "${DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(taskData.get('created_on')))}"
+                                                .toString(),
+                                        taskPriority: taskData['priority'],
+                                        selected: false,
+                                        assigner: taskData['by_name'],
+                                      ));
+                                });
+                            
+  }
+
+
+
+  // void initializeTabs() {
+  //   streamTodayWidget.value = streamToday();
+  //   streamUpcomingWidget.value = streamUpdates();
+  //   streamCreatedWidget.value = streamCreated();
+  // }
 
   @override
   void onClose() {
@@ -1307,3 +1096,5 @@ Widget streamBusiness() {
     });
   }
 }
+  
+

@@ -16,11 +16,11 @@ import 'package:redefineerp/Screens/Task/reAssignTo.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
-import 'package:redefineerp/Widgets/checkboxlisttile.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:redefineerp/Widgets/task_sheet_widget.dart';
 import 'package:lottie/lottie.dart';
+import 'package:redefineerp/helpers/supabae_help.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:intl/intl.dart';
 
@@ -280,11 +280,18 @@ class TaskManager extends StatelessWidget {
                                             showTitleActions: true,
                                             onChanged: (date) {
                                           print(
+                                              "the data issssss:::::::::::;$data");
+                                          print(
                                               'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
                                         }, onConfirm: (date) {
                                           controller.dateSelected = date;
                                           controller.updateSelectedDate();
                                           controller.updateAssignTimeDb(docId);
+
+                                          DbSupa.instance.saveNotification(
+                                              data['to_uid'],
+                                              'Date has been updated',
+                                              docId);
                                         }, currentTime: DateTime.now())
                                       },
                                       child: Row(
@@ -1022,8 +1029,7 @@ class TaskManager extends StatelessWidget {
       },
     );
   }
-
- }
+}
 
 
 

@@ -27,7 +27,6 @@ import 'package:redefineerp/Screens/Search/search_controller.dart';
 import 'package:redefineerp/Screens/Search/search_task.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
-import 'package:redefineerp/Screens/Task/task_manager.dart';
 import 'package:redefineerp/Utilities/basicdialog.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
@@ -37,42 +36,21 @@ import 'package:redefineerp/Widgets/datewidget.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:redefineerp/Widgets/task_sheet_widget.dart';
-import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/themes/container.dart';
 import 'package:redefineerp/themes/spacing.dart';
 import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:intl/intl.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
+import '../Search/search_controller.dart';
 
-class _HomePageState extends State<HomePage> {
-
+class HomePage extends StatelessWidget {
   final storageReference =
       FirebaseStorage.instance.ref().child('images/image.jpg');
 
   ImagePicker picker = ImagePicker();
 
-  // var businessMode = true;
-// 
-  //  flipMode() {
-  //   setState(() {
-  //     businessMode = !businessMode;
-      
-  //   });
-   
-  // }
-
-  // void initState() {
-  //   // time = filterTime.first;
-  //   businessMode = true;
-  // }
-
   XFile? image;
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<HomePageController>(HomePageController());
@@ -320,48 +298,40 @@ final combinedStream = rxdart.CombineLatestStream.list<QuerySnapshot>([stream1, 
                                           ),
                                         ),
                                       ),
-
-                                    Padding(
-                                                padding:
-                                                    const EdgeInsets.only(
-                                                        left: 8.0, bottom: 4),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 16,
-                                                      child: Text(
-                                                        'Assigned to',
-                                                        style: Get
-                                                            .theme.kSubTitle
-                                                            .copyWith(
-                                                                color: Get
-                                                                    .theme
-                                                                    .kLightGrayColor),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 22,
-                                                      child: Text(
-                                                        controller
-                                                            .assignedUserName
-                                                            .value,
-                                                        style: Get.theme
-                                                            .kPrimaryTxtStyle
-                                                            .copyWith(
-                                                                color: Get
-                                                                    .theme
-                                                                    .kBadgeColor),
-                                                      ),
-                                                    ),
-                                                  ],
+                                      Obx(() => Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 8.0, bottom: 4),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                SizedBox(
+                                                  height: 16,
+                                                  child: Text(
+                                                    'Assigned to',
+                                                    style: Get.theme.kSubTitle
+                                                        .copyWith(
+                                                            color: Get.theme
+                                                                .kLightGrayColor),
+                                                  ),
                                                 ),
-                                              )
-
+                                                SizedBox(
+                                                  height: 22,
+                                                  child: Text(
+                                                    controller
+                                                        .assignedUserName.value,
+                                                    style: Get
+                                                        .theme.kPrimaryTxtStyle
+                                                        .copyWith(
+                                                            color: Get.theme
+                                                                .kBadgeColor),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )),
                                     ],
                                   ),
                                 ),
@@ -1525,14 +1495,11 @@ return controller.taskListsIs(context, TotalTasks);
               ),
             ),
             onPressed: onTap),
-
       ),
     );
   }
 
-
-Widget titleRow() {
-
+  Widget titleRow() {
     return Row(
       children: [
         FxContainer(
@@ -1551,26 +1518,23 @@ Widget titleRow() {
     );
   }
 
-
-Widget _bottomSheet(ScrollController controller) {
-  return SingleChildScrollView(
-    physics: ClampingScrollPhysics(),
-    controller: controller,
-    child: Container(
-      color: Colors.transparent,
-      child: Column(
-        children: <Widget>[
-          headerBg(
-              title: 'Gif Design for page loading',
-              createdOn: 'Created: 12 August | 11:00 PM',
-              taskPriority: 1,
-              taskPriorityNum: 2),
-          miniMessage('Marked as done, pending for review'),
-          DateWidget('Due Tommorow'),
-        ],
-
+  Widget _bottomSheet(ScrollController controller) {
+    return SingleChildScrollView(
+      physics: const ClampingScrollPhysics(),
+      controller: controller,
+      child: Container(
+        color: Colors.transparent,
+        child: Column(
+          children: <Widget>[
+            headerBg(
+                title: 'Gif Design for page loading',
+                createdOn: 'Created: 12 August | 11:00 PM',
+                taskPriority: 1,
+                taskPriorityNum: 2),
+            miniMessage('Marked as done, pending for review'),
+            DateWidget('Due Tommorow'),
+          ],
         ),
-
       ),
     );
   }
