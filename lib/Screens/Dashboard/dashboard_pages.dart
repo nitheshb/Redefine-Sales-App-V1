@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Dashboard/dashboard_controller.dart';
 import 'package:redefineerp/Screens/Notification/notification_controller.dart';
 import 'package:redefineerp/Utilities/dummyData.dart';
+import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/themes/constant.dart';
 import 'package:redefineerp/themes/container.dart';
 import 'package:redefineerp/themes/spacing.dart';
@@ -22,22 +23,31 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  late List<String>  filterTime = ["All time", "Yesterday", "This week", "7 days ago"];
+  late List<String> filterTime = [
+    "All time",
+    "Yesterday",
+    "This week",
+    "7 days ago"
+  ];
 
   late String time = "All time";
+
+  var currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   late TooltipBehavior tooltipBehavior;
   late List<ChartSampleData> chartData;
 
   void initTime() {
-    time =  time = filterTime.first; // initializing the time field
- // initializing the time field
- initChartData();
+    time = time = filterTime.first; // initializing the time field
+    // initializing the time field
+    initChartData();
   }
+
   void initState() {
     // time = filterTime.first;
     initChartData();
   }
+
   initChartData() {
     tooltipBehavior =
         TooltipBehavior(enable: true, header: '', canShowMarker: false);
@@ -81,28 +91,28 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: SingleChildScrollView(
         child: Container(
-                     padding: FxSpacing.fromLTRB(
-                    20, FxSpacing.safeAreaTop(context) + 16, 20, 20),
+          padding: FxSpacing.fromLTRB(
+              20, FxSpacing.safeAreaTop(context) + 16, 20, 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               titleRow(),
-                    FxSpacing.height(16),
-                    alert(),
-                    FxSpacing.height(16),
-                    overview(),
-                    FxSpacing.height(20),
-                    statistics(),
+              FxSpacing.height(16),
+              alert(),
+              FxSpacing.height(16),
+              overview(),
+              FxSpacing.height(20),
+              statistics(),
             ],
           ),
         ),
       ),
     );
   }
-Widget titleRow() {
+
+  Widget titleRow() {
     return Row(
       children: [
         FxContainer(
@@ -119,6 +129,7 @@ Widget titleRow() {
       ],
     );
   }
+
   Widget alert() {
     return FxContainer(
       color: Constant.softColors.green.color,
@@ -214,89 +225,128 @@ Widget titleRow() {
     return IntrinsicHeight(
       child: Row(
         children: [
-          Expanded(
-            child: FxContainer.bordered(
-              color: Get.theme.Background,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  FxText.bodySmall(
-                    'Completed',
-                    fontWeight: 600,
-                    muted: true,
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('spark_assignedTasks')
+                .where("status", isEqualTo: "completed")
+                .where("to_uid",
+                    isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text("Something went wrong"));
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasData) {
+                print("completed======>${snapshot.data!.docs}");
+              }
+
+              return Expanded(
+                child: FxContainer.bordered(
+                  color: Get.theme.Background,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FxText.bodySmall(
+                        'Completed',
+                        fontWeight: 600,
+                        muted: true,
+                      ),
+                      FxSpacing.height(8),
+                      FxText.titleLarge(
+                        '${snapshot.data!.docs.length}',
+                        fontWeight: 700,
+                      ),
+                      FxSpacing.height(8),
+                      FxContainer(
+                          borderRadiusAll: Constant.containerRadius.small,
+                          paddingAll: 6,
+                          color: Get.theme.primaryContainer,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                FeatherIcons.arrowUp,
+                                size: 12,
+                                color: Get.theme.onPrimaryContainer,
+                              ),
+                              FxSpacing.width(2),
+                              FxText.bodySmall(
+                                "28%",
+                                color: Get.theme.onPrimaryContainer,
+                              )
+                            ],
+                          ))
+                    ],
                   ),
-                  FxSpacing.height(8),
-                  FxText.titleLarge(
-                    '248',
-                    fontWeight: 700,
-                  ),
-                  FxSpacing.height(8),
-                  FxContainer(
-                      borderRadiusAll: Constant.containerRadius.small,
-                      paddingAll: 6,
-                      color: Get.theme.primaryContainer,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            FeatherIcons.arrowUp,
-                            size: 12,
-                            color: Get.theme.onPrimaryContainer,
-                          ),
-                          FxSpacing.width(2),
-                          FxText.bodySmall(
-                            "28%",
-                            color: Get.theme.onPrimaryContainer,
-                          )
-                        ],
-                      ))
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
           FxSpacing.width(20),
-          Expanded(
-              child: FxContainer(
-            color: Get.theme.primaryContainer,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FxText.bodySmall(
-                  'Tasks',
-                  fontWeight: 600,
-                  muted: true,
-                  color: Get.theme.onPrimaryContainer,
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('spark_assignedTasks')
+                .where("status", isEqualTo: "InProgress")
+                .where("to_uid", isEqualTo: currentUserId)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text("Something went wrong"));
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasData) {
+                print("Inprogressss ${snapshot.data!.docs[0].data()}");
+              }
+
+              return Expanded(
+                  child: FxContainer(
+                color: Get.theme.primaryContainer,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FxText.bodySmall(
+                      'Tasks',
+                      fontWeight: 600,
+                      muted: true,
+                      color: Get.theme.onPrimaryContainer,
+                    ),
+                    FxSpacing.height(8),
+                    FxText.titleLarge(
+                      '${snapshot.data!.docs.length}',
+                      fontWeight: 700,
+                      color: Get.theme.onPrimaryContainer,
+                    ),
+                    FxSpacing.height(8),
+                    FxContainer(
+                        borderRadiusAll: Constant.containerRadius.small,
+                        paddingAll: 6,
+                        color: Get.theme.ErrorContainer,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              FeatherIcons.arrowDown,
+                              size: 12,
+                              color: Get.theme.onErrorContainer,
+                            ),
+                            FxSpacing.width(2),
+                            FxText.bodySmall(
+                              "45%",
+                              fontWeight: 600,
+                              color: Get.theme.onErrorContainer,
+                            )
+                          ],
+                        ))
+                  ],
                 ),
-                FxSpacing.height(8),
-                FxText.titleLarge(
-                  '148',
-                  fontWeight: 700,
-                  color: Get.theme.onPrimaryContainer,
-                ),
-                FxSpacing.height(8),
-                FxContainer(
-                    borderRadiusAll: Constant.containerRadius.small,
-                    paddingAll: 6,
-                    color: Get.theme.ErrorContainer,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          FeatherIcons.arrowDown,
-                          size: 12,
-                          color: Get.theme.onErrorContainer,
-                        ),
-                        FxSpacing.width(2),
-                        FxText.bodySmall(
-                          "45%",
-                          fontWeight: 600,
-                          color: Get.theme.onErrorContainer,
-                        )
-                      ],
-                    ))
-              ],
-            ),
-          )),
+              ));
+            },
+          ),
         ],
       ),
     );
@@ -333,7 +383,7 @@ Widget titleRow() {
     ));
   }
 
-   SfCartesianChart salesStatusChart() {
+  SfCartesianChart salesStatusChart() {
     final controller = Get.put<DashboardController>(DashboardController());
 
     return SfCartesianChart(
