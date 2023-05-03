@@ -949,7 +949,7 @@ class _HomePageState extends State<HomePage> {
                                       label: FxText.bodySmall(
                                         "My Tasks",
                                         fontSize: 11,
-                                        fontWeight: 700
+                                        fontWeight: 700,
                                         color: 0 == 0
                                             ? Get.theme.onPrimaryContainer
                                             : Get
