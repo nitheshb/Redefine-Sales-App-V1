@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
+import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class ContactCard extends StatefulWidget {
@@ -21,34 +22,35 @@ class ContactCard extends StatefulWidget {
 }
 
 class _ContactCardState extends State<ContactCard> {
-
-@override
+  @override
   void initState() {
     // TODO: implement initState
     print('this bool is ${widget.uid}');
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<ContactController>(ContactController());
 
-
     return Container(
-      color:  Colors.white,
+      color: Colors.white,
       child: ListTile(
         leading: Icon(
           Icons.account_circle,
           color: Get.theme.kContactIconColor,
           size: 32,
         ),
-        title: Text(widget.title,
-            style: Get.theme.kNormalStyle
-                .copyWith(color: Get.theme.kContactIconColor)),
-        subtitle: Text(widget.jobTitle,
-            style: Get.theme.kSubTitle
-                .copyWith(color: Get.theme.btnTextCol.withOpacity(0.2))),
+        title: FxText.bodyLarge(
+          widget.title,
+          fontSize: 16,
+          fontWeight: 700,
+        ),
+        subtitle: FxText.bodySmall(
+          widget.jobTitle,
+          fontSize: 11,
+          fontWeight: 700,
+        ),
         trailing: Icon(Icons.arrow_forward_ios_rounded,
             color: Get.theme.btnTextCol.withOpacity(0.2)),
         onTap: widget.onTap,
