@@ -16,11 +16,11 @@ import 'package:redefineerp/Screens/Task/reAssignTo.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
-import 'package:redefineerp/Widgets/checkboxlisttile.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:redefineerp/Widgets/task_sheet_widget.dart';
 import 'package:lottie/lottie.dart';
+import 'package:redefineerp/helpers/supabae_help.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:intl/intl.dart';
 
@@ -145,6 +145,7 @@ class TaskManager extends StatelessWidget {
           ),
           // body: SingleChildScrollView(
           // physics: const BouncingScrollPhysics(),
+          
           body: Stack(
             alignment: Alignment.topCenter,
             children: [
@@ -153,10 +154,10 @@ class TaskManager extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Obx(() => controller.taskType.value != 'mark'
-                          ? miniMessage(
-                              'Marked as done, pending for review by the assigner')
-                          : sizeBox(0, 0)),
+                      // Obx(() => controller.taskType.value != 'mark'
+                      //     ? miniMessage(
+                      //         'Marked as done, pending for review by the assigner')
+                      //     : sizeBox(0, 0)),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(14, 22, 0, 4),
                         child: Text(data['task_title'],
@@ -279,11 +280,18 @@ class TaskManager extends StatelessWidget {
                                             showTitleActions: true,
                                             onChanged: (date) {
                                           print(
+                                              "the data issssss:::::::::::;$data");
+                                          print(
                                               'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
                                         }, onConfirm: (date) {
                                           controller.dateSelected = date;
                                           controller.updateSelectedDate();
                                           controller.updateAssignTimeDb(docId);
+
+                                          DbSupa.instance.saveNotification(
+                                              data['to_uid'],
+                                              'Date has been updated',
+                                              docId);
                                         }, currentTime: DateTime.now())
                                       },
                                       child: Row(
@@ -470,7 +478,10 @@ class TaskManager extends StatelessWidget {
 
                                     // Due Date
 
-                                    InkWell(
+                                    
+                                   Row(
+                                        children: [
+                                         InkWell(
                                       onTap: () => {
                                         DatePicker.showDateTimePicker(context,
                                             showTitleActions: true,
@@ -482,45 +493,44 @@ class TaskManager extends StatelessWidget {
                                           controller.updateSelectedDate();
                                         }, currentTime: DateTime.now())
                                       },
-                                      child: Row(
-                                        children: [
-                                          SizedBox(
-                                            child: Material(
-                                                type: MaterialType.transparency,
-                                                child: DottedBorder(
-                                                  borderType: BorderType.Circle,
-                                                  color:
-                                                      Get.theme.kLightGrayColor,
-                                                  radius: Radius.circular(27.0),
-                                                  dashPattern: [3, 3],
-                                                  strokeWidth: 1,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
-                                                    child: Icon(
-                                                      Icons
-                                                          .calendar_month_outlined,
-                                                      size: 15,
-                                                      color: Get.theme
-                                                          .kLightGrayColor,
+                                            child: SizedBox(
+                                              child: Material(
+                                                  type: MaterialType.transparency,
+                                                  child: DottedBorder(
+                                                    borderType: BorderType.Circle,
+                                                    color:
+                                                        Get.theme.kLightGrayColor,
+                                                    radius: Radius.circular(27.0),
+                                                    dashPattern: [3, 3],
+                                                    strokeWidth: 1,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4.0),
+                                                      child: Icon(
+                                                        Icons
+                                                            .calendar_month_outlined,
+                                                        size: 15,
+                                                        color: Get.theme
+                                                            .kLightGrayColor,
+                                                      ),
                                                     ),
+                                                  )
+                                                  // child: CircleAvatar(
+                                                  //   radius: 19,
+                                                  //     backgroundColor: Get.theme.colorPrimaryDark,
+                                                  //   child: CircleAvatar(
+                                                  //     backgroundColor: Colors.white,
+                                                  //     radius: 18,
+                                                  //     child:   Icon(
+                                                  //                                                     Icons.calendar_month_outlined,
+                                                  //                                                     size: 18,
+                                                  //                                                     color: Get.theme.kLightGrayColor,
+                                                  //                                                   ),
+                                                  //   ),
+                                                  // ),
                                                   ),
-                                                )
-                                                // child: CircleAvatar(
-                                                //   radius: 19,
-                                                //     backgroundColor: Get.theme.colorPrimaryDark,
-                                                //   child: CircleAvatar(
-                                                //     backgroundColor: Colors.white,
-                                                //     radius: 18,
-                                                //     child:   Icon(
-                                                //                                                     Icons.calendar_month_outlined,
-                                                //                                                     size: 18,
-                                                //                                                     color: Get.theme.kLightGrayColor,
-                                                //                                                   ),
-                                                //   ),
-                                                // ),
-                                                ),
+                                            ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
@@ -556,7 +566,7 @@ class TaskManager extends StatelessWidget {
                                           )
                                         ],
                                       ),
-                                    ),
+                                    
                                   ],
                                 ),
 
@@ -843,8 +853,12 @@ class TaskManager extends StatelessWidget {
                             onTap: () {
                               if (controller.isPlaying.value == false) {
                                 controller.isPlaying.value = true;
+                                 controller.closeTask(docId, 'text',
+                                        controller.commentLine.value);
                               } else {
                                 controller.isPlaying.value = false;
+                                controller.reopenedOnTask(docId, 'text',
+                                        controller.commentLine.value);
                               }
                               print(controller.isPlaying.value);
                             },
@@ -855,14 +869,36 @@ class TaskManager extends StatelessWidget {
                                           0.030),
                               child: Align(
                                 alignment: Alignment.topRight,
-                                child: CircleAvatar(
-                                  radius: MediaQuery.of(context).size.height *
-                                      0.030,
-                                  backgroundColor: const Color(0xffBDA1EF),
-                                  child: const Icon(
-                                    Icons.close,
-                                    color: Color(0xff33264b),
-                                  ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+
+                                    Container(
+                                      // radius: MediaQuery.of(context).size.height *
+                                      //     0.030,
+                                      // backgroundColor: const Color(0xffBDA1EF),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                    // shape: BoxShape.circle,
+                    color: const Color(0xffBDA1EF),
+                  ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(vertical:8, horizontal:20),
+                                        child: Row(
+                                          children: [
+                                             const Icon(
+                                              Icons.close,
+                                              color: Color(0xff33264b),
+                                            ),
+                                            SizedBox(width: 10),
+                                            controller.isPlaying.value ? Text('Re-Open Task') : Text('Close Task') ,
+                                           
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    
+                                  ],
                                 ),
                               ),
                             ),
@@ -994,3 +1030,4 @@ class TaskManager extends StatelessWidget {
     );
   }
 }
+

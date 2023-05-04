@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/themes/themes.dart';
 
+import '../../helpers/supabae_help.dart';
+
 class TaskController extends GetxController {
   var taskType = 'mark'.obs;
   DateTime dateSelected = DateTime.now();
@@ -58,6 +60,32 @@ class TaskController extends GetxController {
     commentLine.text = "";
   }
 
+  void closeTask(id, type, txt) async {
+    print('new vlu is ${commentLine.text}');
+    await _collection.doc(id).update({
+     "status": "Completed",
+     "completedOn":  DateTime.now().millisecondsSinceEpoch,
+     "comp_by" : auth.currentUser?.uid,
+     "comments": FieldValue.arrayUnion([
+        {"typ": type, "txt": "Task marked as completed by ${auth.currentUser?.displayName}"}
+      ])
+    });
+    commentLine.text = "";
+  }
+
+   void reopenedOnTask(id, type, txt) async {
+    await _collection.doc(id).update({
+     "status": "InProgress",
+     "completedOn":  0,
+     "reopendOn": DateTime.now().millisecondsSinceEpoch,
+     "reOpen_by" : auth.currentUser?.uid,
+     "comments": FieldValue.arrayUnion([
+        {"typ": type, "txt": "Task re-opened by ${auth.currentUser?.displayName}"}
+      ])
+    });
+    commentLine.text = "";
+  }
+
   void createNewTask() {
     // Get.reset();
     // Get.delete<TaskController>();
@@ -85,6 +113,8 @@ class TaskController extends GetxController {
               snackBarMsg('Task Created!', enableMsgBtn: false),
               sendPushMessage('Task Assigned for you:', taskTitle.text,
                   assignedUserFcmToken.value),
+              DbSupa.instance.saveNotification(
+                  assignedUserUid.value, "Task Assigned for you", value.id),
               taskTitle.clear(),
               taskDescription.clear(),
               dateinput.clear(),
