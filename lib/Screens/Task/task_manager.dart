@@ -201,7 +201,7 @@ class TaskManager extends StatelessWidget {
                                               type: MaterialType.transparency,
                                               child: CircleAvatar(
                                                 backgroundColor:
-                                                    Get.theme.colorPrimaryDark,
+                                                    Color(0xffBDA1EF),
                                                 radius: 14,
                                                 child: Text(
                                                     '${data['to_name'].substring(0, 2)}',
@@ -399,7 +399,7 @@ class TaskManager extends StatelessWidget {
                                               type: MaterialType.transparency,
                                               child: CircleAvatar(
                                                 backgroundColor:
-                                                    Get.theme.colorPrimaryDark,
+                                                    Color(0xffBDA1EF),
                                                 radius: 14,
                                                 child: Text(
                                                     '${controller.assignedUserName.value.substring(0, 2)}',
@@ -993,8 +993,4 @@ class TaskManager extends StatelessWidget {
       },
     );
   }
-
- }
-
-
-
+}

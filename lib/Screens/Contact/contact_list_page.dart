@@ -8,6 +8,7 @@ import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/Widgets/contact_card.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
+import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class ContactListPage extends StatelessWidget {
@@ -16,7 +17,8 @@ class ContactListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<ContactController>(ContactController());
- final HomePageController controller1 = Get.put<HomePageController>(HomePageController());
+    final HomePageController controller1 =
+        Get.put<HomePageController>(HomePageController());
     return Container(
       child: Scaffold(
         appBar: AppBar(
@@ -176,23 +178,21 @@ class ContactListPage extends StatelessWidget {
                       jobTitle: taskData["roles"][0],
                       uid: taskData["uid"],
                       onTap: () {
+                        try {
+                          controller1.assignedUserName.value = taskData["name"];
 
-                   try{
-                          controller1.assignedUserName.value =
-                                taskData["name"];
-                                
-                            controller1.assignedUserDepartment
-                                .value = taskData["department"][0];
-                            controller1.assignedUserEmail.value =
-                                taskData["email"];
-                            controller1.assignedUserUid.value =
-                                taskData["uid"];
-                            controller1.assignedUserFcmToken
-                                .value = taskData["user_fcmtoken"];
-                            Get.back();}catch(e){
-                                        snackBarMsg('This user is not yet using TaskMan');
-                            }
-                          });
+                          controller1.assignedUserDepartment.value =
+                              taskData["department"][0];
+                          controller1.assignedUserEmail.value =
+                              taskData["email"];
+                          controller1.assignedUserUid.value = taskData["uid"];
+                          controller1.assignedUserFcmToken.value =
+                              taskData["user_fcmtoken"];
+                          Get.back();
+                        } catch (e) {
+                          snackBarMsg('This user is not yet using TaskMan');
+                        }
+                      });
                 });
           } else {
             return Center(
@@ -228,10 +228,11 @@ class ContactListPage extends StatelessWidget {
                 ? const StadiumBorder(side: BorderSide(color: Colors.black26))
                 : null,
             backgroundColor: index == controller.selectedIndex.value
-                ? Get.theme.colorPrimaryDark
+                ? Color(0xffBDA1EF)
                 : Colors.white,
-            label: Text(
+            label: FxText.bodyLarge(
               title,
+              fontSize: 12,
               style: Get.theme.kSubTitle.copyWith(
                 color: controller.selectedIndex.value == index
                     ? Colors.white

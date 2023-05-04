@@ -33,12 +33,12 @@ class HomePageController extends GetxController {
 
     updateSelectedDate();
 
-    final subscription = client
-        .from('maahomes_TM_Tasks')
-        .stream(primaryKey: ['id']).listen((event) {
-      // Update the taskList with the new data
-      print('i was changed ${event}');
-    });
+    // final subscription = client
+    //     .from('maahomes_TM_Tasks')
+    //     .stream(primaryKey: ['id']).listen((event) {
+    //   // Update the taskList with the new data
+    //   print('i was changed ${event}');
+    // });
 
     // Add the subscription to the ever-growing list of subscriptions
     // ever(subscription, (_) {});
