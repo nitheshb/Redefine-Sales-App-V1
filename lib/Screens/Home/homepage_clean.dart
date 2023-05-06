@@ -184,7 +184,7 @@ class HomePage extends StatelessWidget {
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                 ),
-                                                child: const ContactListPage()))
+                                                child: ContactListPage()))
                                   },
                                   child: Row(
                                     children: [
@@ -772,8 +772,8 @@ class HomePage extends StatelessWidget {
                   snap: false,
                   pinned: true,
                   floating: true,
-                  flexibleSpace:
-                      FlexibleSpaceBar(background: SlimTeamStats(() => {})),
+                  // flexibleSpace:
+                  //     FlexibleSpaceBar(background: SlimTeamStats(() => {})),
                   expandedHeight: 190,
                   bottom: PreferredSize(
                     preferredSize: Size.fromHeight(48.0),

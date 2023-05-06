@@ -993,8 +993,4 @@ class TaskManager extends StatelessWidget {
       },
     );
   }
-
- }
-
 }
-
