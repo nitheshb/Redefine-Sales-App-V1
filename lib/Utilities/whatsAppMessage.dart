@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/themes/themes.dart';
 
-snackBarMsg(String title,
+dynamic whatsAppMessage(String title,
     {String? message,
     bool snackPostionTop = false,
     bool enableMsgBtn = false,
@@ -20,8 +20,7 @@ snackBarMsg(String title,
               child: Text(
                 btnMsg,
                 style: Get.theme.kSubTitle.copyWith(
-                    color: Get.theme.colorPrimaryDark,
-                    decoration: TextDecoration.underline),
+                    color: Colors.white, decoration: TextDecoration.underline),
               ))
           : null,
       snackPosition:

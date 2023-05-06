@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,17 +8,22 @@ import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
+import 'package:redefineerp/Utilities/whatsAppMessage.dart';
 import 'package:redefineerp/Widgets/contact_card.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
+import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class ContactListPage extends StatelessWidget {
-  const ContactListPage({Key? key}) : super(key: key);
+  ContactListPage({Key? key}) : super(key: key);
+
+  bool? num;
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<ContactController>(ContactController());
- final HomePageController controller1 = Get.put<HomePageController>(HomePageController());
+    final HomePageController controller1 =
+        Get.put<HomePageController>(HomePageController());
     return Container(
       child: Scaffold(
         appBar: AppBar(
@@ -172,27 +179,43 @@ class ContactListPage extends StatelessWidget {
                   QueryDocumentSnapshot<Object?>? taskData =
                       snapshot.data?.docs[i];
                   return ContactCard(
+                      taskData: taskData,
                       title: '${taskData!["name"]}',
                       jobTitle: taskData["roles"][0],
                       uid: taskData["uid"],
                       onTap: () {
+                        print(taskData.data());
+                        try {
+                          controller1.assignedUserName.value = taskData["name"];
 
-                   try{
-                          controller1.assignedUserName.value =
-                                taskData["name"];
-                                
-                            controller1.assignedUserDepartment
-                                .value = taskData["department"][0];
-                            controller1.assignedUserEmail.value =
-                                taskData["email"];
-                            controller1.assignedUserUid.value =
-                                taskData["uid"];
-                            controller1.assignedUserFcmToken
-                                .value = taskData["user_fcmtoken"];
-                            Get.back();}catch(e){
-                                        snackBarMsg('This user is not yet using TaskMan');
+                          controller1.assignedUserDepartment.value =
+                              taskData["department"][0];
+                          controller1.assignedUserEmail.value =
+                              taskData["email"];
+                          controller1.assignedUserUid.value = taskData["uid"];
+                          controller1.assignedUserFcmToken.value =
+                              taskData["user_fcmtoken"];
+                          Get.back();
+                        } catch (e) {
+                          try {
+                            if (taskData['offPh'] != '') {
+                              num = true;
                             }
-                          });
+                          } catch (e) {
+                            num = false;
+                          }
+
+                          snackBarMsg('This user is not yet using TaskMan');
+
+                          num == true
+                              ? whatsAppMessage("Invite User to the app",
+                                  enableMsgBtn: true,
+                                  btnMsg: "Send Invite", onTap: () {
+                                  sendWhatsAppMessage(taskData['offPh']);
+                                })
+                              : print("no phone");
+                        }
+                      });
                 });
           } else {
             return Center(
@@ -211,35 +234,50 @@ class ContactListPage extends StatelessWidget {
           }
         }));
   }
+}
 
-  Widget _contactFilterChip(int index,
-      {required String title,
-      required ContactController controller,
-      required VoidCallback onTap}) {
-    return Padding(
-      padding: index == 0
-          ? const EdgeInsets.only(left: 20, right: 5, top: 8, bottom: 8)
-          : const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
-      child: Obx(
-        () => ActionChip(
-            elevation: 0,
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-            shape: index != controller.selectedIndex.value
-                ? const StadiumBorder(side: BorderSide(color: Colors.black26))
-                : null,
-            backgroundColor: index == controller.selectedIndex.value
-                ? Get.theme.colorPrimaryDark
-                : Colors.white,
-            label: Text(
-              title,
-              style: Get.theme.kSubTitle.copyWith(
-                color: controller.selectedIndex.value == index
-                    ? Colors.white
-                    : Get.theme.kBadgeColor,
-              ),
-            ),
-            onPressed: onTap),
-      ),
-    );
+sendWhatsAppMessage(String number) {
+  if (Platform.isAndroid) {
+    String url =
+        "https://wa.me/+91$number/?text=Please Install taskMan    redefineerp.in";
+    launchUrl(mode: LaunchMode.externalApplication, Uri.parse(url));
+    print(url);
+  } else {
+    String url =
+        "https://api.whatsapp.com/send?phone=+91$number/?text=Please Install taskMan    redefineerp.in";
+    launchUrl(mode: LaunchMode.externalApplication, Uri.parse(url));
+    print(url);
   }
+}
+
+Widget _contactFilterChip(int index,
+    {required String title,
+    required ContactController controller,
+    required VoidCallback onTap}) {
+  return Padding(
+    padding: index == 0
+        ? const EdgeInsets.only(left: 20, right: 5, top: 8, bottom: 8)
+        : const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+    child: Obx(
+      () => ActionChip(
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+          shape: index != controller.selectedIndex.value
+              ? const StadiumBorder(side: BorderSide(color: Colors.black26))
+              : null,
+          backgroundColor: index == controller.selectedIndex.value
+              ? Color(0xffBDA1EF)
+              : Colors.white,
+          label: FxText.bodyLarge(
+            title,
+            fontSize: 12,
+            style: Get.theme.kSubTitle.copyWith(
+              color: controller.selectedIndex.value == index
+                  ? Colors.white
+                  : Get.theme.kBadgeColor,
+            ),
+          ),
+          onPressed: onTap),
+    ),
+  );
 }

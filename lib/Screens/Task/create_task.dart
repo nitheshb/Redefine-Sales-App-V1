@@ -46,7 +46,7 @@ class CreateTaskPage extends StatelessWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => Get.to(const ContactListPage()),
+                    onTap: () => Get.to(ContactListPage()),
                     child: Obx(
                       () => userAssignChip(
                           name: controller.assignedUserName.value),
@@ -269,7 +269,7 @@ class CreateTaskPage extends StatelessWidget {
           style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
         ),
         onPressed: () => {
-              Get.to(() => const ContactListPage()),
+              Get.to(() => ContactListPage()),
             });
   }
 }

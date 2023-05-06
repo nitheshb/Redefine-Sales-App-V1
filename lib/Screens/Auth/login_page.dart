@@ -20,10 +20,10 @@ class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
 
   List<String> images = [
-    'https://img.freepik.com/free-vector/sign-concept-illustration_114360-5267.jpg?w=740&t=st=1678967076~exp=1678967676~hmac=6bc4343ab731f79203f94d96c3474e55f0ac5d43707a2a1af5f23f06b3873fe0',
-    'https://img.freepik.com/free-vector/sign-concept-illustration_114360-125.jpg?w=740&t=st=1678965558~exp=1678966158~hmac=4ed96c65c8618562138c6cbc311d2ccd46f856aa8cfe0f0aa2b94282ffcbc53c',
-    'https://img.freepik.com/free-vector/social-media-is-killing-frienship-concept_23-2148315417.jpg?w=740&t=st=1678965602~exp=1678966202~hmac=f27129b457f9a6ef314fb82977e27093a3aad2731530b0a629da5d78bc1158ae',
-    'https://img.freepik.com/free-vector/sign-concept-illustration_114360-5267.jpg?w=740&t=st=1678967076~exp=1678967676~hmac=6bc4343ab731f79203f94d96c3474e55f0ac5d43707a2a1af5f23f06b3873fe0'
+    'assets/images/login1.png',
+    'assets/images/login2.png',
+    'assets/images/login3.png',
+    'assets/images/login4.png'
   ];
 
   @override
@@ -43,12 +43,12 @@ class LoginPage extends StatelessWidget {
                   child: Stack(
                     children: images.asMap().entries.map((e) {
                       return Positioned(
-                          top: 0,
+                          top: 10,
                           bottom: 0,
                           left: 0,
                           right: 0,
                           child: Obx(() => AnimatedOpacity(
-                              child: Image.network(
+                              child: Image.asset(
                                 e.value,
                                 height:
                                     MediaQuery.of(context).size.height * 0.300,
