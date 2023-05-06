@@ -78,6 +78,8 @@ class DbQuery {
       String sortEmployees = 'ZA',
       required String sortByName}) {
     print('sel dept ${sortByDeptName}');
+
+    // return; 
     if (sortByName.isEmpty) {
       if (sortByDeptName == "All") {
         return FirebaseFirestore.instance
@@ -88,20 +90,30 @@ class DbQuery {
             // .where("department", arrayContainsAny: [deptName.toString().toLowerCase()])
             .snapshots();
       } else {
-        return FirebaseFirestore.instance
+      try {
+          return FirebaseFirestore.instance
             .collection('users')
             .where("department",
                 arrayContainsAny: [sortByDeptName.toString().toLowerCase()])
             .where('orgId', isEqualTo: "maahomes")
             // .orderBy('name', descending: sortEmployees == 'AZ' ? false : true)
             .snapshots();
+      } catch (e) {
+      }
+      
       }
     } else {
-      return FirebaseFirestore.instance
+      try {
+        return FirebaseFirestore.instance
           .collection("users")
           .where('name', isGreaterThanOrEqualTo: sortByName)
           .where('name', isLessThanOrEqualTo: '$sortByName~')
           .snapshots();
+      } catch (e) {
+                print('error at bad state  ${e}');
+
+      
+    }
     }
   }
 

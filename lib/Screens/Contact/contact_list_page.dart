@@ -96,7 +96,7 @@ class ContactListPage extends StatelessWidget {
                             onTap: () => {
                                   controller.selectedIndex.value = id,
                                   controller.filterValue.value = e,
-                                  Get.back()
+                                  // Get.back()
                                 });
                       }),
                     ],

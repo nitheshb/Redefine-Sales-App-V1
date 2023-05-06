@@ -59,7 +59,7 @@ final homeController = Get.put<HomePageController>(HomePageController());
         deptFilterList.add(doc['department'][0]);
       }
       deptFilterList.value = deptFilterList.toSet().toList();
-      debugPrint('DPET LIST ${deptFilterList}');
+      print('DPET LIST ${deptFilterList}');
     });
   }
 
