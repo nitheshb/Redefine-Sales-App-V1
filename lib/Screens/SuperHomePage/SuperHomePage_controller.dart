@@ -8,8 +8,6 @@ import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Profile/profile_page.dart';
 import 'package:redefineerp/Screens/Search/search_task.dart';
 
-
-
 class NavItem {
   final String title;
   final IconData iconData;
@@ -34,15 +32,14 @@ class FullAppController extends GetxController {
     navItems = [
       NavItem('Dashboard', FeatherIcons.airplay),
       NavItem('Products', FeatherIcons.server),
-      NavItem('Orders', FeatherIcons.bell),
+      NavItem('Orders', FeatherIcons.search),
       NavItem('Profile', FeatherIcons.user),
     ];
 
     items = [
       const DashboardPage(),
       HomePage(),
-      
-      const NotificationPage(),
+      const SearchPage(),
       const ProfilePage(),
     ];
   }

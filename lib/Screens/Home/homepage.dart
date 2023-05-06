@@ -125,15 +125,15 @@ class _HomePageState extends State<HomePage> {
             actions: controller.expande.value == true
                 ? []
                 : [
-                    IconButton(
-                      icon: Icon(Icons.search,
-                          color: Get.theme.btnTextCol.withOpacity(0.3)),
-                      onPressed: () {
-                        // Get.to(() => const SearchPage());
-                        controller.expande.value = true;
-                        print(controller.expande.value);
-                      },
-                    ),
+                    // IconButton(
+                    //   icon: Icon(Icons.search,
+                    //       color: Get.theme.btnTextCol.withOpacity(0.3)),
+                    //   onPressed: () {
+                    //     // Get.to(() => const SearchPage());
+                    //     // controller.expande.value = true;
+                    //     // print(controller.expande.value);
+                    //   },
+                    // ),
 
                     IconButton(
                         onPressed: () =>
@@ -275,8 +275,7 @@ class _HomePageState extends State<HomePage> {
                                                         BorderRadius.circular(
                                                             8),
                                                   ),
-                                                  child:
-                                                      const ContactListPage()))
+                                                  child: ContactListPage()))
                                     },
                                     child: Row(
                                       children: [
@@ -724,7 +723,7 @@ class _HomePageState extends State<HomePage> {
                                                                           8),
                                                             ),
                                                             child:
-                                                                const ContactListPage()))
+                                                                ContactListPage()))
                                               },
                                               child: Row(
                                                 children: [
@@ -1196,11 +1195,11 @@ class _HomePageState extends State<HomePage> {
                                           print("qwdqwdw ${taskData!.id}");
 
                                           var iDa = [
-                                            taskData!['to_uid'],
-                                            taskData!['by_uid']
+                                            taskData['to_uid'],
+                                            taskData['by_uid']
                                           ];
                                           DbQuery.instanace.getAddParticipants(
-                                              taskData!.id, iDa);
+                                              taskData.id, iDa);
 
                                           // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
                                           // print(

@@ -130,7 +130,7 @@ class SearchPage extends StatelessWidget {
                 ? const StadiumBorder(side: BorderSide(color: Colors.black26))
                 : null,
             backgroundColor: index == controller.selectedIndex.value
-                ? Get.theme.colorPrimaryDark
+                ? Color(0xffBDA1EF)
                 : Colors.white,
             label: Text(
               title,

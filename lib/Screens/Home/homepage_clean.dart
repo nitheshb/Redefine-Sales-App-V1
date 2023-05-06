@@ -184,7 +184,7 @@ class HomePage extends StatelessWidget {
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                 ),
-                                                child: const ContactListPage()))
+                                                child: ContactListPage()))
                                   },
                                   child: Row(
                                     children: [

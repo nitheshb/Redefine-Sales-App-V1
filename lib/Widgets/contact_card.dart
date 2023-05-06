@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
@@ -10,9 +11,11 @@ class ContactCard extends StatefulWidget {
       required this.title,
       required this.jobTitle,
       required this.uid,
-      required this.onTap})
+      required this.onTap,
+      required this.taskData})
       : super(key: key);
   final String title;
+  final QueryDocumentSnapshot<Object?>? taskData;
   final String jobTitle;
   final VoidCallback onTap;
   final String uid;
@@ -22,8 +25,23 @@ class ContactCard extends StatefulWidget {
 }
 
 class _ContactCardState extends State<ContactCard> {
+  bool? isActive;
+
   @override
   void initState() {
+    try {
+      widget.taskData!["name"];
+
+      widget.taskData!["department"][0];
+      widget.taskData!["email"];
+      widget.taskData!["uid"];
+      widget.taskData!["user_fcmtoken"];
+      isActive = true;
+    } catch (e) {
+      isActive = false;
+
+      print(e);
+    }
     // TODO: implement initState
     print('this bool is ${widget.uid}');
     super.initState();
@@ -41,10 +59,21 @@ class _ContactCardState extends State<ContactCard> {
           color: Get.theme.kContactIconColor,
           size: 32,
         ),
-        title: FxText.bodyLarge(
-          widget.title,
-          fontSize: 16,
-          fontWeight: 700,
+        title: Row(
+          children: [
+            FxText.bodyLarge(
+              widget.title,
+              fontSize: 16,
+              fontWeight: 700,
+            ),
+            Spacer(),
+            isActive == true
+                ? CircleAvatar(
+                    backgroundColor: Colors.green,
+                    radius: MediaQuery.of(context).size.height * 0.006,
+                  )
+                : const SizedBox()
+          ],
         ),
         subtitle: FxText.bodySmall(
           widget.jobTitle,
