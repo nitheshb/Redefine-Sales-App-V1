@@ -397,8 +397,7 @@ class TaskManager extends StatelessWidget {
                                                           BorderRadius.circular(
                                                               8),
                                                     ),
-                                                    child:
-                                                        const ContactListPage()))
+                                                    child: ContactListPage()))
                                       },
                                       child: Row(
                                         children: [

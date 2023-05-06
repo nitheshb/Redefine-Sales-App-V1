@@ -7,7 +7,6 @@ import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/Widgets/contact_card.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
-import 'package:redefineerp/helpers/supabae_help.dart';
 import 'package:redefineerp/themes/themes.dart';
 
 class ReassignToList extends StatelessWidget {
@@ -173,6 +172,7 @@ class ReassignToList extends StatelessWidget {
                   QueryDocumentSnapshot<Object?>? taskData =
                       snapshot.data?.docs[i];
                   return ContactCard(
+                      taskData: taskData,
                       title: '${taskData!["name"]}',
                       jobTitle: taskData["roles"][0],
                       uid: taskData["uid"],
@@ -192,10 +192,6 @@ class ReassignToList extends StatelessWidget {
                           // add to db
                           controller.reAssignTo(docId, taskData["name"],
                               taskData["uid"], taskData["user_fcmtoken"]);
-                          DbSupa.instance.saveNotification(
-                              taskData["uid"],
-                              "This task assigned to ${taskData["name"]}",
-                              docId);
                           Get.back();
                         } catch (e) {
                           snackBarMsg('This user is not yet using TaskMan');

@@ -13,8 +13,6 @@ import '../../Widgets/minimsg.dart';
 class ContactListDialogPage extends StatelessWidget {
   const ContactListDialogPage({Key? key}) : super(key: key);
 
-  
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<ContactController>(ContactController());
@@ -147,22 +145,19 @@ class ContactListDialogPage extends StatelessWidget {
                   ],
                 ),
               ),
-
               if (controller.participants.isNotEmpty)
                 Positioned(
                   bottom: MediaQuery.of(context).size.height * 0.020,
                   left: MediaQuery.of(context).size.height * 0.130,
                   child: InkWell(
                     onTap: () {
-
-                      
                       Get.back();
                     },
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.060,
                       width: MediaQuery.of(context).size.width * 0.250,
                       decoration: BoxDecoration(
-                          color: Colors.blue,
+                          color: Color(0xffBDA1EF),
                           borderRadius: BorderRadius.all(Radius.circular(13))),
                       child: Center(
                         child: Text(
@@ -174,7 +169,6 @@ class ContactListDialogPage extends StatelessWidget {
                     ),
                   ),
                 ),
-      
             ],
           )),
 
@@ -259,7 +253,7 @@ class ContactListDialogPage extends StatelessWidget {
                 ? const StadiumBorder(side: BorderSide(color: Colors.black26))
                 : null,
             backgroundColor: index == controller.selectedIndex.value
-                ? Get.theme.colorPrimaryDark
+                ? Color(0xffBDA1EF)
                 : Colors.white,
             label: Text(
               title,
@@ -289,7 +283,7 @@ class ContactListDialogPage extends StatelessWidget {
             child: Container(
               color: controller.participants
                       .any((participant) => participant['uid'] == index)
-                  ? Get.theme.colorPrimaryDark
+                  ? Color(0xffBDA1EF)
                   : Colors.white,
               child: ListTile(
                 leading: Icon(
@@ -355,5 +349,4 @@ class ContactListDialogPage extends StatelessWidget {
       ),
     );
   }
-
 }
