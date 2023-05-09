@@ -63,24 +63,30 @@ class TaskController extends GetxController {
   void closeTask(id, type, txt) async {
     print('new vlu is ${commentLine.text}');
     await _collection.doc(id).update({
-     "status": "Completed",
-     "completedOn":  DateTime.now().millisecondsSinceEpoch,
-     "comp_by" : auth.currentUser?.uid,
-     "comments": FieldValue.arrayUnion([
-        {"typ": type, "txt": "Task marked as completed by ${auth.currentUser?.displayName}"}
+      "status": "Completed",
+      "completedOn": DateTime.now().millisecondsSinceEpoch,
+      "comp_by": auth.currentUser?.uid,
+      "comments": FieldValue.arrayUnion([
+        {
+          "typ": type,
+          "txt": "Task marked as completed by ${auth.currentUser?.displayName}"
+        }
       ])
     });
     commentLine.text = "";
   }
 
-   void reopenedOnTask(id, type, txt) async {
+  void reopenedOnTask(id, type, txt) async {
     await _collection.doc(id).update({
-     "status": "InProgress",
-     "completedOn":  0,
-     "reopendOn": DateTime.now().millisecondsSinceEpoch,
-     "reOpen_by" : auth.currentUser?.uid,
-     "comments": FieldValue.arrayUnion([
-        {"typ": type, "txt": "Task re-opened by ${auth.currentUser?.displayName}"}
+      "status": "InProgress",
+      "completedOn": 0,
+      "reopendOn": DateTime.now().millisecondsSinceEpoch,
+      "reOpen_by": auth.currentUser?.uid,
+      "comments": FieldValue.arrayUnion([
+        {
+          "typ": type,
+          "txt": "Task re-opened by ${auth.currentUser?.displayName}"
+        }
       ])
     });
     commentLine.text = "";
