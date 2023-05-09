@@ -145,7 +145,7 @@ class TaskManager extends StatelessWidget {
           ),
           // body: SingleChildScrollView(
           // physics: const BouncingScrollPhysics(),
-          
+
           body: Stack(
             alignment: Alignment.topCenter,
             children: [
@@ -477,95 +477,94 @@ class TaskManager extends StatelessWidget {
 
                                     // Due Date
 
-                                    
-                                   Row(
-                                        children: [
-                                         InkWell(
-                                      onTap: () => {
-                                        DatePicker.showDateTimePicker(context,
-                                            showTitleActions: true,
-                                            onChanged: (date) {
-                                          print(
-                                              'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                        }, onConfirm: (date) {
-                                          controller.dateSelected = date;
-                                          controller.updateSelectedDate();
-                                        }, currentTime: DateTime.now())
-                                      },
-                                            child: SizedBox(
-                                              child: Material(
-                                                  type: MaterialType.transparency,
-                                                  child: DottedBorder(
-                                                    borderType: BorderType.Circle,
-                                                    color:
-                                                        Get.theme.kLightGrayColor,
-                                                    radius: Radius.circular(27.0),
-                                                    dashPattern: [3, 3],
-                                                    strokeWidth: 1,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4.0),
-                                                      child: Icon(
-                                                        Icons
-                                                            .calendar_month_outlined,
-                                                        size: 15,
-                                                        color: Get.theme
-                                                            .kLightGrayColor,
-                                                      ),
+                                    Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () => {
+                                            DatePicker.showDateTimePicker(
+                                                context,
+                                                showTitleActions: true,
+                                                onChanged: (date) {
+                                              print(
+                                                  'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                            }, onConfirm: (date) {
+                                              controller.dateSelected = date;
+                                              controller.updateSelectedDate();
+                                            }, currentTime: DateTime.now())
+                                          },
+                                          child: SizedBox(
+                                            child: Material(
+                                                type: MaterialType.transparency,
+                                                child: DottedBorder(
+                                                  borderType: BorderType.Circle,
+                                                  color:
+                                                      Get.theme.kLightGrayColor,
+                                                  radius: Radius.circular(27.0),
+                                                  dashPattern: [3, 3],
+                                                  strokeWidth: 1,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Icon(
+                                                      Icons
+                                                          .calendar_month_outlined,
+                                                      size: 15,
+                                                      color: Get.theme
+                                                          .kLightGrayColor,
                                                     ),
-                                                  )
-                                                  // child: CircleAvatar(
-                                                  //   radius: 19,
-                                                  //     backgroundColor: Get.theme.colorPrimaryDark,
-                                                  //   child: CircleAvatar(
-                                                  //     backgroundColor: Colors.white,
-                                                  //     radius: 18,
-                                                  //     child:   Icon(
-                                                  //                                                     Icons.calendar_month_outlined,
-                                                  //                                                     size: 18,
-                                                  //                                                     color: Get.theme.kLightGrayColor,
-                                                  //                                                   ),
-                                                  //   ),
-                                                  // ),
                                                   ),
-                                            ),
+                                                )
+                                                // child: CircleAvatar(
+                                                //   radius: 19,
+                                                //     backgroundColor: Get.theme.colorPrimaryDark,
+                                                //   child: CircleAvatar(
+                                                //     backgroundColor: Colors.white,
+                                                //     radius: 18,
+                                                //     child:   Icon(
+                                                //                                                     Icons.calendar_month_outlined,
+                                                //                                                     size: 18,
+                                                //                                                     color: Get.theme.kLightGrayColor,
+                                                //                                                   ),
+                                                //   ),
+                                                // ),
+                                                ),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0, bottom: 4),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                  height: 16,
-                                                  child: Text(
-                                                    'Created On',
-                                                    style: Get.theme.kSubTitle
-                                                        .copyWith(
-                                                            color: Get.theme
-                                                                .kLightGrayColor,
-                                                            fontSize: 10),
-                                                  ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 8.0, bottom: 4),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                height: 16,
+                                                child: Text(
+                                                  'Created On',
+                                                  style: Get.theme.kSubTitle
+                                                      .copyWith(
+                                                          color: Get.theme
+                                                              .kLightGrayColor,
+                                                          fontSize: 10),
                                                 ),
-                                                SizedBox(
-                                                  height: 22,
-                                                  child: Text(
-                                                      // createdOn,
-                                                      "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(data["created_on"]))}",
-                                                      style: Get
-                                                          .theme.kNormalStyle
-                                                          .copyWith()),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    
+                                              ),
+                                              SizedBox(
+                                                height: 22,
+                                                child: Text(
+                                                    // createdOn,
+                                                    "${DateFormat('MMM dd, yyyy').format(DateTime.fromMillisecondsSinceEpoch(data["created_on"]))}",
+                                                    style: Get
+                                                        .theme.kNormalStyle
+                                                        .copyWith()),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 ),
 
@@ -850,14 +849,15 @@ class TaskManager extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
+                              print("object tappppedddddd");
                               if (controller.isPlaying.value == false) {
                                 controller.isPlaying.value = true;
-                                 controller.closeTask(docId, 'text',
-                                        controller.commentLine.value);
+                                controller.closeTask(docId, 'text',
+                                    controller.commentLine.value);
                               } else {
                                 controller.isPlaying.value = false;
                                 controller.reopenedOnTask(docId, 'text',
-                                        controller.commentLine.value);
+                                    controller.commentLine.value);
                               }
                               print(controller.isPlaying.value);
                             },
@@ -871,32 +871,34 @@ class TaskManager extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-
                                     Container(
                                       // radius: MediaQuery.of(context).size.height *
                                       //     0.030,
                                       // backgroundColor: const Color(0xffBDA1EF),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(50),
-                    // shape: BoxShape.circle,
-                    color: const Color(0xffBDA1EF),
-                  ),
+                                        // shape: BoxShape.circle,
+                                        color: const Color(0xffBDA1EF),
+                                      ),
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(vertical:8, horizontal:20),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 20),
                                         child: Row(
                                           children: [
-                                             const Icon(
+                                            const Icon(
                                               Icons.close,
                                               color: Color(0xff33264b),
                                             ),
                                             SizedBox(width: 10),
-                                            controller.isPlaying.value ? Text('Re-Open Task') : Text('Close Task') ,
-                                           
+                                            Obx(
+                                              () => controller.isPlaying.value
+                                                  ? Text('Re-Open Task')
+                                                  : const Text('Close Task'),
+                                            ),
                                           ],
                                         ),
                                       ),
                                     ),
-                                    
                                   ],
                                 ),
                               ),
@@ -937,11 +939,12 @@ class TaskManager extends StatelessWidget {
               ),
               Obx(() => controller.isPlaying.value == true
                   ? Positioned(
-                      top: MediaQuery.of(context).size.height * 0.050,
+                      top: MediaQuery.of(context).size.height * 0.00,
                       // left: MediaQuery.of(context).size.width * 0.50,
                       // right: MediaQuery.of(context).size.width * 0.50,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.5,
+                      child: SizedBox(
+                        // color: Colors.black,
+                        height: MediaQuery.of(context).size.height * 0.4,
                         width: MediaQuery.of(context).size.width * 1,
                         child: Lottie.asset('assets/images/closing.json'),
                       ))
