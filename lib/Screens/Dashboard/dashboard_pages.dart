@@ -63,37 +63,37 @@ class _DashboardPageState extends State<DashboardPage> {
 
     chartData = <ChartSampleData>[
       ChartSampleData(
-          x: '${DateTime.now().day}',
-          y: today,
+          x: '${DateTime.now().day - 6}',
+          y: day7,
           pointColor: Constant.softColors.blue.color),
       ChartSampleData(
-        x: '${DateTime.now().day + 1}',
-        y: day2,
+        x: '${DateTime.now().day - 5}',
+        y: day6,
         pointColor: Constant.softColors.violet.color,
       ),
       ChartSampleData(
-        x: '${DateTime.now().day + 2}',
-        y: day3,
-        pointColor: Constant.softColors.orange.color,
-      ),
-      ChartSampleData(
-        x: '${DateTime.now().day + 3}',
-        y: day4,
-        pointColor: Constant.softColors.blue.color,
-      ),
-      ChartSampleData(
-        x: '${DateTime.now().day + 4}',
+        x: '${DateTime.now().day - 4}',
         y: day5,
         pointColor: Constant.softColors.orange.color,
       ),
       ChartSampleData(
-        x: '${DateTime.now().day + 5}',
-        y: day6,
+        x: '${DateTime.now().day - 3}',
+        y: day4,
         pointColor: Constant.softColors.blue.color,
       ),
       ChartSampleData(
-        x: '${DateTime.now().day + 6}',
-        y: day7,
+        x: '${DateTime.now().day - 2}',
+        y: day3,
+        pointColor: Constant.softColors.orange.color,
+      ),
+      ChartSampleData(
+        x: '${DateTime.now().day - 1}',
+        y: day2,
+        pointColor: Constant.softColors.blue.color,
+      ),
+      ChartSampleData(
+        x: '${DateTime.now().day}',
+        y: today,
         pointColor: Constant.softColors.violet.color,
       ),
     ];
@@ -256,23 +256,23 @@ class _DashboardPageState extends State<DashboardPage> {
                       DateTime.now().day) {
                     today = today + 1;
                   } else if (snapshot.data!.docs[i]['completedOn'] ==
-                      DateTime.now().day + 1) {
-                    day2 = day2 + 1;
+                      DateTime.now().day - 6) {
+                    day7 = day7 + 1;
                   } else if (snapshot.data!.docs[i]['completedOn'] ==
-                      DateTime.now().day + 2) {
-                    day3 = day3 + 1;
-                  } else if (snapshot.data!.docs[i]['completedOn'] ==
-                      DateTime.now().day + 3) {
-                    day4 = day4 + 1;
-                  } else if (snapshot.data!.docs[i]['completedOn'] ==
-                      DateTime.now().day + 4) {
-                    day5 = day5 + 1;
-                  } else if (snapshot.data!.docs[i]['completedOn'] ==
-                      DateTime.now().day + 5) {
+                      DateTime.now().day - 5) {
                     day6 = day6 + 1;
                   } else if (snapshot.data!.docs[i]['completedOn'] ==
-                      DateTime.now().day + 6) {
-                    day7 = day7 + 1;
+                      DateTime.now().day - 4) {
+                    day5 = day5 + 1;
+                  } else if (snapshot.data!.docs[i]['completedOn'] ==
+                      DateTime.now().day - 3) {
+                    day4 = day4 + 1;
+                  } else if (snapshot.data!.docs[i]['completedOn'] ==
+                      DateTime.now().day - 2) {
+                    day3 = day3 + 1;
+                  } else if (snapshot.data!.docs[i]['completedOn'] ==
+                      DateTime.now().day - 1) {
+                    day2 = day2 + 1;
                   }
                 }
 
