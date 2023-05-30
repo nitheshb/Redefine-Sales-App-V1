@@ -1,22 +1,33 @@
-
-
-
 import 'package:get/get.dart';
 import 'package:redefineerp/Utilities/dummyData.dart';
 import 'package:redefineerp/themes/constant.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class DashboardController extends GetxController{
-  late List<String>  filterTime = ["All time", "Yesterday", "This week", "7 days ago"];
+class DashboardController extends GetxController {
+  late List<String> filterTime = [
+    "All time",
+    "Yesterday",
+    "This week",
+    "7 days ago"
+  ];
+
+  RxList day1 = [].obs;
+  RxList day2 = [].obs;
+  RxList day3 = [].obs;
+  RxList day4 = [].obs;
+  RxList day5 = [].obs;
+  RxList day6 = [].obs;
+  RxList day7 = [].obs;
 
   late String time = "All time";
   late TooltipBehavior tooltipBehavior;
   late List<ChartSampleData> chartData;
 
   void initTime() {
-    time =  time = filterTime.first; // initializing the time field
- initChartData();
+    time = time = filterTime.first; // initializing the time field
+    initChartData();
   }
+
   void initState() {
     // time = filterTime.first;
     initChartData();

@@ -63,8 +63,8 @@ class TaskController extends GetxController {
   void closeTask(id, type, txt) async {
     print('new vlu is ${commentLine.text}');
     await _collection.doc(id).update({
-      "status": "Completed",
-      "completedOn": DateTime.now().millisecondsSinceEpoch,
+      "status": "completed",
+      "completedOn": DateTime.now().day,
       "comp_by": auth.currentUser?.uid,
       "comments": FieldValue.arrayUnion([
         {
@@ -80,7 +80,7 @@ class TaskController extends GetxController {
     await _collection.doc(id).update({
       "status": "InProgress",
       "completedOn": 0,
-      "reopendOn": DateTime.now().millisecondsSinceEpoch,
+      "reopendOn": DateTime.now().day,
       "reOpen_by": auth.currentUser?.uid,
       "comments": FieldValue.arrayUnion([
         {
