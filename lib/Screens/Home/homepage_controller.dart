@@ -437,8 +437,8 @@ class HomePageController extends GetxController {
                             showingLists[index];
                         print("qwdqwdw ${taskData!.id}");
 
-                        var iDa = [taskData!['to_uid'], taskData!['by_uid']];
-                        DbQuery.instanace.getAddParticipants(taskData!.id, iDa);
+                        var iDa = [taskData['to_uid'], taskData['by_uid']];
+                        DbQuery.instanace.getAddParticipants(taskData.id, iDa);
 
                         return CardSetup(context, taskData);
                       }),
