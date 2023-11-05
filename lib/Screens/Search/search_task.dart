@@ -12,7 +12,7 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SearchController controller = Get.put<SearchController>(SearchController());
+    MySearchController controller = Get.put<MySearchController>(MySearchController());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -116,7 +116,7 @@ class SearchPage extends StatelessWidget {
 
   Widget _filterChip(int index,
       {required String title,
-      required SearchController controller,
+      required MySearchController controller,
       required VoidCallback onTap}) {
     return Padding(
       padding: index == 0

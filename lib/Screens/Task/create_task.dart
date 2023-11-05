@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
@@ -87,14 +87,14 @@ class CreateTaskPage extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            DatePicker.showDateTimePicker(context,
-                                showTitleActions: true, onChanged: (date) {
-                              print(
-                                  'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                            }, onConfirm: (date) {
-                              controller.dateSelected = date;
-                              controller.updateSelectedDate();
-                            }, currentTime: DateTime.now());
+                            // DatePicker.showDateTimePicker(context,
+                            //     showTitleActions: true, onChanged: (date) {
+                            //   print(
+                            //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                            // }, onConfirm: (date) {
+                            //   controller.dateSelected = date;
+                            //   controller.updateSelectedDate();
+                            // }, currentTime: DateTime.now());
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),

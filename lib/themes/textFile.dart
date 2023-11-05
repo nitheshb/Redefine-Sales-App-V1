@@ -5,7 +5,7 @@
 /// There are mainly 13 types of Text widgets.
 /// h1,h2,h3,h4,h5,h6,sh1,sh2,b1,b2,button,caption,overline - This is the order of its size.
 import 'package:flutter/material.dart';
-import 'package:flutx/flutx.dart';
+// import 'package:flutx/flutx.dart';
 import 'package:redefineerp/themes/app_theme.dart';
 import 'package:redefineerp/themes/textStyle_theme.dart';
 

@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as FlutterDateTimePicker;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,8 +57,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put<HomePageController>(HomePageController());
     final controller1 = Get.put<ContactController>(ContactController());
-    SearchController searchController =
-        Get.put<SearchController>(SearchController());
+    // MySearchController searchController =
+    //     Get.put<MySearchController>(SearchController());
     // TaskController controller1 = Get.put<TaskController>(TaskController());
     debugPrint("home called ${FirebaseAuth.instance.currentUser}");
     // Set the system status bar color
@@ -109,16 +109,16 @@ class HomePage extends StatelessWidget {
                     controller: controller.searchText,
                     onChanged: (v) {
                       if (v == '') {
-                        searchController.searchResultsWidget.value =
-                            searchController.searchResults('');
+                        // MySearchController.searchResultsWidget.value =
+                        //     MySearchController.searchResults('');
                         controller.search.value = false;
                       } else {
                         controller.search.value = true;
                       }
-                      searchController.searchResultsWidget.value =
-                          searchController.searchResults(v);
+                      // MySearchController.searchResultsWidget.value =
+                      //     MySearchController.searchResults(v);
 
-                      print(searchController.searchResultsWidget.value);
+                      // print(MySearchController.searchResultsWidget.value);
                     },
                     decoration: InputDecoration(
                         prefixIcon: IconButton(
@@ -247,16 +247,16 @@ class HomePage extends StatelessWidget {
                               onSubmitted: (value) {
                                 Navigator.pop(context);
                                 var currentDate = DateTime.now();
-                                DatePicker.showTimePicker(context,
-                                    showSecondsColumn: false,
-                                    showTitleActions: true,
-                                    onChanged: (date) {}, onConfirm: (date) {
-                                  if (value.isNotEmpty) {
-                                    print('value iss ${value} data is ${date}');
-                                    //  var task = Task.create(name: value, createdAt: date);
-                                    // base.dataStore.addTask(task: task);
-                                  }
-                                }, currentTime: DateTime.now());
+                                // FlutterDateTimePicker.DatePicker.showTimePicker(context,
+                                //     showSecondsColumn: false,
+                                //     showTitleActions: true,
+                                //     onChanged: (date) {}, onConfirm: (date) {
+                                //   if (value.isNotEmpty) {
+                                //     print('value iss ${value} data is ${date}');
+                                //     //  var task = Task.create(name: value, createdAt: date);
+                                //     // base.dataStore.addTask(task: task);
+                                //   }
+                                // }, currentTime: DateTime.now());
                               },
                               autofocus: true,
                             ),
@@ -344,15 +344,15 @@ class HomePage extends StatelessWidget {
 
                                   InkWell(
                                     onTap: () => {
-                                      DatePicker.showDateTimePicker(context,
-                                          showTitleActions: true,
-                                          onChanged: (date) {
-                                        print(
-                                            'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                      }, onConfirm: (date) {
-                                        controller.dateSelected = date;
-                                        controller.updateSelectedDate();
-                                      }, currentTime: DateTime.now())
+                                      // FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
+                                      //     showTitleActions: true,
+                                      //     onChanged: (date) {
+                                      //   print(
+                                      //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                      // }, onConfirm: (date) {
+                                      //   controller.dateSelected = date;
+                                      //   controller.updateSelectedDate();
+                                      // }, currentTime: DateTime.now())
                                     },
                                     child: Row(
                                       children: [
@@ -749,18 +749,18 @@ class HomePage extends StatelessWidget {
                                             ),
                                             InkWell(
                                               onTap: () => {
-                                                DatePicker.showDateTimePicker(
-                                                    context,
-                                                    showTitleActions: true,
-                                                    onChanged: (date) {
-                                                  print(
-                                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                                }, onConfirm: (date) {
-                                                  controller.dateSelected =
-                                                      date;
-                                                  controller
-                                                      .updateSelectedDate();
-                                                }, currentTime: DateTime.now())
+                                                // FlutterDateTimePicker.DatePicker.showDateTimePicker(
+                                                //     context,
+                                                //     showTitleActions: true,
+                                                //     onChanged: (date) {
+                                                //   print(
+                                                //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                                // }, onConfirm: (date) {
+                                                //   controller.dateSelected =
+                                                //       date;
+                                                //   controller
+                                                //       .updateSelectedDate();
+                                                // }, currentTime: DateTime.now())
                                               },
                                               child: Icon(
                                                 Icons.calendar_month_outlined,
@@ -817,15 +817,15 @@ class HomePage extends StatelessWidget {
                                       ),
                                       InkWell(
                                         onTap: () => {
-                                          DatePicker.showDateTimePicker(context,
-                                              showTitleActions: true,
-                                              onChanged: (date) {
-                                            print(
-                                                'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                          }, onConfirm: (date) {
-                                            // controller.dateSelected = date;
-                                            // controller.updateSelectedDate();
-                                          }, currentTime: DateTime.now())
+                                          // FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
+                                          //     showTitleActions: true,
+                                          //     onChanged: (date) {
+                                          //   print(
+                                          //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                          // }, onConfirm: (date) {
+                                          //   // controller.dateSelected = date;
+                                          //   // controller.updateSelectedDate();
+                                          // }, currentTime: DateTime.now())
                                         },
                                         child: Icon(
                                           Icons.flag_outlined,
@@ -1345,37 +1345,37 @@ class HomePage extends StatelessWidget {
             //                                 children: [
             //                                   _filterChip(0,
             //                                       title: 'All',
-            //                                       controller: searchController,
+            //                                       controller: MySearchController,
             //                                       onTap: () => {
-            //                                             searchController
+            //                                             MySearchController
             //                                                 .selectedIndex.value = 0,
             //                                           }),
             //                                   _filterChip(1,
             //                                       title: 'Done',
-            //                                       controller: searchController,
+            //                                       controller: MySearchController,
             //                                       onTap: () => {
-            //                                             searchController
+            //                                             MySearchController
             //                                                 .selectedIndex.value = 1,
             //                                           }),
             //                                   _filterChip(2,
             //                                       title: 'Pending',
-            //                                       controller: searchController,
+            //                                       controller: MySearchController,
             //                                       onTap: () => {
-            //                                             searchController
+            //                                             MySearchController
             //                                                 .selectedIndex.value = 2,
             //                                           }),
             //                                   _filterChip(3,
             //                                       title: 'Created',
-            //                                       controller: searchController,
+            //                                       controller: MySearchController,
             //                                       onTap: () => {
-            //                                             searchController
+            //                                             MySearchController
             //                                                 .selectedIndex.value = 3,
             //                                           }),
             //                                   _filterChip(4,
             //                                       title: 'Today',
-            //                                       controller: searchController,
+            //                                       controller: MySearchController,
             //                                       onTap: () => {
-            //                                             searchController
+            //                                             MySearchController
             //                                                 .selectedIndex.value = 4,
             //                                           }),
             //                                 ],
@@ -1490,7 +1490,7 @@ class HomePage extends StatelessWidget {
             //             ? SizedBox(
             //                 height: MediaQuery.of(context).size.height * 0.89,
             //                 child:
-            //                     Obx(() => searchController.searchResultsWidget.value),
+            //                     Obx(() => MySearchController.searchResultsWidget.value),
             //               )
             //             : controller.streamToday()
             //         // body: TabBarView(
@@ -1508,7 +1508,7 @@ class HomePage extends StatelessWidget {
 
   Widget _filterChip(int index,
       {required String title,
-      required SearchController controller,
+      required MySearchController controller,
       required VoidCallback onTap}) {
     return Padding(
       padding: index == 0

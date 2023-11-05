@@ -6,10 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as FlutterDateTimePicker;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_dialog.dart';
@@ -150,16 +149,16 @@ class HomePage extends StatelessWidget {
                             onSubmitted: (value) {
                               Navigator.pop(context);
                               var currentDate = DateTime.now();
-                              DatePicker.showTimePicker(context,
-                                  showSecondsColumn: false,
-                                  showTitleActions: true,
-                                  onChanged: (date) {}, onConfirm: (date) {
-                                if (value.isNotEmpty) {
-                                  print('value iss ${value} data is ${date}');
-                                  //  var task = Task.create(name: value, createdAt: date);
-                                  // base.dataStore.addTask(task: task);
-                                }
-                              }, currentTime: DateTime.now());
+                              // FlutterDateTimePicker.DatePicker.showTimePicker(context,
+                              //     showSecondsColumn: false,
+                              //     showTitleActions: true,
+                              //     onChanged: (date) {}, onConfirm: (date) {
+                              //   if (value.isNotEmpty) {
+                              //     print('value iss ${value} data is ${date}');
+                              //     //  var task = Task.create(name: value, createdAt: date);
+                              //     // base.dataStore.addTask(task: task);
+                              //   }
+                              // }, currentTime: DateTime.now());
                             },
                             autofocus: true,
                           ),
@@ -244,7 +243,7 @@ class HomePage extends StatelessWidget {
 
                                 InkWell(
                                   onTap: () => {
-                                    DatePicker.showDateTimePicker(context,
+                                    FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
                                         showTitleActions: true,
                                         onChanged: (date) {
                                       print(
@@ -637,7 +636,7 @@ class HomePage extends StatelessWidget {
                                           ),
                                           InkWell(
                                             onTap: () => {
-                                              DatePicker.showDateTimePicker(
+                                              FlutterDateTimePicker.DatePicker.showDateTimePicker(
                                                   context,
                                                   showTitleActions: true,
                                                   onChanged: (date) {
@@ -702,7 +701,7 @@ class HomePage extends StatelessWidget {
                                     ),
                                     InkWell(
                                       onTap: () => {
-                                        DatePicker.showDateTimePicker(context,
+                                        FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
                                             showTitleActions: true,
                                             onChanged: (date) {
                                           print(

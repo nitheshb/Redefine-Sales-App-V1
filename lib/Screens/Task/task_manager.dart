@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as FlutterDateTimePicker;
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_dialog.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
@@ -276,23 +276,23 @@ class TaskManager extends StatelessWidget {
 
                                     InkWell(
                                       onTap: () => {
-                                        DatePicker.showDateTimePicker(context,
-                                            showTitleActions: true,
-                                            onChanged: (date) {
-                                          print(
-                                              "the data issssss:::::::::::;$data");
-                                          print(
-                                              'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                        }, onConfirm: (date) {
-                                          controller.dateSelected = date;
-                                          controller.updateSelectedDate();
-                                          controller.updateAssignTimeDb(docId);
+                                        // FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
+                                        //     showTitleActions: true,
+                                        //     onChanged: (date) {
+                                        //   print(
+                                        //       "the data issssss:::::::::::;$data");
+                                        //   print(
+                                        //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                        // }, onConfirm: (date) {
+                                        //   controller.dateSelected = date;
+                                        //   controller.updateSelectedDate();
+                                        //   controller.updateAssignTimeDb(docId);
 
-                                          DbSupa.instance.saveNotification(
-                                              data['to_uid'],
-                                              'Date has been updated',
-                                              docId);
-                                        }, currentTime: DateTime.now())
+                                        //   DbSupa.instance.saveNotification(
+                                        //       data['to_uid'],
+                                        //       'Date has been updated',
+                                        //       docId);
+                                        // }, currentTime: DateTime.now())
                                       },
                                       child: Row(
                                         children: [
@@ -481,16 +481,16 @@ class TaskManager extends StatelessWidget {
                                       children: [
                                         InkWell(
                                           onTap: () => {
-                                            DatePicker.showDateTimePicker(
-                                                context,
-                                                showTitleActions: true,
-                                                onChanged: (date) {
-                                              print(
-                                                  'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                            }, onConfirm: (date) {
-                                              controller.dateSelected = date;
-                                              controller.updateSelectedDate();
-                                            }, currentTime: DateTime.now())
+                                            // FlutterDateTimePicker.DatePicker.showDateTimePicker(
+                                            //     context,
+                                            //     showTitleActions: true,
+                                            //     onChanged: (date) {
+                                            //   print(
+                                            //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                            // }, onConfirm: (date) {
+                                            //   controller.dateSelected = date;
+                                            //   controller.updateSelectedDate();
+                                            // }, currentTime: DateTime.now())
                                           },
                                           child: SizedBox(
                                             child: Material(

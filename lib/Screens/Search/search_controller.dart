@@ -9,7 +9,7 @@ import 'package:redefineerp/Widgets/checkboxlisttile.dart';
 import 'package:intl/intl.dart';
 import 'package:redefineerp/themes/themes.dart';
 
-class SearchController extends GetxController {
+class MySearchController extends GetxController {
   var selectedIndex = 0.obs;
 
   var searchResultsWidget = sizeBox(0, 0).obs;

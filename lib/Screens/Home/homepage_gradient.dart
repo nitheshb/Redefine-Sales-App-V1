@@ -5,7 +5,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+// import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as FlutterDateTimePicker;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -296,16 +296,16 @@ class HomeGradientPage extends StatelessWidget {
                           onSubmitted: (value) {
                             Navigator.pop(context);
                             var currentDate = DateTime.now();
-                            DatePicker.showTimePicker(context,
-                                showSecondsColumn: false,
-                                showTitleActions: true,
-                                onChanged: (date) {}, onConfirm: (date) {
-                              if (value.isNotEmpty) {
-                                print('value iss ${value} data is ${date}');
-                                //  var task = Task.create(name: value, createdAt: date);
-                                // base.dataStore.addTask(task: task);
-                              }
-                            }, currentTime: DateTime.now());
+                            // FlutterDateTimePicker.DatePicker.showTimePicker(context,
+                            //     showSecondsColumn: false,
+                            //     showTitleActions: true,
+                            //     onChanged: (date) {}, onConfirm: (date) {
+                            //   if (value.isNotEmpty) {
+                            //     print('value iss ${value} data is ${date}');
+                            //     //  var task = Task.create(name: value, createdAt: date);
+                            //     // base.dataStore.addTask(task: task);
+                            //   }
+                            // }, currentTime: DateTime.now());
                           },
                           autofocus: true,
                         ),
@@ -407,15 +407,15 @@ class HomeGradientPage extends StatelessWidget {
 
                               InkWell(
                                 onTap: () => {
-                                  DatePicker.showDateTimePicker(context,
-                                      showTitleActions: true,
-                                      onChanged: (date) {
-                                    print(
-                                        'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                  }, onConfirm: (date) {
-                                    controller.dateSelected = date;
-                                    controller.updateSelectedDate();
-                                  }, currentTime: DateTime.now())
+                                  // FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
+                                  //     showTitleActions: true,
+                                  //     onChanged: (date) {
+                                  //   print(
+                                  //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                  // }, onConfirm: (date) {
+                                  //   controller.dateSelected = date;
+                                  //   controller.updateSelectedDate();
+                                  // }, currentTime: DateTime.now())
                                 },
                                 child: Row(
                                   children: [
@@ -780,16 +780,16 @@ class HomeGradientPage extends StatelessWidget {
                                         ),
                                         InkWell(
                                           onTap: () => {
-                                            DatePicker.showDateTimePicker(
-                                                context,
-                                                showTitleActions: true,
-                                                onChanged: (date) {
-                                              print(
-                                                  'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                            }, onConfirm: (date) {
-                                              controller.dateSelected = date;
-                                              controller.updateSelectedDate();
-                                            }, currentTime: DateTime.now())
+                                            // FlutterDateTimePicker.DatePicker.showDateTimePicker(
+                                            //     context,
+                                            //     showTitleActions: true,
+                                            //     onChanged: (date) {
+                                            //   print(
+                                            //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                            // }, onConfirm: (date) {
+                                            //   controller.dateSelected = date;
+                                            //   controller.updateSelectedDate();
+                                            // }, currentTime: DateTime.now())
                                           },
                                           child: Icon(
                                             Icons.calendar_month_outlined,
@@ -843,15 +843,15 @@ class HomeGradientPage extends StatelessWidget {
                                   ),
                                   InkWell(
                                     onTap: () => {
-                                      DatePicker.showDateTimePicker(context,
-                                          showTitleActions: true,
-                                          onChanged: (date) {
-                                        print(
-                                            'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                      }, onConfirm: (date) {
-                                        // controller.dateSelected = date;
-                                        // controller.updateSelectedDate();
-                                      }, currentTime: DateTime.now())
+                                      // FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
+                                      //     showTitleActions: true,
+                                      //     onChanged: (date) {
+                                      //   print(
+                                      //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                      // }, onConfirm: (date) {
+                                      //   // controller.dateSelected = date;
+                                      //   // controller.updateSelectedDate();
+                                      // }, currentTime: DateTime.now())
                                     },
                                     child: Icon(
                                       Icons.flag_outlined,
@@ -1583,16 +1583,16 @@ class HomeGradientPage extends StatelessWidget {
                               onSubmitted: (value) {
                                 Navigator.pop(context);
                                 var currentDate = DateTime.now();
-                                DatePicker.showTimePicker(context,
-                                    showSecondsColumn: false,
-                                    showTitleActions: true,
-                                    onChanged: (date) {}, onConfirm: (date) {
-                                  if (value.isNotEmpty) {
-                                    print('value iss ${value} data is ${date}');
-                                    //  var task = Task.create(name: value, createdAt: date);
-                                    // base.dataStore.addTask(task: task);
-                                  }
-                                }, currentTime: DateTime.now());
+                                // FlutterDateTimePicker.DatePicker.showTimePicker(context,
+                                //     showSecondsColumn: false,
+                                //     showTitleActions: true,
+                                //     onChanged: (date) {}, onConfirm: (date) {
+                                //   if (value.isNotEmpty) {
+                                //     print('value iss ${value} data is ${date}');
+                                //     //  var task = Task.create(name: value, createdAt: date);
+                                //     // base.dataStore.addTask(task: task);
+                                //   }
+                                // }, currentTime: DateTime.now());
                               },
                               autofocus: true,
                             ),
@@ -1707,15 +1707,15 @@ class HomeGradientPage extends StatelessWidget {
 
                                   InkWell(
                                     onTap: () => {
-                                      DatePicker.showDateTimePicker(context,
-                                          showTitleActions: true,
-                                          onChanged: (date) {
-                                        print(
-                                            'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                      }, onConfirm: (date) {
-                                        controller.dateSelected = date;
-                                        controller.updateSelectedDate();
-                                      }, currentTime: DateTime.now())
+                                      // FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
+                                      //     showTitleActions: true,
+                                      //     onChanged: (date) {
+                                      //   print(
+                                      //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                      // }, onConfirm: (date) {
+                                      //   controller.dateSelected = date;
+                                      //   controller.updateSelectedDate();
+                                      // }, currentTime: DateTime.now())
                                     },
                                     child: Row(
                                       children: [
@@ -2109,18 +2109,18 @@ class HomeGradientPage extends StatelessWidget {
                                             ),
                                             InkWell(
                                               onTap: () => {
-                                                DatePicker.showDateTimePicker(
-                                                    context,
-                                                    showTitleActions: true,
-                                                    onChanged: (date) {
-                                                  print(
-                                                      'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                                }, onConfirm: (date) {
-                                                  controller.dateSelected =
-                                                      date;
-                                                  controller
-                                                      .updateSelectedDate();
-                                                }, currentTime: DateTime.now())
+                                                // FlutterDateTimePicker.DatePicker.showDateTimePicker(
+                                                //     context,
+                                                //     showTitleActions: true,
+                                                //     onChanged: (date) {
+                                                //   print(
+                                                //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                                // }, onConfirm: (date) {
+                                                //   controller.dateSelected =
+                                                //       date;
+                                                //   controller
+                                                //       .updateSelectedDate();
+                                                // }, currentTime: DateTime.now())
                                               },
                                               child: Icon(
                                                 Icons.calendar_month_outlined,
@@ -2177,15 +2177,15 @@ class HomeGradientPage extends StatelessWidget {
                                       ),
                                       InkWell(
                                         onTap: () => {
-                                          DatePicker.showDateTimePicker(context,
-                                              showTitleActions: true,
-                                              onChanged: (date) {
-                                            print(
-                                                'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                          }, onConfirm: (date) {
-                                            // controller.dateSelected = date;
-                                            // controller.updateSelectedDate();
-                                          }, currentTime: DateTime.now())
+                                          // FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
+                                          //     showTitleActions: true,
+                                          //     onChanged: (date) {
+                                          //   print(
+                                          //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
+                                          // }, onConfirm: (date) {
+                                          //   // controller.dateSelected = date;
+                                          //   // controller.updateSelectedDate();
+                                          // }, currentTime: DateTime.now())
                                         },
                                         child: Icon(
                                           Icons.flag_outlined,
