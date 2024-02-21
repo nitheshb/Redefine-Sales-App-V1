@@ -20,6 +20,7 @@ import 'package:redefineerp/Screens/Contact/contacts_controller.dart';
 import 'package:redefineerp/Screens/Home/homepage2.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Home/homepage_gradient.dart';
+import 'package:redefineerp/Screens/Leads/LeadsDetails.dart';
 import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Profile/profile_page.dart';
 import 'package:redefineerp/Screens/Report/report_page.dart';
@@ -34,12 +35,14 @@ import 'package:redefineerp/Utilities/basicdialog.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
+import 'package:redefineerp/Widgets/FxCard.dart';
 import 'package:redefineerp/Widgets/checkboxlisttile.dart';
 import 'package:redefineerp/Widgets/datewidget.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:redefineerp/Widgets/task_sheet_widget.dart';
 import 'package:redefineerp/themes/container.dart';
+import 'package:redefineerp/themes/customTheme.dart';
 import 'package:redefineerp/themes/spacing.dart';
 import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
@@ -48,13 +51,26 @@ import 'package:rxdart/streams.dart';
 
 import '../Search/search_controller.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  //  late CustomTheme customTheme;
+  //   late ThemeData theme;
   final storageReference =
       FirebaseStorage.instance.ref().child('images/image.jpg');
 
   ImagePicker picker = ImagePicker();
 
   XFile? image;
+  @override
+  void initState() {
+    super.initState();
+
+
+  }
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<HomePageController>(HomePageController());
@@ -242,7 +258,7 @@ class HomePage extends StatelessWidget {
                                             ? Get.theme.primaryContainer
                                             : Colors.transparent,
                                         label: FxText.bodySmall(
-                                          "All Projects",
+                                          "My Taks",
                                           fontSize: 11,
                                           fontWeight: 700,
                                           color: controller.myTaskTypeCategory
@@ -273,16 +289,16 @@ class HomePage extends StatelessWidget {
                                           backgroundColor: controller
                                                       .myTaskTypeCategory
                                                       .value ==
-                                                  'assignedToMe'
+                                                  'myLeads'
                                               ? Get.theme.primaryContainer
                                               : Colors.transparent,
                                           label: FxText.bodySmall(
-                                            "Assigned to me ",
+                                            "My Leads ",
                                             fontSize: 11,
                                             fontWeight: 700,
                                             color: controller.myTaskTypeCategory
                                                         .value ==
-                                                    'assignedToMe'
+                                                    'myLeads'
                                                 ? Get.theme.onPrimaryContainer
                                                 : Get.theme.onBackground,
                                           ),
@@ -290,7 +306,7 @@ class HomePage extends StatelessWidget {
                                                 print(
                                                     'hello ${controller.myTaskTypeCategory.value == 'assignedToMe'}'),
                                                 controller.setTaskTypeFun(
-                                                    'assignedToMe')
+                                                    'myLeads')
                                               }),
                                     ),
                                   ),
@@ -305,23 +321,23 @@ class HomePage extends StatelessWidget {
                                             6, 1, 6, 1),
                                         backgroundColor:
                                             controller.myTaskTypeCategory ==
-                                                    'creatdByMe'
+                                                    'projects'
                                                 ? Get.theme.primaryContainer
                                                 : Colors.transparent,
                                         label: FxText.bodySmall(
-                                          "Recently Uploaded",
+                                          "Projects",
                                           fontSize: 11,
                                           fontWeight: 700,
                                           color:
                                               controller.myTaskTypeCategory ==
-                                                      'creatdByMe'
+                                                      'projects'
                                                   ? Get.theme.onPrimaryContainer
                                                   : Get.theme.onBackground,
                                         ),
                                         onPressed: () => {
                                               print('hello'),
                                               controller
-                                                  .setTaskTypeFun('creatdByMe'),
+                                                  .setTaskTypeFun('projects'),
                                               print(controller
                                                   .showingLists.length)
                                             }),
@@ -368,197 +384,20 @@ class HomePage extends StatelessWidget {
                 ];
               },
               // body: controller.streamToday()
-               body:
-                           StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("${controller2.currentUserObj['orgId']}_projects")
-                  // .where("status", isEqualTo: "ongoing")
-                  .snapshots(),
-              // stream: DbQuery.instanace.getStreamCombineTasks(),
-              builder: (context, snapshot) {
-              //     if (!snapshot.hasData) {
-              //   return CircularProgressIndicator();
-              // }
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Text("Something went wrong! 😣..."),
-                  );
-                } else if (snapshot.hasData) {
-
-                  // lets seperate between business vs personal
-
-                  var TotalTasks = snapshot.data!.docs.toList();
-
-                   print('pub dev is ${TotalTasks}');
-                   print('pub dev isx ${controller2.currentUserObj['orgId']}');
-    
-
-                // particpantsIdA
-
-                // return Text('Full Data');
-                   return Column(
-                        children: [
-                          Expanded(
-                            child: MediaQuery.removePadding(
-                              context: context,
-                              removeTop: true,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const BouncingScrollPhysics(),
-                                    itemCount: snapshot.data?.docs.length,
-                                    itemBuilder: (context, i) {
-
-var projData =
-                      snapshot.data?.docs[i];
-                      var unitCounts;
-                      try {
-                           unitCounts = projData?['totalUnitCount'] ?? 0;      
-                      } catch (e) {
-                             unitCounts = 'NA';
-                      }
-             
-                                      // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
-                                      // print(
-                                      //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
-                                      // print("due date is ${taskData!.get('due data')}");
-                                      // return Text("hello");
-                                      // return controller.CardSetup(context,taskData);  
-
-                                      return   GestureDetector(
-            onTap: () {
-              Get.to(() => ProjectUnitScreen(projectDetails: projData ));
-            },
-                                        child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: MediaQuery.of(context).size.height * 0.010,
-                                                             horizontal:
-                                        MediaQuery.of(context).size.width * 0.030,
-                                                      ),
-                                                  child: Container(
-                                                    padding: EdgeInsets.symmetric(
-                                                        vertical: MediaQuery.of(context).size.height * 0.020,
-                                                        horizontal: MediaQuery.of(context).size.height * 0.020),
-                                                    height: MediaQuery.of(context).size.height * 0.3,
-                                                    width: MediaQuery.of(context).size.width * 1,
-                                                    decoration: const BoxDecoration(
-                                                      gradient: LinearGradient(colors: [
-                                                        // Color.fromARGB(255, 233, 233, 224),
-                                                        Color(0xFF9990FF),
-                                                        Color.fromARGB(255, 233, 233, 224),
-                                                        Color.fromARGB(255, 233, 233, 224),
-                                                   
-                                                        // Color.fromARGB(255, 233, 233, 224)
-                                                      ]),
-                                                      borderRadius: BorderRadius.all(
-                                                        Radius.circular(13),
-                                                      ),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              height: MediaQuery.of(context).size.height * 0.080,
-                                                              width: MediaQuery.of(context).size.width * 0.170,
-                                                              decoration: const BoxDecoration(
-                                                                image: DecorationImage(
-                                                                    fit: BoxFit.fill,
-                                                                    image:
-                                                                        AssetImage("assets/images/projectImage.png")),
-                                                                borderRadius: BorderRadius.all(
-                                                                  Radius.circular(19),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            SizedBox(
-                                                              width: MediaQuery.of(context).size.width * 0.040,
-                                                            ),
-                                                            Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                              children: [
-                                                                Text(
-                                                                 projData?['projectName'],
-                                                                  style: headline2,
-                                                                ), Text(
-                                                                 'ane',
-                                                                  style: headline2,
-                                                                ),
-                                                                Text(
-                                                                  "${unitCounts} Units",
-                                                                  style: displaySmall,
-                                                                )
-                                                              ],
-                                                            )
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: MediaQuery.of(context).size.height * 0.020,
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Text(
-                                                              "Newly Added",
-                                                              style: headline2.copyWith(fontSize: 12),
-                                                            ),
-                                                            Spacer(),
-                                                            Text(
-                                                              'See All',
-                                                              style: GoogleFonts.inter(
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontSize: 12,
-                                                                  color: appLightTheme.primaryColor),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          height: MediaQuery.of(context).size.height * 0.010,
-                                                        ),
-                                                        SizedBox(
-                                                          height: MediaQuery.of(context).size.height * 0.123,
-                                                          width: MediaQuery.of(context).size.width * 0.9,
-                                                          child: ListView.builder(
-                                                            itemCount: 5,
-                                                            scrollDirection: Axis.horizontal,
-                                                            itemBuilder: (context, index) {
-                                                              return Padding(
-                                                                padding: EdgeInsets.only(
-                                                                    right: MediaQuery.of(context).size.width * 0.010),
-                                                                child: Container(
-                                                                  height: 110,
-                                                                  width: 110,
-                                                                  decoration: BoxDecoration(
-                                                                      image: DecorationImage(
-                                                                          image: AssetImage("assets/images/room.png")),
-                                                                      borderRadius:
-                                                                          BorderRadius.all(Radius.circular(13))),
-                                                                ),
-                                                              );
-                                                            },
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                      );
-    
-                                      return Text('${projData?['projectName']}');  
-                                      
-                                      }),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-
-                  }else{
-                    return Text('No Data');
-                  }}),
-
+               body: Center(
+           child: () {
+          switch (controller.myTaskTypeCategory.value) {
+            case 'allBusinessTasks':
+              return Text('Tasks');
+            case 'myLeads':
+              return _LeadsList(context, controller2);
+            case 'projects':
+              return _projectsBody(context,controller2);
+            default:
+              return Text('Invalid selection');
+          }
+        }()),
+     
               // body: TabBarView(
               //   children: [
               //       controller.streamToday(),
@@ -757,6 +596,361 @@ var projData =
         ));
   }
 
+ Widget _projectsBody( context, controller2) {
+             return         StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("${controller2.currentUserObj['orgId']}_projects")
+                  // .where("status", isEqualTo: "ongoing")
+                  .snapshots(),
+              // stream: DbQuery.instanace.getStreamCombineTasks(),
+              builder: (context, snapshot) {
+              //     if (!snapshot.hasData) {
+              //   return CircularProgressIndicator();
+              // }
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text("Something went wrong! 😣..."),
+                  );
+                } else if (snapshot.hasData) {
+
+                  // lets seperate between business vs personal
+
+                  var TotalTasks = snapshot.data!.docs.toList();
+
+                   print('pub dev is ${TotalTasks}');
+                   print('pub dev isx ${controller2.currentUserObj['orgId']}');
+    
+
+                // particpantsIdA
+
+                // return Text('Full Data');
+                   return Column(
+                        children: [
+                          Expanded(
+                            child: MediaQuery.removePadding(
+                              context: context,
+                              removeTop: true,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: snapshot.data?.docs.length,
+                                    itemBuilder: (context, i) {
+
+var projData =
+                      snapshot.data?.docs[i];
+                      var unitCounts;
+                      try {
+                           unitCounts = projData?['totalUnitCount'] ?? 0;      
+                      } catch (e) {
+                             unitCounts = 'NA';
+                      }
+             
+                                  
+return _buildSingleHouse(context, projData);
+ 
+                                      
+                                      }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+
+                  }else{
+                    return Text('No Data');
+                  }});
+
+ }
+
+  Widget _buildSingleHouse( context, projData) {
+
+    String totalUnitCount = projData?.data()?.containsKey('totalUnitCount') == true
+    ? projData['totalUnitCount'].toString()
+    : '0';
+     String soldUnitCount = projData?.data()?.containsKey('soldUnitCount') == true
+    ? projData!['soldUnitCount'].toString()
+    : '0';
+    return FxCard(
+      onTap: () {
+                      Get.to(() => ProjectUnitScreen(projectDetails: projData ));
+      },
+      margin: FxSpacing.nTop(24),
+      paddingAll: 0,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      borderRadiusAll: 16,
+      child: Column(
+        children: [
+          // Image(
+          //   image: AssetImage("assets/images/room.png"),
+          //   fit: BoxFit.fitWidth,
+          // ),
+          FxContainer(
+            paddingAll: 16,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FxText.bodyMedium(
+                      projData?['projectName'],
+                      fontWeight: 700,
+                    ),
+                    FxText.bodyMedium(
+                      projData!['projectType']?['name'],
+                      fontWeight: 600,
+                      color: appGreenTheme.secondary,
+                    ),
+                  ],
+                ),
+                FxSpacing.height(4),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 16,
+                      color: Colors.grey.withAlpha(180),
+                    ),
+                    FxSpacing.width(4),
+                    FxText.bodySmall(
+                      projData!['location'],
+                      xMuted: true,
+                    ),
+                  ],
+                ),
+                FxSpacing.height(8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.king_bed,
+                            size: 16,
+                            color:
+                                Colors.grey.withAlpha(180),
+                          ),
+                          FxSpacing.width(4),
+                          FxText.bodySmall(
+                            totalUnitCount,
+                            xMuted: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.bathtub,
+                            size: 16,
+                            color:
+                                Colors.grey.withAlpha(180),
+                          ),
+                          FxSpacing.width(4),
+                          FxText.bodySmall(
+                            '${projData!['area']}',
+                            xMuted: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                FxSpacing.height(8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.square_foot,
+                            size: 16,
+                            color:
+                                Colors.grey.withAlpha(180),
+                          ),
+                          FxSpacing.width(4),
+                          FxText.bodySmall(
+                            soldUnitCount,
+                            xMuted: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.aspect_ratio,
+                            size: 16,
+                            color:
+                                Colors.grey.withAlpha(180),
+                          ),
+                          FxSpacing.width(4),
+                          FxText.bodySmall(
+                            '${projData!['area']}',
+                            xMuted: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+ Widget _LeadsList( context, controller2) {
+             return         StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("${controller2.currentUserObj['orgId']}_leads")
+                  // .where("assignedTo", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                  .where("Status", isEqualTo: 'followup')
+                  .snapshots(),
+              // stream: DbQuery.instanace.getStreamCombineTasks(),
+              builder: (context, snapshot) {
+              //     if (!snapshot.hasData) {
+              //   return CircularProgressIndicator();
+              // }
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text("Something went wrong! 😣..."),
+                  );
+                } else if (snapshot.hasData) {
+
+                   return Column(
+                        children: [
+                          Expanded(
+                            child: MediaQuery.removePadding(
+                              context: context,
+                              removeTop: true,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: snapshot.data?.docs.length,
+                                    itemBuilder: (context, i) {
+
+var projData =
+                      snapshot.data?.docs[i];
+                
+          
+                                  
+return _buildLeadsCard(context, projData);
+ 
+                                      
+                                      }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+
+                  }else{
+                    return Text('No Data');
+                  }});
+
+ }
+
+   Widget _buildLeadsCard( context,     _list) {
+
+      String lead_Remarks = _list?.data()?.containsKey('Remarks') == true
+    ? _list!['Remarks']
+    : 'NA';
+
+    return Container(
+      margin: FxSpacing.top(16),
+      child: InkWell(
+        onTap: () {
+          //_showBottomSheet(context);
+       
+                      Get.to(() => LeadsDetailsScreen(leadDetails: _list ));
+    
+        },
+        child: Row(
+          children: <Widget>[
+            // ClipRRect(
+            //   borderRadius: BorderRadius.all(Radius.circular(24)),
+            //   child: Image(
+            //     image: AssetImage('./assets/images/profile/avatar_2.jpg'),
+            //     height: 48,
+            //     width: 48,
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
+            Expanded(
+              child: Container(
+                margin: FxSpacing.left(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FxText.bodyMedium(_list['Name'],
+                        letterSpacing: 0,
+                     
+                        fontWeight: 600),
+                    FxText.bodySmall(
+                      lead_Remarks,
+                   
+                      letterSpacing: 0,
+                      xMuted: true,
+                      fontWeight: 600,
+                      fontSize: 12,
+                    ),
+                    FxText.bodySmall(
+                      _list['Status'],
+                      fontSize: 12,
+                      muted: true,
+                      letterSpacing: 0,
+                      fontWeight: 500,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                setState(() {
+                  // _list[index] = !_list[index];
+                });
+              },
+              child: FxContainer(
+                 margin: FxSpacing.right(16),
+                padding: FxSpacing.fromLTRB(16, 8, 16, 8),
+                bordered: false,
+                borderRadiusAll: 4,
+                border: Border.all(color: Colors.grey, width: 1),
+                color:false
+                    ? Colors.transparent
+                    : appLightTheme.primaryColor,
+                child: FxText.bodySmall("Call",
+                    color:false
+                        ? appLightTheme.colorScheme.onBackground
+                        : appLightTheme.colorScheme.onPrimary,
+                    fontWeight: 600,
+                    letterSpacing: 0.3),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  
+      }
+
   Widget _filterChip(int index,
       {required String title,
       required MySearchController controller,
@@ -799,7 +993,7 @@ var projData =
         ),
         FxSpacing.width(8),
         FxText.titleLarge(
-          "SiteMaster💥",
+          "Sales💥",
           fontWeight: 600,
           // color: Get.theme.primary,
         ),

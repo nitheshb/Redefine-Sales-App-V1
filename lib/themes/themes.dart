@@ -32,6 +32,10 @@ extension ThemeExtension on ThemeData {
      
      Color get      ErrorContainer=> Color(0xffFFD9D4);
      Color get      onErrorContainer=> Color.fromARGB(255, 146, 104, 104);
+     Color get      medicarePrimary=> const Color(0xff6d65df);
+     Color get      medicareOnPrimary=> const Color(0xffffffff);    
+      Color get      groceryPrimary=> const Color(0xff10bb6b);
+     Color get      groceryOnPrimary=> const Color(0xffffffff);
 
 
           
@@ -174,6 +178,13 @@ ThemeData appGreenTheme = ThemeData(
 const primaryGreenLighter = Color(0xFF7DDE86);
 const primaryGreenLightest = Color(0xFFECFCE5);
 
+
+ var  seedColor = Color(0xff1c8c8c);
+  var      primaryContainer = Color(0xffdafafa);
+     var   secondary = Color(0xfff15f5f);
+    var    onSecondary = Color(0xffffffff);
+      var  secondaryContainer = Color(0xfff8d6d6);
+
 TextStyle displaySmall =
     GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 16);
 
@@ -244,4 +255,9 @@ TextStyle tinyRegular = GoogleFonts.inter(
     fontSize: 12.4,
     letterSpacing: 1.0,
     height: 1.4);
+
+
+
+     
+
 
