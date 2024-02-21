@@ -8,6 +8,12 @@ import 'package:redefineerp/Screens/Profile/profile_controller.dart';
 
 ProfileController profileController = Get.put(ProfileController());
 
+final ThemeData appLightTheme = ThemeData(
+    brightness: Brightness.light,
+    primaryColor: const Color(0xFF6B4EFF),
+    primaryColorDark: const Color(0xFF5538EE),
+    primaryColorLight: const Color(0xFF9990FF),
+    backgroundColor: Color.fromARGB(255, 242, 240, 240));
 extension ThemeExtension on ThemeData {
 
 
@@ -115,3 +121,127 @@ class Themes {
     // textTheme: TextTheme(headline1: GoogleFonts.quicksand(fontSize: 18,fontWeight: FontWeight.w800,color: Theme.of(context).btnTextCol),headline2: GoogleFonts.quicksand(fontSize: 16,fontWeight: FontWeight.w600),headline3: GoogleFonts.quicksand(fontSize: 14,fontWeight: FontWeight.w600))
   );
 }
+
+final TextTheme textTheme = TextTheme(
+  bodyLarge: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 14),
+  bodyMedium: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 14),
+  bodyText1: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 14),
+  bodyText2: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 13),
+  caption: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 12),
+  headline4: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 12),
+  headline5: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 12),
+  headlineLarge: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 11.7),
+  headlineMedium: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 11),
+  labelLarge: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 11.4),
+  labelMedium: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 11.4),
+  labelSmall: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 11.3),
+  overline: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 11.3),
+  subtitle1: GoogleFonts.inter(fontWeight: FontWeight.normal, fontSize: 11.3),
+  subtitle2: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 11.3),
+  titleLarge: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 11.3),
+  titleMedium: GoogleFonts.inter(fontWeight: FontWeight.normal, fontSize: 11),
+  titleSmall: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 11.3),
+);
+
+final ThemeData appBlueMode = ThemeData(
+  primaryColor: const Color(0xFF48A7F8),
+  primaryColorDark: const Color(0xFF0065D0),
+  primaryColorLight: const Color(0xFF6EC2FB),
+);
+// for primary theme
+const primaryLighther = Color(0xFFC6C4FF);
+const primaryLightest = Color(0xFFE7E7FF);
+
+// for blue theme
+const primaryBlueLighter = Color(0xFF9BDCFD);
+const primaryBlueLightest = Color(0xFFC9F0FF);
+
+// for ink theme
+const inkDarkest = Color(0xFF090A0A);
+const inkDarker = Color(0xFF202325);
+const inkDark = Color(0xFF303437);
+const inkBase = Color(0xFF404446);
+const inkLight = Color(0xFF6C7072);
+const inkLighter = Color(0xFF72777A);
+
+ThemeData appGreenTheme = ThemeData(
+    primaryColor: const Color(0xFF23C16B),
+    primaryColorDark: const Color(0xFF198155),
+    primaryColorLight: const Color(0xFF4CD471));
+
+// for green theme
+
+const primaryGreenLighter = Color(0xFF7DDE86);
+const primaryGreenLightest = Color(0xFFECFCE5);
+
+TextStyle displaySmall =
+    GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 16);
+
+TextStyle displayMedium =
+    GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 17);
+
+TextStyle caption = GoogleFonts.inter(
+    fontWeight: FontWeight.w500, fontSize: 16.3, color: Color(0xFF6C7072));
+
+TextStyle button = GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 12);
+
+TextStyle headline3 =
+    GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 16);
+
+TextStyle headline2 =
+    GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 18);
+TextStyle displayLarge =
+    GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 15);
+
+TextStyle bodySmall =
+    GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 13);
+
+TextStyle headline6 =
+    GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 14.6);
+
+TextStyle headlineSmall = GoogleFonts.inter(
+  fontWeight: FontWeight.w800,
+  fontSize: 11.4,
+);
+
+TextStyle buttontext = GoogleFonts.inter(
+    fontWeight: FontWeight.w600, fontSize: 13.4, color: Colors.white);
+
+TextStyle headline1 =
+    GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 20);
+
+TextStyle titleNormal = GoogleFonts.inter(
+    fontWeight: FontWeight.w400, fontSize: 14.3, color: Color(0xFF72777A));
+
+TextStyle titleRegular =
+    GoogleFonts.inter(fontWeight: FontWeight.w300, fontSize: 14.3);
+
+TextStyle titleTiny =
+    GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 10.8);
+
+TextStyle titleTinyMedium =
+    GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 10.8);
+
+TextStyle titleTinyRegular =
+    GoogleFonts.inter(fontWeight: FontWeight.normal, fontSize: 10.8);
+TextStyle titleTinyBold =
+    GoogleFonts.inter(fontWeight: FontWeight.w900, fontSize: 10.8);
+
+TextStyle bodyTinyMedium =
+    GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 10.8);
+
+TextStyle bodyTinyRegular =
+    GoogleFonts.inter(fontWeight: FontWeight.normal, fontSize: 10.6);
+
+TextStyle bodyTinyBold =
+    GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 10.6);
+
+TextStyle tinyMedium =
+    GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 10.6);
+
+TextStyle tinyRegular = GoogleFonts.inter(
+    fontWeight: FontWeight.w400,
+    fontSize: 12.4,
+    letterSpacing: 1.0,
+    height: 1.4);
+

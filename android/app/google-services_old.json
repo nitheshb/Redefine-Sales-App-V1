@@ -1,0 +1,142 @@
+{
+  "project_info": {
+    "project_number": "805525655781",
+    "project_id": "redefine-erp",
+    "storage_bucket": "redefine-erp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805525655781:android:079e9450420fc6abdc840c",
+        "android_client_info": {
+          "package_name": "com.example.erp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "805525655781-blp0t57efv1dcunrqbvrrsnd8ok1e1ke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfee-Mdo-rFHx1JWQXf7gQ164IScmLY0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "805525655781-blp0t57efv1dcunrqbvrrsnd8ok1e1ke.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805525655781:android:f9667ee6ef2e4dcedc840c",
+        "android_client_info": {
+          "package_name": "com.example.redefineerp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "805525655781-blp0t57efv1dcunrqbvrrsnd8ok1e1ke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfee-Mdo-rFHx1JWQXf7gQ164IScmLY0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "805525655781-blp0t57efv1dcunrqbvrrsnd8ok1e1ke.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805525655781:android:cd8de16ffc94148fdc840c",
+        "android_client_info": {
+          "package_name": "com.example.todo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "805525655781-27aaji7hp27t9sceergo3ggikl0me0io.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.todo",
+            "certificate_hash": "c9a2e83904c6aace725ecd68e4d9455ec886145e"
+          }
+        },
+        {
+          "client_id": "805525655781-blp0t57efv1dcunrqbvrrsnd8ok1e1ke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfee-Mdo-rFHx1JWQXf7gQ164IScmLY0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "805525655781-blp0t57efv1dcunrqbvrrsnd8ok1e1ke.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:805525655781:android:fdce843a2a4a9f0ddc840c",
+        "android_client_info": {
+          "package_name": "com.task.erp.redefine"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "805525655781-2h66mn09c8ndqa2cupj5ka1g53bn1e55.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.task.erp.redefine",
+            "certificate_hash": "c828a3b991fc46a12abd8367654293141bd3aa52"
+          }
+        },
+        {
+          "client_id": "805525655781-blp0t57efv1dcunrqbvrrsnd8ok1e1ke.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfee-Mdo-rFHx1JWQXf7gQ164IScmLY0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "805525655781-blp0t57efv1dcunrqbvrrsnd8ok1e1ke.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

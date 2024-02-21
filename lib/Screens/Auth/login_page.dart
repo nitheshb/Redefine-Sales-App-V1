@@ -20,10 +20,10 @@ class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
 
   List<String> images = [
-    'assets/images/login1.png',
-    'assets/images/login2.png',
-    'assets/images/login3.png',
-    'assets/images/login4.png'
+    'assets/images/mood_dairy_image.png',
+    'assets/images/relax_image.png',
+    'assets/images/welcome.png',
+    'assets/images/mood_dairy_image.png'
   ];
 
   @override
@@ -210,4 +210,5 @@ class LoginPage extends StatelessWidget {
     SystemChannels.platform.invokeMethod('SystemNavigator.pop');
     return Future.value(false);
   }
+
 }

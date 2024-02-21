@@ -54,6 +54,7 @@ dependencies:
   introduction_screen: ^3.0.2
   image_picker: ^0.8.6
   syncfusion_flutter_charts:
+  shared_preferences:
   # jiffy:
   percent_indicator: ^4.0.1
   rxdart: ^0.27.2

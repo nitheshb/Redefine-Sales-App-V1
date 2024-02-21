@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:redefineerp/Screens/Auth/auth_controller.dart';
 import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_dialog.dart';
 import 'package:redefineerp/Screens/Contact/contact_list_page.dart';
@@ -28,6 +29,7 @@ import 'package:redefineerp/Screens/Search/search_controller.dart';
 import 'package:redefineerp/Screens/Search/search_task.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
+import 'package:redefineerp/Screens/projectDetails/project_units_screen.dart';
 import 'package:redefineerp/Utilities/basicdialog.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
 import 'package:redefineerp/Utilities/custom_sizebox.dart';
@@ -56,40 +58,33 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<HomePageController>(HomePageController());
+    final controller2 = Get.put<AuthController>(AuthController());
     final controller1 = Get.put<ContactController>(ContactController());
     // MySearchController searchController =
     //     Get.put<MySearchController>(SearchController());
     // TaskController controller1 = Get.put<TaskController>(TaskController());
     debugPrint("home called ${FirebaseAuth.instance.currentUser}");
+    debugPrint("home calledc ${controller2.currentUserObj}");
     // Set the system status bar color
 // Create two streams for each query
     final stream1 = FirebaseFirestore.instance
-        .collection('spark_assignedTasks')
+        .collection('maahomes_projects')
         // .where("due_date",
         //     isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
-        .where("status", isEqualTo: "InProgress")
+        .where("status", isEqualTo: "ongoing")
         // .where("particpantsIdA", arrayContains: FirebaseAuth.instance.currentUser!.uid)
-        .where("to_uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .where("by_uid", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        // .where("to_uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        // .where("by_uid", isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
 
         // .orWhere("by_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
 
         .snapshots();
-    final stream2 = FirebaseFirestore.instance
-        .collection('spark_assignedTasks')
-        .where("due_date",
-            isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
-        .where("status", isEqualTo: "InProgress")
-        // .where("particpantsIdA", arrayContains: FirebaseAuth.instance.currentUser!.uid)
-        // .where("to_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
-        .where("by_uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .snapshots();
+
 
 // Combine the two streams using the RxCombineLatestStream from the rxdart package
 // final combinedStream = RxCombineLatestStream<QuerySnapshot>([stream1, stream2]);
 // final combinedStream = rxdart.CombineLatestStream( [stream1, stream2]);
-    final combinedStream =
-        CombineLatestStream.list<QuerySnapshot>([stream1, stream2]);
+
     return Obx(() => Scaffold(
           backgroundColor: const Color(0xffffffff),
           appBar: AppBar(
@@ -148,772 +143,12 @@ class HomePage extends StatelessWidget {
                             {Get.to(() => const NotificationPage())},
                         icon: const Icon(Icons.notifications),
                         color: Get.theme.btnTextCol.withOpacity(0.3)),
-                    //  IconButton(
-
-                    //                   onPressed: () => {Get.to(() => const ProfilePage())},
-                    //                   icon: Hero(
-                    //                     tag: 'profile',
-                    //                     child: Material(
-                    //                       type: MaterialType.transparency,
-                    //                       child: CircleAvatar(
-                    //                         backgroundColor: Color(0xffe6e7fd),
-                    //                         radius: 30,
-                    //                         child: Icon(
-                    //                           Icons.person,
-                    //                           color: Colors.black38,
-                    //                           size: 20,
-                    //                         ),
-                    //                       ),
-                    //                     ),
-                    //                   ),
-                    //                 ),
-                    // // PopupMenuButton(
-                    //   itemBuilder: (BuildContext context) => [
-                    //     PopupMenuItem(
-                    //       child: Text('Settings'),
-                    //     ),
-                    //   ],
-                    // ),
+        
                   ],
           ),
 
-          //  IconButton(
 
-          //                   onPressed: () => {Get.to(() => const ProfilePage())},
-          //                   icon: Hero(
-          //                     tag: 'profile',
-          //                     child: Material(
-          //                       type: MaterialType.transparency,
-          //                       child: CircleAvatar(
-          //                         backgroundColor: Color(0xffe6e7fd),
-          //                         radius: 30,
-          //                         child: Icon(
-          //                           Icons.person,
-          //                           color: Colors.black38,
-          //                           size: 20,
-          //                         ),
-          //                       ),
-          //                     ),
-          //                   ),
-          //                 ),
-          // // PopupMenuButton(
-          //   itemBuilder: (BuildContext context) => [
-          //     PopupMenuItem(
-          //       child: Text('Settings'),
-          //     ),
-          //   ],
-          // ),
-          // ],
-
-          // ),
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () => {
-              showModalBottomSheet(
-                  shape: const RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(9.0))),
-                  backgroundColor: Colors.white,
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => Padding(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom,
-                          left: 14.0,
-                          right: 14.0,
-                          top: 10.0),
-                      child: Form(
-                        key: controller.taskKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextFormField(
-                              validator: controller.validateTaskTitle,
-                              controller: controller.taskTitle,
-                              onChanged: controller.validateTaskTitle,
-                              decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Task name...'),
-                              style: const TextStyle(
-                                  fontSize: 19, fontWeight: FontWeight.w500),
-                              autofocus: true,
-                            ),
-                            TextField(
-                              decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Description'),
-                              style: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w400),
-                              onSubmitted: (value) {
-                                Navigator.pop(context);
-                                var currentDate = DateTime.now();
-                                // FlutterDateTimePicker.DatePicker.showTimePicker(context,
-                                //     showSecondsColumn: false,
-                                //     showTitleActions: true,
-                                //     onChanged: (date) {}, onConfirm: (date) {
-                                //   if (value.isNotEmpty) {
-                                //     print('value iss ${value} data is ${date}');
-                                //     //  var task = Task.create(name: value, createdAt: date);
-                                //     // base.dataStore.addTask(task: task);
-                                //   }
-                                // }, currentTime: DateTime.now());
-                              },
-                              autofocus: true,
-                            ),
-                            //  Container(
-                            //   height:
-                            //  child: null),
-                            Visibility(
-                              visible: !(controller.assignedUserName.value ==
-                                  "Assign someone"),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  // assign to
-
-                                  InkWell(
-                                    onTap: () => {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              Dialog(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                  ),
-                                                  child: ContactListPage()))
-                                    },
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          child: Material(
-                                            type: MaterialType.transparency,
-                                            child: CircleAvatar(
-                                              backgroundColor:
-                                                  Get.theme.colorPrimaryDark,
-                                              radius: 17,
-                                              child: Text(
-                                                  '${controller.assignedUserName.value.substring(0, 2)}',
-                                                  style: const TextStyle(
-                                                      color: Colors.white)),
-                                            ),
-                                          ),
-                                        ),
-                                        Obx(() => Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0, bottom: 4),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                    height: 16,
-                                                    child: Text(
-                                                      'Assigned to',
-                                                      style: Get.theme.kSubTitle
-                                                          .copyWith(
-                                                              color: Get.theme
-                                                                  .kLightGrayColor),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 22,
-                                                    child: Text(
-                                                      controller
-                                                          .assignedUserName
-                                                          .value,
-                                                      style: Get.theme
-                                                          .kPrimaryTxtStyle
-                                                          .copyWith(
-                                                              color: Get.theme
-                                                                  .kBadgeColor),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-
-                                  // Due Date
-
-                                  InkWell(
-                                    onTap: () => {
-                                      // FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
-                                      //     showTitleActions: true,
-                                      //     onChanged: (date) {
-                                      //   print(
-                                      //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                      // }, onConfirm: (date) {
-                                      //   controller.dateSelected = date;
-                                      //   controller.updateSelectedDate();
-                                      // }, currentTime: DateTime.now())
-                                    },
-                                    child: Row(
-                                      children: [
-                                        SizedBox(
-                                          child: Material(
-                                              type: MaterialType.transparency,
-                                              child: DottedBorder(
-                                                borderType: BorderType.Circle,
-                                                color:
-                                                    Get.theme.kLightGrayColor,
-                                                radius:
-                                                    const Radius.circular(27.0),
-                                                dashPattern: [3, 3],
-                                                strokeWidth: 1,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(6.0),
-                                                  child: Icon(
-                                                    Icons
-                                                        .calendar_month_outlined,
-                                                    size: 18,
-                                                    color: Get
-                                                        .theme.kLightGrayColor,
-                                                  ),
-                                                ),
-                                              )
-                                              // child: CircleAvatar(
-                                              //   radius: 19,
-                                              //     backgroundColor: Get.theme.colorPrimaryDark,
-                                              //   child: CircleAvatar(
-                                              //     backgroundColor: Colors.white,
-                                              //     radius: 18,
-                                              //     child:   Icon(
-                                              //                                                     Icons.calendar_month_outlined,
-                                              //                                                     size: 18,
-                                              //                                                     color: Get.theme.kLightGrayColor,
-                                              //                                                   ),
-                                              //   ),
-                                              // ),
-                                              ),
-                                        ),
-                                        Obx(() => Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 8.0, bottom: 4),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 16,
-                                                        child: Text(
-                                                          'Due Date',
-                                                          style: Get
-                                                              .theme.kSubTitle
-                                                              .copyWith(
-                                                                  color: Get
-                                                                      .theme
-                                                                      .kLightGrayColor),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 22,
-                                                        child: Text(
-                                                            controller
-                                                                .selectedDateTime
-                                                                .value,
-                                                            style: Get.theme
-                                                                .kNormalStyle
-                                                                .copyWith(
-                                                                    color: Get
-                                                                        .theme
-                                                                        .kBadgeColor)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                            //               () => ActionChip(
-                                            // elevation: 0,
-                                            // side: BorderSide(color: Get.theme.btnTextCol.withOpacity(0.1)),
-                                            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                            // backgroundColor: Get.theme.kBadgeColorBg,
-                                            // label: Text(
-                                            //   controller.assignedUserName.value,
-                                            //   style: Get.theme.kSubTitle.copyWith(color: Get.theme.kBadgeColor),
-                                            // ),
-                                            // onPressed: () => {
-                                            //       // Get.to(() => const ContactListPage()),
-                                            //       showDialog(
-                                            //               context: context,
-                                            //               builder: (BuildContext context) => Dialog(
-                                            // shape: RoundedRectangleBorder(
-                                            //   borderRadius: BorderRadius.circular(8),
-                                            // ),
-                                            // child:  ContactListPage()))
-                                            //     }
-                                            //     )
-                                            ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            const SizedBox(
-                              height: 8,
-                            ),
-
-                            Visibility(
-                                visible:
-                                    (controller.attachmentsA.value.length > 0),
-                                child: SizedBox(
-                                    // height: 20,
-                                    child: Column(
-                                  children: [
-                                    SizedBox(
-                                      // height: 20,
-                                      child: Text(
-                                        'Attachments',
-                                        style: Get.theme.kSubTitle.copyWith(
-                                            color: const Color(0xff707070),
-                                            fontSize: 16),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 15),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 2.0),
-                                      child: Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () async {
-                                              image = await picker.pickImage(
-                                                  source: ImageSource.gallery);
-                                              storageReference
-                                                  .putFile(File(image!.path))
-                                                  .then((value) async {
-                                                controller.attachmentsA.value
-                                                    .add(await value.ref
-                                                        .getDownloadURL());
-                                                print(
-                                                    'Image URL: ${controller.attachmentsA.value}');
-                                              });
-                                            },
-                                            child: DottedBorder(
-                                              // borderType: BorderType.Circle,
-                                              color: Get.theme.kLightGrayColor,
-                                              radius:
-                                                  const Radius.circular(27.0),
-                                              dashPattern: [6, 8],
-                                              strokeWidth: 1.5,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(24.0),
-                                                child: Icon(
-                                                  Icons.add,
-                                                  size: 22,
-                                                  color:
-                                                      Get.theme.kLightGrayColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            height: 100,
-                                            child: Container(
-                                              child: ListView.builder(
-                                                  shrinkWrap: true,
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  physics:
-                                                      const BouncingScrollPhysics(),
-                                                  itemCount: controller
-                                                      .attachmentsA.length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                              int index) =>
-                                                          Card(
-                                                              child: Image(
-                                                            image: NetworkImage(
-                                                                controller
-                                                                        .attachmentsA[
-                                                                    index]),
-                                                            // fit: BoxFit.fill,
-                                                            width: 100,
-                                                            height: 100,
-                                                          ))),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ))),
-
-                            Visibility(
-                              visible:
-                                  (controller1.participants.value.isNotEmpty),
-                              child: SizedBox(
-                                // height: 20,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Participants',
-                                      style: Get.theme.kSubTitle.copyWith(
-                                          color: const Color(0xff707070),
-                                          fontSize: 16),
-                                    ),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    SizedBox(
-                                      width:
-                                          MediaQuery.of(context).size.width * 1,
-                                      child: Row(
-                                        children: [
-                                          // Generator.buildOverlaysProfile(
-                                          //     images: [
-                                          //       'assets/images/icon.jpg',
-                                          //       'assets/images/icon.jpg',
-                                          //     ],
-                                          //     enabledOverlayBorder: true,
-                                          //     overlayBorderColor: Color(0xfff0f0f0),
-                                          //     overlayBorderThickness: 1.7,
-                                          //     leftFraction: 0.72,
-                                          //     size: 26),
-
-                                          InkWell(
-                                              onTap: () => {
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext
-                                                                context) =>
-                                                            const ContactListDialogPage())
-                                                  },
-                                              child: DottedBorder(
-                                                borderType: BorderType.Circle,
-                                                color:
-                                                    Get.theme.kLightGrayColor,
-                                                radius:
-                                                    const Radius.circular(27.0),
-                                                dashPattern: [3, 3],
-                                                strokeWidth: 1,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(4.0),
-                                                  child: Icon(
-                                                    Icons.add,
-                                                    size: 15,
-                                                    color: Get
-                                                        .theme.kLightGrayColor,
-                                                  ),
-                                                ),
-                                              )),
-
-                                          const SizedBox(
-                                            width: 4,
-                                          ),
-                                          Obx(
-                                            () => SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.04,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.720,
-                                              child: ListView.builder(
-                                                itemCount: controller
-                                                    .participantsANew
-                                                    .value
-                                                    .length,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemBuilder: (context, index) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 3.0),
-                                                    child: SizedBox(
-                                                      child: Material(
-                                                        type: MaterialType
-                                                            .transparency,
-                                                        child: CircleAvatar(
-                                                          backgroundColor: Get
-                                                              .theme
-                                                              .colorPrimaryDark,
-                                                          radius: 14,
-                                                          child: Text(
-                                                              '${controller.participantsANew[index]['name'].substring(0, 2)}',
-                                                              style: const TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize:
-                                                                      10)),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                          // Obx(
-                                          //   () => SizedBox(
-                                          //     height:
-                                          //         MediaQuery.of(context).size.height * 0.04,
-                                          //     width:
-                                          //         MediaQuery.of(context).size.width * 0.720,
-                                          //     child: ListView.builder(
-                                          //       itemCount: controller_Contacts
-                                          //           .participants.value.length,
-                                          //       scrollDirection: Axis.horizontal,
-                                          //       itemBuilder: (context, index) {
-                                          //         return Padding(
-                                          //           padding: const EdgeInsets.only(left:3.0),
-                                          //           child: SizedBox(
-                                          //             child: Material(
-                                          //               type: MaterialType.transparency,
-                                          //               child: CircleAvatar(
-                                          //                 backgroundColor:
-                                          //                     Get.theme.colorPrimaryDark,
-                                          //                 radius: 14,
-                                          //                 child: Text(
-                                          //                     '${controller_Contacts.participants[index]['name'].substring(0, 2)}',
-                                          //                     style: TextStyle(
-                                          //                         color: Colors.white,
-                                          //                         fontSize: 10)),
-                                          //               ),
-                                          //             ),
-                                          //           ),
-                                          //         );
-                                          //       },
-                                          //     ),
-                                          //   ),
-                                          // ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                    children: [
-                                      Visibility(
-                                        visible: (controller
-                                                .assignedUserName.value ==
-                                            "Assign someone"),
-                                        child: Row(
-                                          children: [
-                                            InkWell(
-                                              onTap: () => {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (BuildContext
-                                                            context) =>
-                                                        Dialog(
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8),
-                                                            ),
-                                                            child:
-                                                                ContactListPage()))
-                                              },
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.person,
-                                                    color: Get
-                                                        .theme.kLightGrayColor,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 20.0,
-                                            ),
-                                            InkWell(
-                                              onTap: () => {
-                                                // FlutterDateTimePicker.DatePicker.showDateTimePicker(
-                                                //     context,
-                                                //     showTitleActions: true,
-                                                //     onChanged: (date) {
-                                                //   print(
-                                                //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                                // }, onConfirm: (date) {
-                                                //   controller.dateSelected =
-                                                //       date;
-                                                //   controller
-                                                //       .updateSelectedDate();
-                                                // }, currentTime: DateTime.now())
-                                              },
-                                              child: Icon(
-                                                Icons.calendar_month_outlined,
-                                                color:
-                                                    Get.theme.kLightGrayColor,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 20.0,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: !(controller
-                                                .attachmentsA.value.length >
-                                            0),
-                                        child: Row(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                InkWell(
-                                                  onTap: () async {
-                                                    image =
-                                                        await picker.pickImage(
-                                                            source: ImageSource
-                                                                .gallery);
-                                                    storageReference
-                                                        .putFile(
-                                                            File(image!.path))
-                                                        .then((value) async {
-                                                      controller.attachmentsA
-                                                          .value = [
-                                                        await value.ref
-                                                            .getDownloadURL()
-                                                      ];
-                                                      print(
-                                                          'Image URL: ${controller.attachmentsA.value}');
-                                                    });
-                                                  },
-                                                  child: Icon(
-                                                    Icons.attach_file,
-                                                    color: Get
-                                                        .theme.kLightGrayColor,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  width: 20.0,
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () => {
-                                          // FlutterDateTimePicker.DatePicker.showDateTimePicker(context,
-                                          //     showTitleActions: true,
-                                          //     onChanged: (date) {
-                                          //   print(
-                                          //       'change ${date.millisecondsSinceEpoch} $date in time zone ${date.timeZoneOffset.inHours}');
-                                          // }, onConfirm: (date) {
-                                          //   // controller.dateSelected = date;
-                                          //   // controller.updateSelectedDate();
-                                          // }, currentTime: DateTime.now())
-                                        },
-                                        child: Icon(
-                                          Icons.flag_outlined,
-                                          color: Get.theme.kLightGrayColor,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 20.0,
-                                      ),
-                                      Visibility(
-                                        visible: (!controller1
-                                            .participants.value.isNotEmpty),
-                                        child: InkWell(
-                                          onTap: () => {
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    const ContactListDialogPage())
-                                          },
-                                          child: Icon(
-                                            Icons.people_alt_outlined,
-                                            color: Get.theme.kLightGrayColor,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                InkWell(
-                                    onTap: () => {
-                                          controller.validationSuccess.value =
-                                              false,
-                                          // print(
-                                          //     controller.validationSuccess.value),
-                                          controller.checkTaskValidation()
-                                        },
-
-                                    // {controller.createNewTask()},
-                                    child: Obx(
-                                      () => CircleAvatar(
-                                        radius:
-                                            MediaQuery.of(context).size.height *
-                                                0.030,
-                                        backgroundColor: controller
-                                                    .validationSuccess.value ==
-                                                true
-                                            ? Get.theme.primaryContainer
-                                            : Colors.grey,
-                                        child: Icon(
-                                          Icons.send,
-                                          color: controller.validationSuccess
-                                                      .value ==
-                                                  true
-                                              ? Colors.blue
-                                              : const Color.fromARGB(
-                                                  255, 62, 62, 62),
-                                        ),
-                                      ),
-                                    ))
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                          ],
-                        ),
-                      )))
-            },
-
-            backgroundColor: Color(0xffBDA1EF),
-            label: Text('Add Task'),
-            icon: const Icon(
-              Icons.add,
-              // color: Color(0xff33264b),
-            ),
-            // child: Row(
-            //   children: [
-            //     Text('Aedd Task'),
-            //     const Icon(
-            //       Icons.add,
-            //       color: Color(0xff33264b),
-            //     ),
-            //   ],
-            // ),
-          ),
-          // floatingActionButtonLocation:
-          //     FloatingActionButtonLocation.,
+        
 
           body: DefaultTabController(
             length: 3,
@@ -1007,7 +242,7 @@ class HomePage extends StatelessWidget {
                                             ? Get.theme.primaryContainer
                                             : Colors.transparent,
                                         label: FxText.bodySmall(
-                                          "All Tasks",
+                                          "All Projects",
                                           fontSize: 11,
                                           fontWeight: 700,
                                           color: controller.myTaskTypeCategory
@@ -1074,7 +309,7 @@ class HomePage extends StatelessWidget {
                                                 ? Get.theme.primaryContainer
                                                 : Colors.transparent,
                                         label: FxText.bodySmall(
-                                          "Created by me  ",
+                                          "Recently Uploaded",
                                           fontSize: 11,
                                           fontWeight: 700,
                                           color:
@@ -1133,180 +368,196 @@ class HomePage extends StatelessWidget {
                 ];
               },
               // body: controller.streamToday()
-              body: Container(
-                child: StreamBuilder<List<QuerySnapshot>>(
-                    // stream: FirebaseFirestore.instance
-                    //     .collection('spark_assignedTasks')
-                    //     .where("due_date",
-                    //         isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
-                    //     .where("status", isEqualTo: "InProgress")
-                    //     // .where("particpantsIdA", arrayContains: FirebaseAuth.instance.currentUser!.uid)
-                    //     // .where("to_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
-                    //     // .orWhere("by_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
+               body:
+                           StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("${controller2.currentUserObj['orgId']}_projects")
+                  // .where("status", isEqualTo: "ongoing")
+                  .snapshots(),
+              // stream: DbQuery.instanace.getStreamCombineTasks(),
+              builder: (context, snapshot) {
+              //     if (!snapshot.hasData) {
+              //   return CircularProgressIndicator();
+              // }
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text("Something went wrong! 😣..."),
+                  );
+                } else if (snapshot.hasData) {
 
-                    //     .snapshots(),
-                    stream: combinedStream,
-                    builder: (context, snapshot) {
-                      //     if (!snapshot.hasData) {
-                      //   return CircularProgressIndicator();
-                      // }
-                      if (snapshot.hasError) {
-                        return const Center(
-                          child: Text("Something went wrong! 😣..."),
-                        );
-                      } else if (snapshot.hasData) {
-                        List<DocumentSnapshot> mergedDocs = [];
-                        snapshot.data!.forEach((querySnapshot) {
-                          mergedDocs.addAll(querySnapshot.docs);
-                        });
-                        // lets seperate between business vs personal
-                        print(
-                            'sele values i s ${controller.businessMode.value}');
+                  // lets seperate between business vs personal
 
-                        // var TotalTasks = snapshot.data!.docs.toList();
-                        var TotalTasks = mergedDocs;
-                        var personalTasks, businessTasks;
+                  var TotalTasks = snapshot.data!.docs.toList();
 
-                        // controller.totalTasksStreamData.value =TotalTasks;
-                        controller.totalTasksStreamData.value = TotalTasks;
+                   print('pub dev is ${TotalTasks}');
+                   print('pub dev isx ${controller2.currentUserObj['orgId']}');
+    
 
-                        //  personalTasks= TotalTasks.where((element) => element["by_uid"] ==  FirebaseAuth.instance.currentUser!.uid);
-                        //  controller.personalData.value = personalTasks.toList();
+                // particpantsIdA
 
-                        //     businessTasks= TotalTasks.where((element) => element["by_uid"] !=  FirebaseAuth.instance.currentUser!.uid);
+                // return Text('Full Data');
+                   return Column(
+                        children: [
+                          Expanded(
+                            child: MediaQuery.removePadding(
+                              context: context,
+                              removeTop: true,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: snapshot.data?.docs.length,
+                                    itemBuilder: (context, i) {
 
-                        //   controller.businessData.value = businessTasks.toList();
-
-                        //   if(!controller.businessMode.value){
-                        //  personalTasks= TotalTasks.where((element) => element["by_uid"] ==  FirebaseAuth.instance.currentUser!.uid);
-                        //  controller.personalData.value = personalTasks.toList();
-                        //   }else{
-                        //    personalTasks= TotalTasks.where((element) => element["by_uid"] !=  FirebaseAuth.instance.currentUser!.uid);
-
-                        //   controller.businessData.value = personalTasks.toList();
-                        //   }
-
-                        // if (doc['status'] == "Done") {
-                        //   donecount.value = donecount.value + 1;
-                        //   debugPrint("DONE COUNT== ${donecount.value}");
-                        // } else if (doc['status'] == "InProgress") {
-                        //   notdone.value = notdone.value + 1;
-                        //   debugPrint("Not done COUNT== ${notdone.value}");
-                        // }
-                        // }
-// return   Countup(
-//               begin: 0,
-//               end: 300,
-//               duration: Duration(milliseconds: 300),
-//               separator: ',',
-//               style: TextStyle(
-//                 fontSize: 36,
-//               ),
-//             );
-
-                        return controller.taskListsIs(context, TotalTasks);
-                        return Obx(() => FxText.titleSmall(
-                              //  personalTasks.length.toString(),
-                              controller.totalTasksStreamData.length.toString(),
-                              fontWeight: 700,
-                            ));
-                      } else {
-                        return Center(
-                          child: Column(
-                            children: [
-                              Center(
-                                  child: FxText.titleSmall(
-                                "0",
-                                fontWeight: 700,
-                              )),
-                              // SizedBox(height: 50),
-                              // Center(
-                              //   child: Text("Tasks Loading..."),
-                              // )
-                            ],
-                          ),
-                        );
+var projData =
+                      snapshot.data?.docs[i];
+                      var unitCounts;
+                      try {
+                           unitCounts = projData?['totalUnitCount'] ?? 0;      
+                      } catch (e) {
+                             unitCounts = 'NA';
                       }
-                    }),
-                // Obx(()=> FxText.titleSmall(
-                //   widget.numOfTodayTasks.toString(),
-                //   fontWeight: 700,
-                // )),
-              ),
-              // body:
-              //              StreamBuilder<QuerySnapshot>(
-              // stream: FirebaseFirestore.instance
-              //     .collection('spark_assignedTasks')
-              //     .where("due_date",
-              //         isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
-              //     .where("status", isEqualTo: "InProgress")
-              //     // .where("to_uid", isEqualTo: controller.currentUser!.uid)
-              //     //  .where("particpantsA", arrayContains: controller.currentUser!.uid)
-              //     // .where('particpantsIdA', arrayContains: FirebaseAuth.instance.currentUser!.uid)
-              //     .snapshots(),
-              // // stream: DbQuery.instanace.getStreamCombineTasks(),
-              // builder: (context, snapshot) {
-              // //     if (!snapshot.hasData) {
-              // //   return CircularProgressIndicator();
-              // // }
-              //   if (snapshot.hasError) {
-              //     return const Center(
-              //       child: Text("Something went wrong! 😣..."),
-              //     );
-              //   } else if (snapshot.hasData) {
+             
+                                      // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
+                                      // print(
+                                      //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
+                                      // print("due date is ${taskData!.get('due data')}");
+                                      // return Text("hello");
+                                      // return controller.CardSetup(context,taskData);  
 
-              //     // lets seperate between business vs personal
+                                      return   GestureDetector(
+            onTap: () {
+              Get.to(() => ProjectUnitScreen(projectDetails: projData ));
+            },
+                                        child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: MediaQuery.of(context).size.height * 0.010,
+                                                             horizontal:
+                                        MediaQuery.of(context).size.width * 0.030,
+                                                      ),
+                                                  child: Container(
+                                                    padding: EdgeInsets.symmetric(
+                                                        vertical: MediaQuery.of(context).size.height * 0.020,
+                                                        horizontal: MediaQuery.of(context).size.height * 0.020),
+                                                    height: MediaQuery.of(context).size.height * 0.3,
+                                                    width: MediaQuery.of(context).size.width * 1,
+                                                    decoration: const BoxDecoration(
+                                                      gradient: LinearGradient(colors: [
+                                                        // Color.fromARGB(255, 233, 233, 224),
+                                                        Color(0xFF9990FF),
+                                                        Color.fromARGB(255, 233, 233, 224),
+                                                        Color.fromARGB(255, 233, 233, 224),
+                                                   
+                                                        // Color.fromARGB(255, 233, 233, 224)
+                                                      ]),
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(13),
+                                                      ),
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Container(
+                                                              height: MediaQuery.of(context).size.height * 0.080,
+                                                              width: MediaQuery.of(context).size.width * 0.170,
+                                                              decoration: const BoxDecoration(
+                                                                image: DecorationImage(
+                                                                    fit: BoxFit.fill,
+                                                                    image:
+                                                                        AssetImage("assets/images/projectImage.png")),
+                                                                borderRadius: BorderRadius.all(
+                                                                  Radius.circular(19),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: MediaQuery.of(context).size.width * 0.040,
+                                                            ),
+                                                            Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                 projData?['projectName'],
+                                                                  style: headline2,
+                                                                ), Text(
+                                                                 'ane',
+                                                                  style: headline2,
+                                                                ),
+                                                                Text(
+                                                                  "${unitCounts} Units",
+                                                                  style: displaySmall,
+                                                                )
+                                                              ],
+                                                            )
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          height: MediaQuery.of(context).size.height * 0.020,
+                                                        ),
+                                                        Row(
+                                                          children: [
+                                                            Text(
+                                                              "Newly Added",
+                                                              style: headline2.copyWith(fontSize: 12),
+                                                            ),
+                                                            Spacer(),
+                                                            Text(
+                                                              'See All',
+                                                              style: GoogleFonts.inter(
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: 12,
+                                                                  color: appLightTheme.primaryColor),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          height: MediaQuery.of(context).size.height * 0.010,
+                                                        ),
+                                                        SizedBox(
+                                                          height: MediaQuery.of(context).size.height * 0.123,
+                                                          width: MediaQuery.of(context).size.width * 0.9,
+                                                          child: ListView.builder(
+                                                            itemCount: 5,
+                                                            scrollDirection: Axis.horizontal,
+                                                            itemBuilder: (context, index) {
+                                                              return Padding(
+                                                                padding: EdgeInsets.only(
+                                                                    right: MediaQuery.of(context).size.width * 0.010),
+                                                                child: Container(
+                                                                  height: 110,
+                                                                  width: 110,
+                                                                  decoration: BoxDecoration(
+                                                                      image: DecorationImage(
+                                                                          image: AssetImage("assets/images/room.png")),
+                                                                      borderRadius:
+                                                                          BorderRadius.all(Radius.circular(13))),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                      );
+    
+                                      return Text('${projData?['projectName']}');  
+                                      
+                                      }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
 
-              //     var TotalTasks = snapshot.data!.docs.toList();
-
-              //      print('pub dev is ${TotalTasks}');
-              //     if(!controller.businessMode.value){
-              //       // business list
-              //               controller.businessData.value= TotalTasks.where((element) => (element["by_uid"] != element["to_uid"]) && (element["by_uid"] == FirebaseAuth.instance.currentUser!.uid || element["to_uid"] == FirebaseAuth.instance.currentUser!.uid)).toList();
-              //                 // controller.totalTasksStreamData.value = businessData;
-
-              //     }else{
-              //      controller.personalData.value= TotalTasks.where((element) => element["by_uid"] == FirebaseAuth.instance.currentUser!.uid && element["to_uid"] == FirebaseAuth.instance.currentUser!.uid).toList();
-              //     }
-
-              //   // particpantsIdA
-
-              //   // return Text('Full Data');
-              //      return Obx(() => Column(
-              //           children: [
-              //             Expanded(
-              //               child: MediaQuery.removePadding(
-              //                 context: context,
-              //                 removeTop: true,
-              //                 child: Padding(
-              //                   padding: const EdgeInsets.only(top: 10.0),
-              //                   child: ListView.builder(
-              //                       shrinkWrap: true,
-              //                       physics: const BouncingScrollPhysics(),
-              //                       itemCount: controller.totalTasksStreamData.length,
-              //                       itemBuilder: (context, index) {
-              //                         late QueryDocumentSnapshot<Object?>? taskData =
-              //                             controller.totalTasksStreamData[index];
-              //                         print("qwdqwdw ${taskData!.id}");
-
-              //                         var iDa  = [taskData!['to_uid'], taskData!['by_uid']];
-              //                         DbQuery.instanace.getAddParticipants(taskData!.id, iDa);
-
-              //                         // taskController.setAssignDetails(taskData?.id, taskData!['to_uid'], taskData['to_name']);
-              //                         // print(
-              //                         //     "date is ${DateFormat('yyyy-MM-dd').format(DateTime.now())}");
-              //                         // print("due date is ${taskData!.get('due data')}");
-              //                         // return Text("hello");
-              //                         return controller.CardSetup(context,taskData);  }),
-              //                 ),
-              //               ),
-              //             ),
-              //           ],
-              //         ));
-
-              //     }else{
-              //       return Text('No Data');
-              //     }}),
+                  }else{
+                    return Text('No Data');
+                  }}),
 
               // body: TabBarView(
               //   children: [
@@ -1548,7 +799,7 @@ class HomePage extends StatelessWidget {
         ),
         FxSpacing.width(8),
         FxText.titleLarge(
-          "TaskMan",
+          "SiteMaster💥",
           fontWeight: 600,
           // color: Get.theme.primary,
         ),

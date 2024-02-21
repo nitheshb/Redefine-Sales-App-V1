@@ -102,8 +102,8 @@ class HomePageController extends GetxController {
 
   var myTaskTypeCategory = 'allBusinessTasks'.obs;
 
-  var currentUser;
 
+  var currentUser;
   int tempDueDate = 0;
   int dueDateIndex = 0;
 
@@ -382,7 +382,7 @@ class HomePageController extends GetxController {
         .get()
         .then((QuerySnapshot querySnapshot) {
       final doc = querySnapshot.docs[0];
-      print('check it ${doc.data()}');
+      print('check it ${doc.data()} ${currentUser}');
       userName.value = doc['name'];
       userEmail.value = doc['email'];
     });

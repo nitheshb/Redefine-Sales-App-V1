@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:redefineerp/Screens/Home/homepage.dart';
+import 'package:redefineerp/Screens/OnBoarding/onBoradingScreen.dart';
 import 'package:redefineerp/Screens/OnBoarding/onboarding_page.dart';
 import 'package:redefineerp/Screens/SuperHomePage/SuperHomePage.dart';
 import 'package:redefineerp/getx_bindings.dart';
@@ -83,7 +84,7 @@ class MyApp extends StatelessWidget {
       initialBinding: ControllerBindings(),
       themeMode: ThemeService().theme,
       debugShowCheckedModeBanner: false,
-      home: currentUser == null ? OnBoardingPage() : SuperHomePage(),
+      home: currentUser == null ? OnboardScreen() : SuperHomePage(),
     );
   }
 }

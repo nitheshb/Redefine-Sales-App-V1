@@ -9,6 +9,9 @@ import 'package:redefineerp/Screens/SuperHomePage/SuperHomePage.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/methods/methods.dart';
+import 'package:redefineerp/models/user.dart';
+import 'package:redefineerp/util/auth.dart';
+import 'package:redefineerp/util/state_widget.dart';
 import 'package:supabase/supabase.dart';
 
 class AuthController extends GetxController {
@@ -20,6 +23,7 @@ class AuthController extends GetxController {
   final formKey = GlobalKey<FormState>();
   var showPass = true.obs;
   RxInt activeIndex = 0.obs;
+  var currentUserObj = {}.obs;
 
   final  currentUser = FirebaseAuth.instance.currentUser;
   bool isLoading = false;
@@ -28,6 +32,10 @@ class AuthController extends GetxController {
   String? loggedInFcmToken;
 
   var userDetails = [];
+    void setOrgId(var newOrgId) {
+      print('my value sis c  $newOrgId');
+    currentUserObj.assignAll(newOrgId[0].data());
+  }
 startTimer() {
     Timer.periodic(
       Duration(seconds: 5),
@@ -48,6 +56,9 @@ startTimer() {
 
   void getLoggedInUserDetails() async {
     var x = await DbQuery.instanace.getLoggedInUserDetails(currentUser?.uid);
+    setOrgId(x);
+
+   
   }
 
   @override
@@ -59,14 +70,25 @@ startTimer() {
     super.onInit();
   }
 
-  void loginUser() {
+  void loginUser() async {
+
+    //   await  StateWidget.of(context).logInUser(email.text, password.text);
+    // await  Get.offAll(() => SuperHomePage());
+    //   return;
     if (email.text.isNotEmpty && password.text.isNotEmpty) {
       isLoading = true;
-      logIn(email.text, password.text).then((user) {
+      logIn(email.text, password.text).then((user)async{
         if (user != null && localFcmToken != null) {
-          debugPrint("Login Sucessfull");
+
           isLoading = false;
           var currentUser = FirebaseAuth.instance.currentUser;
+                    debugPrint("Login Sucessfull ${currentUser?.uid}");
+             user = await Auth.getUserFirestore(currentUser?.uid);
+//  FirebaseAuth.instance.authStateChanges().listen((user) {
+//       // setOrgId(user);
+//     });
+print('user details are ${user}');
+    // await Auth.storeUserLocal(user as Bid365User);
 
           FirebaseFirestore.instance
               .collection('users')
@@ -74,6 +96,7 @@ startTimer() {
               .update({"user_fcmtoken": localFcmToken}).then((_) {
             debugPrint("success!");
           });
+
           Get.offAll(() => SuperHomePage());
         } else {
           snackBarMsg('Error: Invalid credentials');
