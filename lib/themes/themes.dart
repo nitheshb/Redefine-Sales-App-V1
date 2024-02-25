@@ -178,6 +178,8 @@ ThemeData appGreenTheme = ThemeData(
 const primaryGreenLighter = Color(0xFF7DDE86);
 const primaryGreenLightest = Color(0xFFECFCE5);
 
+const medicarePrimary = Color(0xff6d65df);
+const medicareOnPrimary =  Color(0xffffffff);
 
  var  seedColor = Color(0xff1c8c8c);
   var      primaryContainer = Color(0xffdafafa);

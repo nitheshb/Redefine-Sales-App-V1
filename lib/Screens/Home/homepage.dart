@@ -2,6 +2,8 @@
 
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -41,6 +43,7 @@ import 'package:redefineerp/Widgets/datewidget.dart';
 import 'package:redefineerp/Widgets/headerbg.dart';
 import 'package:redefineerp/Widgets/minimsg.dart';
 import 'package:redefineerp/Widgets/task_sheet_widget.dart';
+import 'package:redefineerp/helpers/firebase_help.dart';
 import 'package:redefineerp/themes/container.dart';
 import 'package:redefineerp/themes/customTheme.dart';
 import 'package:redefineerp/themes/spacing.dart';
@@ -388,7 +391,7 @@ class _HomePageState extends State<HomePage> {
            child: () {
           switch (controller.myTaskTypeCategory.value) {
             case 'allBusinessTasks':
-              return Text('Tasks');
+             return _LeadsTasksList(context, controller2);
             case 'myLeads':
               return _LeadsList(context, controller2);
             case 'projects':
@@ -870,6 +873,15 @@ return _buildLeadsCard(context, projData);
     ? _list!['Remarks']
     : 'NA';
 
+    
+      String lead_Name = _list?.data()?.containsKey('Name') == true
+    ? _list!['Name']
+    : 'NA';   
+    
+    String lead_status = _list?.data()?.containsKey('Status') == true
+    ? _list!['Status']
+    : 'NA';
+
     return Container(
       margin: FxSpacing.top(16),
       child: InkWell(
@@ -896,7 +908,7 @@ return _buildLeadsCard(context, projData);
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    FxText.bodyMedium(_list['Name'],
+                    FxText.bodyMedium(lead_Name,
                         letterSpacing: 0,
                      
                         fontWeight: 600),
@@ -909,7 +921,186 @@ return _buildLeadsCard(context, projData);
                       fontSize: 12,
                     ),
                     FxText.bodySmall(
-                      _list['Status'],
+                      lead_status,
+                      fontSize: 12,
+                      muted: true,
+                      letterSpacing: 0,
+                      fontWeight: 500,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {
+                _callNumber();
+                  print('res iss ');
+                // setState(() {
+                //   // _list[index] = !_list[index];
+                // });
+              },
+              child: FxContainer(
+                 margin: FxSpacing.right(16),
+                padding: FxSpacing.fromLTRB(16, 8, 16, 8),
+                bordered: false,
+                borderRadiusAll: 4,
+                border: Border.all(color: Colors.grey, width: 1),
+                color:false
+                    ? Colors.transparent
+                    : appLightTheme.primaryColor,
+                child: FxText.bodySmall("Call",
+                    color:false
+                        ? appLightTheme.colorScheme.onBackground
+                        : appLightTheme.colorScheme.onPrimary,
+                    fontWeight: 600,
+                    letterSpacing: 0.3),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  
+      }
+
+_callNumber() async{
+   print('res issx ');
+  const number = '919489000525'; //set the number here
+  bool? res = await FlutterPhoneDirectCaller.callNumber(number);
+  print('res is ${res}');
+}
+
+ Widget _LeadsTasksList( context, controller2) {
+             return         StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("${controller2.currentUserObj['orgId']}_leads_sch")
+                  // .where("assignedTo", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                  .where("staA", arrayContainsAny: ['pending', 'overdue'])
+                  .snapshots(),
+              // stream: DbQuery.instanace.getStreamCombineTasks(),
+              builder:  (context, snapshot)   {
+              //     if (!snapshot.hasData) {
+              //   return CircularProgressIndicator();
+              // }
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text("Something went wrong! 😣..."),
+                  );
+                } else if (snapshot.hasData)   {
+  //     List<dynamic> processedDocs = [];
+  // for (var docSnapshot in snapshot.data!.docs) {
+  //   var docData = docSnapshot.data() as Map<String, dynamic>;
+  //   var staDA = docData['staDA'];
+  //   if (staDA != null && staDA.isNotEmpty) {
+  //     docData['uid'] = docSnapshot.id;
+  //     // Assuming getLeadbyId1 returns a Future:
+  //     var leadUser =  DbQuery.instanace.getLeadbyId1(controller2.currentUserObj['orgId'], docData['uid']);
+  //     docData['leadUser'] = await leadUser;
+  //     processedDocs.add(docData);
+  //   }
+  // }
+
+                   return Column(
+                        children: [
+                          Expanded(
+                            child: MediaQuery.removePadding(
+                              context: context,
+                              removeTop: true,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10.0),
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: snapshot.data!.docs.length,
+                                    itemBuilder: (context, index) {
+    var docSnapshot = snapshot.data!.docs[index];
+    var docData = docSnapshot.data() as Map<String, dynamic>;
+   // var projData = processedDocs[i];
+       // Return a FutureBuilder for each item
+    return FutureBuilder(
+      future: DbQuery.instanace.getLeadbyId1(controller2.currentUserObj['orgId'], docData['uid']),
+      builder: (context, asyncSnapshot) {
+        if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator(); // Or a placeholder widget
+        }
+
+        if (asyncSnapshot.hasError) {
+          return const Text("Failed to load additional data");
+        }
+
+        // Assuming asyncSnapshot.data contains the lead user data
+        docData['leadUser'] = asyncSnapshot.data;
+        // Now, you can use docData including the fetched leadUser data to build your widget
+        return _buildLeadTasksCard(context, docData);
+      },
+    );
+                                  
+//return _buildLeadTasksCard(context, projData);
+ 
+                                      
+                                      }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+
+                  }else{
+                    return Text('No Data');
+                  }});
+
+ }
+
+   Widget _buildLeadTasksCard( context,     _list) {
+
+    //   String lead_Remarks = _list?.data()?.containsKey('Remarks') == true
+    // ? _list!['Remarks']
+    // : 'NA';
+String lead_Remarks = '';
+    print('task data is ${_list}');
+// return Text('${_list[_list['staDA'][0]]}');
+    return Container(
+      margin: FxSpacing.top(16),
+      child: InkWell(
+        onTap: () {
+          //_showBottomSheet(context);
+       
+                      Get.to(() => LeadsDetailsScreen(leadDetails: _list ));
+    
+        },
+        child: Row(
+          children: <Widget>[
+            // ClipRRect(
+            //   borderRadius: BorderRadius.all(Radius.circular(24)),
+            //   child: Image(
+            //     image: AssetImage('./assets/images/profile/avatar_2.jpg'),
+            //     height: 48,
+            //     width: 48,
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
+            Expanded(
+              child: Container(
+                margin: FxSpacing.left(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    FxText.bodyMedium("${_list['leadUser'][0]['Name']}",
+                        letterSpacing: 0,
+                     
+                        fontWeight: 600),
+                    FxText.bodySmall(
+                      _list['leadUser'][0]['Name'],
+                   
+                      letterSpacing: 0,
+                      xMuted: true,
+                      fontWeight: 600,
+                      fontSize: 12,
+                    ),
+                    FxText.bodySmall(
+                      _list['leadUser'][0]['Status'],
                       fontSize: 12,
                       muted: true,
                       letterSpacing: 0,

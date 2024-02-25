@@ -19,6 +19,22 @@ class DbQuery {
     }
   }
 
+
+  getLeadbyId1(orgId, uid) async {
+
+
+                  
+    var LoggedInUserDetails = await FirebaseFirestore.instance
+        .collection("${orgId}_leads")
+        .where("uid", isEqualTo: uid)
+        .get();
+   
+    if (LoggedInUserDetails.docs.isNotEmpty) {
+      return LoggedInUserDetails.docs.toList();
+    } else {
+      return null;
+    }
+  }
   final CollectionReference usersRef =
       FirebaseFirestore.instance.collection('spark_assignedTasks');
   final CollectionReference tasksTableRef =
