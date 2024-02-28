@@ -32,6 +32,7 @@ import 'package:redefineerp/Screens/Search/search_controller.dart';
 import 'package:redefineerp/Screens/Search/search_task.dart';
 import 'package:redefineerp/Screens/Task/create_task.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
+import 'package:redefineerp/Screens/Widgets/ShimmerCard.dart';
 import 'package:redefineerp/Screens/projectDetails/project_units_screen.dart';
 import 'package:redefineerp/Utilities/basicdialog.dart';
 import 'package:redefineerp/Utilities/bottomsheet.dart';
@@ -819,7 +820,8 @@ return _buildSingleHouse(context, projData);
               stream: FirebaseFirestore.instance
                   .collection("${controller2.currentUserObj['orgId']}_leads")
                   // .where("assignedTo", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                  .where("Status", isEqualTo: 'followup')
+                  .where("Status",  whereIn: ['new','followup', 'visitfixed', 'visitdone' ])
+
                   .snapshots(),
               // stream: DbQuery.instanace.getStreamCombineTasks(),
               builder: (context, snapshot) {
@@ -1023,7 +1025,7 @@ _callNumber() async{
       future: DbQuery.instanace.getLeadbyId1(controller2.currentUserObj['orgId'], docData['uid']),
       builder: (context, asyncSnapshot) {
         if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator(); // Or a placeholder widget
+          return  SkeletonCard(); // Or a placeholder widget
         }
 
         if (asyncSnapshot.hasError) {

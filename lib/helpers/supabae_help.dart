@@ -65,4 +65,28 @@ class DbSupa {
     //   print('Notification saved  successfully');
     // }
   }
+
+
+   Future<List<Map<String, dynamic>>?>  streamLeadActivityLog(uid) async {
+    final client = GetIt.instance<SupabaseClient>();
+   
+
+      final response = await client
+      .from('${'spark'}_lead_logs')
+      .select('type, subtype, T, by, from, to')
+      .eq('Luid', uid)
+      .order('T', ascending: false)
+      .execute();
+  print('Task inserted successfully ${response}');
+    
+        List<Map<String, dynamic>>? leadLogs = (response.data as List).cast<Map<String, dynamic>>();
+   
+   print('Task inserted successfully ${leadLogs}');
+    return leadLogs;
+    if (response   != null) {
+      print(response);
+    } else {
+      print('Task inserted successfully');
+    }
+  }
 }

@@ -55,7 +55,9 @@ dependencies:
   intl: ^0.18.0
   introduction_screen: ^3.0.2
   image_picker: ^0.8.6
+  omni_datetime_picker: ^1.0.9
   syncfusion_flutter_charts:
+  shimmer:
   shared_preferences:
   # jiffy:
   percent_indicator: ^4.0.1

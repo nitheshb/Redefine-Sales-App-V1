@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:redefineerp/Screens/Auth/auth_controller.dart';
 import 'package:redefineerp/Screens/Home/Generator.dart';
 import 'package:redefineerp/Screens/Task/task_controller.dart';
 import 'package:redefineerp/Screens/Task/task_manager.dart';
@@ -22,7 +23,7 @@ import 'package:redefineerp/main.dart';
 import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 
-class HomePageController extends GetxController {
+class LeadDetailsController extends GetxController {
   var validationSuccess = false.obs;
   @override
   void onInit() async {
@@ -46,6 +47,7 @@ class HomePageController extends GetxController {
       currentUser = user;
     });
     print('my user is yo yo ${currentUser}');
+    
     super.onInit();
   }
 
@@ -65,10 +67,13 @@ class HomePageController extends GetxController {
 
   final scrollController = ScrollController();
   TextEditingController searchText = TextEditingController();
+        final controller2 = Get.put<AuthController>(AuthController());
   RxBool search = false.obs;
 
   RxDouble currentoffset = 0.0.obs;
-
+var selScheduleObj = {}.obs;
+var selLead = {}.obs;
+var selLeadId = ''.obs;
   var tabIndex = 0.obs;
   var bottomBarIndex = 0.obs;
   var dummy = true.obs;
@@ -100,10 +105,10 @@ class HomePageController extends GetxController {
 
   var totalTasksStreamData = [].obs;
 
-  var myTaskTypeCategory = 'myLeads'.obs;
-
+  var myTaskTypeCategory = 'allBusinessTasks'.obs;
 
   var currentUser;
+
   int tempDueDate = 0;
   int dueDateIndex = 0;
 
@@ -129,7 +134,7 @@ class HomePageController extends GetxController {
   GlobalKey<FormState> taskKey = GlobalKey<FormState>();
   var taskType = 'mark'.obs;
   DateTime dateSelected = DateTime.now();
-  var selectedDateTime = ''.obs;
+  var selectedDateTime = 0.obs;
 
   var assignedUserName = 'Assign someone'.obs;
   var assignedUserDepartment = ''.obs;
@@ -159,8 +164,19 @@ class HomePageController extends GetxController {
   }
 
   void updateSelectedDate() {
-    selectedDateTime.value =
-        DateFormat('dd-MM-yyyy kk:mm').format(dateSelected);
+    // selectedDateTime.value =
+    //     DateFormat('dd-MM-yyyy kk:mm').format(dateSelected);
+    //
+    selectedDateTime.value =dateSelected.millisecondsSinceEpoch;
+      
+  }
+  
+   void selNewStaus(item, leadDetails) {
+    if(item['value']== 'followup'){
+      taskTitle.text = 'Make a ${item['value']} task';
+    }
+    selectedDateTime.value =dateSelected.millisecondsSinceEpoch;
+print('seleted lead is ${selScheduleObj.value['staDA']}');
   }
 
   flipMode(title) {
@@ -256,6 +272,10 @@ class HomePageController extends GetxController {
     if (!validator) {
       return;
     } else {
+            createNewTask();
+        print(assignedUserName);
+        validationSuccess.value = false;
+        return;
       if (assignedUserName == 'Assign someone') {
         Get.snackbar(
             colorText: Get.theme.colorPrimaryDark,
@@ -277,7 +297,59 @@ class HomePageController extends GetxController {
     // Get.reset();
     // Get.delete<TaskController>();
     print('hello ${participantsANew}');
+    var data = {
+      'stsType': 'tempLeadStatus' ,
+      'assTo': auth.currentUser?.displayName,
+      'assToId': auth.currentUser?.uid,
+      'by': auth.currentUser?.displayName,
+      'cby': auth.currentUser?.uid,
+      'type': 'schedule',
+      'pri': taskPriority.value,
+      'notes': taskTitle.text == '' ? 'Negotiate with customer' : taskTitle.text,
+      'sts': 'pending',
+      'schTime': selectedDateTime.value,
+      'ct': DateTime.now().millisecondsSinceEpoch,
+    };
+  //  _collection
+  //       .add();
 
+      int xo = DateTime.now().millisecondsSinceEpoch;
+     var newA=  selScheduleObj.value['staA']; 
+      var newStaDA=  selScheduleObj.value['staDA'];
+      
+  var yo = {
+    'staA': selScheduleObj.value['staA'],
+    // 'staDA': newStaDA.add(xo),
+    xo.toString(): data,
+  };
+
+  print('value is ${yo} ${selScheduleObj.value['staA']} ${selScheduleObj}');
+
+      FirebaseFirestore.instance.collection('${controller2.currentUserObj['orgId']}_leads_sch').doc(selLeadId.value).update({...yo}) .then((value) => {
+              // print("Task Created for home  ${value.id}$assignedUserUid }"),
+              Get.back(),
+              snackBarMsg('Task Created!', enableMsgBtn: false),
+              sendPushMessage('Task Assigned for you:', taskTitle.text,
+                  assignedUserFcmToken.value),
+
+//                   // assinged to
+//                   DbSupa.instance.saveNotification(assignedUserUid.value, 'Task Assigned for you', taskId),
+
+//                   //send to followers
+// participantsANew.value.map((follerId)=>{
+//                   DbSupa.instance.saveNotification(assignedUserUid.value, 'Ur Following New Task', taskId),
+
+// })
+
+              taskTitle.clear(),
+              taskDescription.clear(),
+              dateinput.clear(),
+              assignedUserName = 'Assign someone'.obs,
+            });
+
+            return;
+  
+  
     _collection
         .add({
           'task_title': taskTitle.text,
@@ -382,7 +454,7 @@ class HomePageController extends GetxController {
         .get()
         .then((QuerySnapshot querySnapshot) {
       final doc = querySnapshot.docs[0];
-      print('check it ${doc.data()} ${currentUser}');
+      print('check it ${doc.data()}');
       userName.value = doc['name'];
       userEmail.value = doc['email'];
     });
