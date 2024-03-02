@@ -18,13 +18,13 @@ BasicDialog(
     actions: [
       TextButton(
         onPressed: () => Get.back(),
-        style:
-            TextButton.styleFrom(primary: Get.theme.kLightGrayColor),
+        // style:
+        //     TextButton.styleFrom(primary: Get.theme.kLightGrayColor),
         child: const Text('Close'),
       ),
       TextButton(
           onPressed: () => onTap(),
-          style: TextButton.styleFrom(primary: Get.theme.colorPrimaryDark),
+          // style: TextButton.styleFrom(primary: Get.theme.colorPrimaryDark),
           child: Text(confirmText))
     ],
   ));
