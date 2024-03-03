@@ -52,8 +52,40 @@ import 'package:redefineerp/themes/textFile.dart';
 import 'package:redefineerp/themes/themes.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/streams.dart';
+import 'package:call_log/call_log.dart';
+import 'package:workmanager/workmanager.dart';
 
 import '../Search/search_controller.dart';
+
+void callbackDispatcher() {
+  Workmanager().executeTask((dynamic task, dynamic inputData) async {
+    print('Background Services are Working!');
+    try {
+      final Iterable<CallLogEntry> cLog = await CallLog.get();
+      print('Queried call log entries');
+      for (CallLogEntry entry in cLog) {
+        print('-------------------------------------');
+        print('F. NUMBER  : ${entry.formattedNumber}');
+        print('C.M. NUMBER: ${entry.cachedMatchedNumber}');
+        print('NUMBER     : ${entry.number}');
+        print('NAME       : ${entry.name}');
+        print('TYPE       : ${entry.callType}');
+        print(
+            'DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp!.toInt())}');
+        print('DURATION   : ${entry.duration}');
+        print('ACCOUNT ID : ${entry.phoneAccountId}');
+        print('ACCOUNT ID : ${entry.phoneAccountId}');
+        print('SIM NAME   : ${entry.simDisplayName}');
+        print('-------------------------------------');
+      }
+      return true;
+    } on PlatformException catch (e, s) {
+      print(e);
+      print(s);
+      return true;
+    }
+  });
+}
 
 class HomePage extends StatefulWidget {
   @override
@@ -63,6 +95,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   //  late CustomTheme customTheme;
   //   late ThemeData theme;
+  Iterable<CallLogEntry> _callLogEntries = <CallLogEntry>[];
+
   final storageReference =
       FirebaseStorage.instance.ref().child('images/image.jpg');
 
@@ -72,9 +106,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
-
   }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put<HomePageController>(HomePageController());
@@ -99,7 +132,6 @@ class _HomePageState extends State<HomePage> {
         // .orWhere("by_uid", isEqualTo:  FirebaseAuth.instance.currentUser!.uid)
 
         .snapshots();
-
 
 // Combine the two streams using the RxCombineLatestStream from the rxdart package
 // final combinedStream = RxCombineLatestStream<QuerySnapshot>([stream1, stream2]);
@@ -157,19 +189,13 @@ class _HomePageState extends State<HomePage> {
                         print(controller.expande.value);
                       },
                     ),
-
                     IconButton(
                         onPressed: () =>
                             {Get.to(() => const NotificationPage())},
                         icon: const Icon(Icons.notifications),
                         color: Get.theme.btnTextCol.withOpacity(0.3)),
-        
                   ],
           ),
-
-
-        
-
           body: DefaultTabController(
             length: 3,
             child: NestedScrollView(
@@ -309,8 +335,8 @@ class _HomePageState extends State<HomePage> {
                                           onPressed: () => {
                                                 print(
                                                     'hello ${controller.myTaskTypeCategory.value == 'assignedToMe'}'),
-                                                controller.setTaskTypeFun(
-                                                    'myLeads')
+                                                controller
+                                                    .setTaskTypeFun('myLeads')
                                               }),
                                     ),
                                   ),
@@ -388,20 +414,19 @@ class _HomePageState extends State<HomePage> {
                 ];
               },
               // body: controller.streamToday()
-               body: Center(
-           child: () {
-          switch (controller.myTaskTypeCategory.value) {
-            case 'allBusinessTasks':
-             return _LeadsTasksList(context, controller2);
-            case 'myLeads':
-              return _LeadsList(context, controller2);
-            case 'projects':
-              return _projectsBody(context,controller2);
-            default:
-              return Text('Invalid selection');
-          }
-        }()),
-     
+              body: Center(child: () {
+                switch (controller.myTaskTypeCategory.value) {
+                  case 'allBusinessTasks':
+                    return _LeadsTasksList(context, controller2);
+                  case 'myLeads':
+                    return _LeadsList(context, controller2);
+                  case 'projects':
+                    return _projectsBody(context, controller2);
+                  default:
+                    return Text('Invalid selection');
+                }
+              }()),
+
               // body: TabBarView(
               //   children: [
               //       controller.streamToday(),
@@ -600,85 +625,78 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
- Widget _projectsBody( context, controller2) {
-             return         StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("${controller2.currentUserObj['orgId']}_projects")
-                  // .where("status", isEqualTo: "ongoing")
-                  .snapshots(),
-              // stream: DbQuery.instanace.getStreamCombineTasks(),
-              builder: (context, snapshot) {
-              //     if (!snapshot.hasData) {
-              //   return CircularProgressIndicator();
-              // }
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Text("Something went wrong! 😣..."),
-                  );
-                } else if (snapshot.hasData) {
+  Widget _projectsBody(context, controller2) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("${controller2.currentUserObj['orgId']}_projects")
+            // .where("status", isEqualTo: "ongoing")
+            .snapshots(),
+        // stream: DbQuery.instanace.getStreamCombineTasks(),
+        builder: (context, snapshot) {
+          //     if (!snapshot.hasData) {
+          //   return CircularProgressIndicator();
+          // }
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text("Something went wrong! 😣..."),
+            );
+          } else if (snapshot.hasData) {
+            // lets seperate between business vs personal
 
-                  // lets seperate between business vs personal
+            var TotalTasks = snapshot.data!.docs.toList();
 
-                  var TotalTasks = snapshot.data!.docs.toList();
+            print('pub dev is ${TotalTasks}');
+            print('pub dev isx ${controller2.currentUserObj['orgId']}');
 
-                   print('pub dev is ${TotalTasks}');
-                   print('pub dev isx ${controller2.currentUserObj['orgId']}');
-    
+            // particpantsIdA
 
-                // particpantsIdA
+            // return Text('Full Data');
+            return Column(
+              children: [
+                Expanded(
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: snapshot.data?.docs.length,
+                          itemBuilder: (context, i) {
+                            var projData = snapshot.data?.docs[i];
+                            var unitCounts;
+                            try {
+                              unitCounts = projData?['totalUnitCount'] ?? 0;
+                            } catch (e) {
+                              unitCounts = 'NA';
+                            }
 
-                // return Text('Full Data');
-                   return Column(
-                        children: [
-                          Expanded(
-                            child: MediaQuery.removePadding(
-                              context: context,
-                              removeTop: true,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const BouncingScrollPhysics(),
-                                    itemCount: snapshot.data?.docs.length,
-                                    itemBuilder: (context, i) {
+                            return _buildSingleHouse(context, projData);
+                          }),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Text('No Data');
+          }
+        });
+  }
 
-var projData =
-                      snapshot.data?.docs[i];
-                      var unitCounts;
-                      try {
-                           unitCounts = projData?['totalUnitCount'] ?? 0;      
-                      } catch (e) {
-                             unitCounts = 'NA';
-                      }
-             
-                                  
-return _buildSingleHouse(context, projData);
- 
-                                      
-                                      }),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-
-                  }else{
-                    return Text('No Data');
-                  }});
-
- }
-
-  Widget _buildSingleHouse( context, projData) {
-
-    String totalUnitCount = projData?.data()?.containsKey('totalUnitCount') == true
-    ? projData['totalUnitCount'].toString()
-    : '0';
-     String soldUnitCount = projData?.data()?.containsKey('soldUnitCount') == true
-    ? projData!['soldUnitCount'].toString()
-    : '0';
+  Widget _buildSingleHouse(context, projData) {
+    String totalUnitCount =
+        projData?.data()?.containsKey('totalUnitCount') == true
+            ? projData['totalUnitCount'].toString()
+            : '0';
+    String soldUnitCount =
+        projData?.data()?.containsKey('soldUnitCount') == true
+            ? projData!['soldUnitCount'].toString()
+            : '0';
     return FxCard(
       onTap: () {
-                      Get.to(() => ProjectUnitScreen(projectDetails: projData ));
+        Get.to(() => ProjectUnitScreen(projectDetails: projData));
       },
       margin: FxSpacing.nTop(24),
       paddingAll: 0,
@@ -734,8 +752,7 @@ return _buildSingleHouse(context, projData);
                           Icon(
                             Icons.king_bed,
                             size: 16,
-                            color:
-                                Colors.grey.withAlpha(180),
+                            color: Colors.grey.withAlpha(180),
                           ),
                           FxSpacing.width(4),
                           FxText.bodySmall(
@@ -752,8 +769,7 @@ return _buildSingleHouse(context, projData);
                           Icon(
                             Icons.bathtub,
                             size: 16,
-                            color:
-                                Colors.grey.withAlpha(180),
+                            color: Colors.grey.withAlpha(180),
                           ),
                           FxSpacing.width(4),
                           FxText.bodySmall(
@@ -776,8 +792,7 @@ return _buildSingleHouse(context, projData);
                           Icon(
                             Icons.square_foot,
                             size: 16,
-                            color:
-                                Colors.grey.withAlpha(180),
+                            color: Colors.grey.withAlpha(180),
                           ),
                           FxSpacing.width(4),
                           FxText.bodySmall(
@@ -794,8 +809,7 @@ return _buildSingleHouse(context, projData);
                           Icon(
                             Icons.aspect_ratio,
                             size: 16,
-                            color:
-                                Colors.grey.withAlpha(180),
+                            color: Colors.grey.withAlpha(180),
                           ),
                           FxSpacing.width(4),
                           FxText.bodySmall(
@@ -815,83 +829,79 @@ return _buildSingleHouse(context, projData);
     );
   }
 
- Widget _LeadsList( context, controller2) {
-             return         StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("${controller2.currentUserObj['orgId']}_leads")
-                  // .where("assignedTo", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                  .where("Status",  whereIn: ['new','followup', 'visitfixed', 'visitdone' ])
+  Widget _LeadsList(context, controller2) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("${controller2.currentUserObj['orgId']}_leads")
+            // .where("assignedTo", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where("Status", whereIn: [
+          'new',
+          'followup',
+          'visitfixed',
+          'visitdone'
+        ]).snapshots(),
+        // stream: DbQuery.instanace.getStreamCombineTasks(),
+        builder: (context, snapshot) {
+          //     if (!snapshot.hasData) {
+          //   return CircularProgressIndicator();
+          // }
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text("Something went wrong! 😣..."),
+            );
+          } else if (snapshot.hasData) {
+            return Column(
+              children: [
+                Expanded(
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: snapshot.data?.docs.length,
+                          itemBuilder: (context, i) {
+                            var projData = snapshot.data?.docs[i];
 
-                  .snapshots(),
-              // stream: DbQuery.instanace.getStreamCombineTasks(),
-              builder: (context, snapshot) {
-              //     if (!snapshot.hasData) {
-              //   return CircularProgressIndicator();
-              // }
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Text("Something went wrong! 😣..."),
-                  );
-                } else if (snapshot.hasData) {
+                            return _buildLeadsCard(context, projData);
+                          }),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Text('No Data');
+          }
+        });
+  }
 
-                   return Column(
-                        children: [
-                          Expanded(
-                            child: MediaQuery.removePadding(
-                              context: context,
-                              removeTop: true,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const BouncingScrollPhysics(),
-                                    itemCount: snapshot.data?.docs.length,
-                                    itemBuilder: (context, i) {
+  Widget _buildLeadsCard(context, _list) {
+    String lead_Remarks = _list?.data()?.containsKey('Remarks') == true
+        ? _list!['Remarks']
+        : 'NA';
 
-var projData =
-                      snapshot.data?.docs[i];
-                
-          
-                                  
-return _buildLeadsCard(context, projData);
- 
-                                      
-                                      }),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
+    String lead_Name =
+        _list?.data()?.containsKey('Name') == true ? _list!['Name'] : 'NA';
 
-                  }else{
-                    return Text('No Data');
-                  }});
-
- }
-
-   Widget _buildLeadsCard( context,     _list) {
-
-      String lead_Remarks = _list?.data()?.containsKey('Remarks') == true
-    ? _list!['Remarks']
-    : 'NA';
-
-    
-      String lead_Name = _list?.data()?.containsKey('Name') == true
-    ? _list!['Name']
-    : 'NA';   
-    
-    String lead_status = _list?.data()?.containsKey('Status') == true
-    ? _list!['Status']
-    : 'NA';
+    String lead_status =
+        _list?.data()?.containsKey('Status') == true ? _list!['Status'] : 'NA';
 
     return Container(
       margin: FxSpacing.top(16),
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           //_showBottomSheet(context);
-       
-                      Get.to(() => LeadsDetailsScreen(leadDetails: _list ));
-    
+          final Iterable<CallLogEntry> result = await CallLog.query();
+          setState(() {
+            _callLogEntries = result;
+          });
+          Get.to(() => LeadsDetailsScreen(
+                leadDetails: _list,
+                callLogEntries: _callLogEntries,
+              ));
         },
         child: Row(
           children: <Widget>[
@@ -911,12 +921,9 @@ return _buildLeadsCard(context, projData);
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     FxText.bodyMedium(lead_Name,
-                        letterSpacing: 0,
-                     
-                        fontWeight: 600),
+                        letterSpacing: 0, fontWeight: 600),
                     FxText.bodySmall(
                       lead_Remarks,
-                   
                       letterSpacing: 0,
                       xMuted: true,
                       fontWeight: 600,
@@ -938,22 +945,20 @@ return _buildLeadsCard(context, projData);
             InkWell(
               onTap: () {
                 _callNumber();
-                  print('res iss ');
+                print('res iss ');
                 // setState(() {
                 //   // _list[index] = !_list[index];
                 // });
               },
               child: FxContainer(
-                 margin: FxSpacing.right(16),
+                margin: FxSpacing.right(16),
                 padding: FxSpacing.fromLTRB(16, 8, 16, 8),
                 bordered: false,
                 borderRadiusAll: 4,
                 border: Border.all(color: Colors.grey, width: 1),
-                color:false
-                    ? Colors.transparent
-                    : appLightTheme.primaryColor,
+                color: false ? Colors.transparent : appLightTheme.primaryColor,
                 child: FxText.bodySmall("Call",
-                    color:false
+                    color: false
                         ? appLightTheme.colorScheme.onBackground
                         : appLightTheme.colorScheme.onPrimary,
                     fontWeight: 600,
@@ -964,103 +969,103 @@ return _buildLeadsCard(context, projData);
         ),
       ),
     );
-  
-      }
+  }
 
-_callNumber() async{
-   print('res issx ');
-  const number = '919489000525'; //set the number here
-  bool? res = await FlutterPhoneDirectCaller.callNumber(number);
-  print('res is ${res}');
-}
+  _callNumber() async {
+    print('res issx ');
+    const number = '919489000525'; //set the number here
+    bool? res = await FlutterPhoneDirectCaller.callNumber(number);
+    print('res is ${res}');
+  }
 
- Widget _LeadsTasksList( context, controller2) {
-             return         StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("${controller2.currentUserObj['orgId']}_leads_sch")
-                  // .where("assignedTo", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                  .where("staA", arrayContainsAny: ['pending', 'overdue'])
-                  .snapshots(),
-              // stream: DbQuery.instanace.getStreamCombineTasks(),
-              builder:  (context, snapshot)   {
-              //     if (!snapshot.hasData) {
-              //   return CircularProgressIndicator();
-              // }
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Text("Something went wrong! 😣..."),
-                  );
-                } else if (snapshot.hasData)   {
-  //     List<dynamic> processedDocs = [];
-  // for (var docSnapshot in snapshot.data!.docs) {
-  //   var docData = docSnapshot.data() as Map<String, dynamic>;
-  //   var staDA = docData['staDA'];
-  //   if (staDA != null && staDA.isNotEmpty) {
-  //     docData['uid'] = docSnapshot.id;
-  //     // Assuming getLeadbyId1 returns a Future:
-  //     var leadUser =  DbQuery.instanace.getLeadbyId1(controller2.currentUserObj['orgId'], docData['uid']);
-  //     docData['leadUser'] = await leadUser;
-  //     processedDocs.add(docData);
-  //   }
-  // }
+  Widget _LeadsTasksList(context, controller2) {
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("${controller2.currentUserObj['orgId']}_leads_sch")
+            // .where("assignedTo", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where("staA",
+                arrayContainsAny: ['pending', 'overdue']).snapshots(),
+        // stream: DbQuery.instanace.getStreamCombineTasks(),
+        builder: (context, snapshot) {
+          //     if (!snapshot.hasData) {
+          //   return CircularProgressIndicator();
+          // }
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text("Something went wrong! 😣..."),
+            );
+          } else if (snapshot.hasData) {
+            //     List<dynamic> processedDocs = [];
+            // for (var docSnapshot in snapshot.data!.docs) {
+            //   var docData = docSnapshot.data() as Map<String, dynamic>;
+            //   var staDA = docData['staDA'];
+            //   if (staDA != null && staDA.isNotEmpty) {
+            //     docData['uid'] = docSnapshot.id;
+            //     // Assuming getLeadbyId1 returns a Future:
+            //     var leadUser =  DbQuery.instanace.getLeadbyId1(controller2.currentUserObj['orgId'], docData['uid']);
+            //     docData['leadUser'] = await leadUser;
+            //     processedDocs.add(docData);
+            //   }
+            // }
 
-                   return Column(
-                        children: [
-                          Expanded(
-                            child: MediaQuery.removePadding(
-                              context: context,
-                              removeTop: true,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 10.0),
-                                child: ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const BouncingScrollPhysics(),
-                                    itemCount: snapshot.data!.docs.length,
-                                    itemBuilder: (context, index) {
-    var docSnapshot = snapshot.data!.docs[index];
-    var docData = docSnapshot.data() as Map<String, dynamic>;
-   // var projData = processedDocs[i];
-       // Return a FutureBuilder for each item
-    return FutureBuilder(
-      future: DbQuery.instanace.getLeadbyId1(controller2.currentUserObj['orgId'], docData['uid']),
-      builder: (context, asyncSnapshot) {
-        if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-          return  SkeletonCard(); // Or a placeholder widget
-        }
+            return Column(
+              children: [
+                Expanded(
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            var docSnapshot = snapshot.data!.docs[index];
+                            var docData =
+                                docSnapshot.data() as Map<String, dynamic>;
+                            // var projData = processedDocs[i];
+                            // Return a FutureBuilder for each item
+                            return FutureBuilder(
+                              future: DbQuery.instanace.getLeadbyId1(
+                                  controller2.currentUserObj['orgId'],
+                                  docData['uid']),
+                              builder: (context, asyncSnapshot) {
+                                if (asyncSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return SkeletonCard(); // Or a placeholder widget
+                                }
 
-        if (asyncSnapshot.hasError) {
-          return const Text("Failed to load additional data");
-        }
+                                if (asyncSnapshot.hasError) {
+                                  return const Text(
+                                      "Failed to load additional data");
+                                }
 
-        // Assuming asyncSnapshot.data contains the lead user data
-        docData['leadUser'] = asyncSnapshot.data;
-        // Now, you can use docData including the fetched leadUser data to build your widget
-        return _buildLeadTasksCard(context, docData);
-      },
-    );
-                                  
+                                // Assuming asyncSnapshot.data contains the lead user data
+                                docData['leadUser'] = asyncSnapshot.data;
+                                // Now, you can use docData including the fetched leadUser data to build your widget
+                                return _buildLeadTasksCard(context, docData);
+                              },
+                            );
+
 //return _buildLeadTasksCard(context, projData);
- 
-                                      
-                                      }),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
+                          }),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Text('No Data');
+          }
+        });
+  }
 
-                  }else{
-                    return Text('No Data');
-                  }});
-
- }
-
-   Widget _buildLeadTasksCard( context,     _list) {
-
+  Widget _buildLeadTasksCard(context, _list) {
     //   String lead_Remarks = _list?.data()?.containsKey('Remarks') == true
     // ? _list!['Remarks']
     // : 'NA';
-String lead_Remarks = '';
+    String lead_Remarks = '';
     print('task data is ${_list}');
 // return Text('${_list[_list['staDA'][0]]}');
     return Container(
@@ -1068,9 +1073,11 @@ String lead_Remarks = '';
       child: InkWell(
         onTap: () {
           //_showBottomSheet(context);
-       
-                      Get.to(() => LeadsDetailsScreen(leadDetails: _list ));
-    
+
+          Get.to(() => LeadsDetailsScreen(
+                leadDetails: _list,
+                callLogEntries: _callLogEntries,
+              ));
         },
         child: Row(
           children: <Widget>[
@@ -1090,12 +1097,9 @@ String lead_Remarks = '';
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     FxText.bodyMedium("${_list['leadUser'][0]['Name']}",
-                        letterSpacing: 0,
-                     
-                        fontWeight: 600),
+                        letterSpacing: 0, fontWeight: 600),
                     FxText.bodySmall(
                       _list['leadUser'][0]['Name'],
-                   
                       letterSpacing: 0,
                       xMuted: true,
                       fontWeight: 600,
@@ -1121,16 +1125,14 @@ String lead_Remarks = '';
                 });
               },
               child: FxContainer(
-                 margin: FxSpacing.right(16),
+                margin: FxSpacing.right(16),
                 padding: FxSpacing.fromLTRB(16, 8, 16, 8),
                 bordered: false,
                 borderRadiusAll: 4,
                 border: Border.all(color: Colors.grey, width: 1),
-                color:false
-                    ? Colors.transparent
-                    : appLightTheme.primaryColor,
+                color: false ? Colors.transparent : appLightTheme.primaryColor,
                 child: FxText.bodySmall("Call",
-                    color:false
+                    color: false
                         ? appLightTheme.colorScheme.onBackground
                         : appLightTheme.colorScheme.onPrimary,
                     fontWeight: 600,
@@ -1141,8 +1143,7 @@ String lead_Remarks = '';
         ),
       ),
     );
-  
-      }
+  }
 
   Widget _filterChip(int index,
       {required String title,
