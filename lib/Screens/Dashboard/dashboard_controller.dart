@@ -5,10 +5,11 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class DashboardController extends GetxController {
   late List<String> filterTime = [
-    "All time",
+     "Today",
     "Yesterday",
     "This week",
-    "7 days ago"
+    "7 days ago",
+    "All time",
   ];
 
   RxList day1 = [].obs;
@@ -19,7 +20,7 @@ class DashboardController extends GetxController {
   RxList day6 = [].obs;
   RxList day7 = [].obs;
 
-  late String time = "All time";
+  late String time = "Today";
   late TooltipBehavior tooltipBehavior;
   late List<ChartSampleData> chartData;
 

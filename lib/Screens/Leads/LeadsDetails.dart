@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
@@ -17,7 +18,9 @@ import 'package:redefineerp/Screens/Dashboard/dashboard_controller.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Leads/LeadDetailsController.dart';
 import 'package:redefineerp/Screens/Leads/LeadLogs.dart';
+import 'package:redefineerp/Screens/Leads/VisitDoneQuestions.dart';
 import 'package:redefineerp/Screens/projectDetails/unit_screen.dart';
+import 'package:redefineerp/Widgets/FxCard.dart';
 import 'package:redefineerp/themes/constant.dart';
 import 'package:redefineerp/themes/container.dart';
 import 'package:redefineerp/themes/progress_bar.dart';
@@ -278,6 +281,8 @@ _callNumber() async{
             ),
   onPressed: () async => {
    controller.selNewStaus(item,widget.leadDetails),
+   print('new status is ${item['label']}'),
+   if(item['value']=='followup'){
            await   showModalBottomSheet(
                   shape: const RoundedRectangleBorder(
                       borderRadius:
@@ -811,8 +816,10 @@ _callNumber() async{
                           ),
                         )),
                   )
-            },
-          ),
+    }  else if(item['value']== 'visitdone'){
+Get.to(( )=> VisitDoneExamScreen())
+        } }
+         ),
         ),
     ],
   ),
@@ -828,32 +835,13 @@ _callNumber() async{
             FxSpacing.height(4),
             alert(),
               // FxSpacing.height(16),
-              TabBar(
-  controller: _tabController,
-  tabs: [
-          Tab(
-                    child: FxText.titleMedium("Tasks",
-                        color: _currentIndex == 0
-                            ? Get.theme.onPrimaryContainer
-                            : Get.theme.onBackground,
-                            fontSize: 12
-                        )),
-                        Tab(
-                    child: FxText.titleMedium("Logs",
-                        color: _currentIndex == 1
-                            ? Get.theme.onPrimaryContainer
-                            : Get.theme.onBackground,
-                            fontSize: 12
-                        )),
-          ],
-        // or TabBarIndicatorSize.tab
-  indicatorPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0), // Adjust the padding here
-             labelColor: Get.theme.onPrimaryContainer,
-            indicatorColor:  appLightTheme.medicarePrimary.withAlpha(100),
-            unselectedLabelColor: Get.theme.onPrimaryContainer,
-),
+            
+                    
+              tabsCard(),      
+                    
+        
 
- _currentIndex == 0 ? ScheduleListData(context, controller2) :  LeadLogsScreen( leadDetails: widget.leadDetails,)
+  Obx(() =>controller.tabSelected.value == 'Tasks' ? ScheduleListData(context, controller2) :  LeadLogsScreen( leadDetails: widget.leadDetails,))
         //   TabBarView(
         //   controller: _tabController,
         //   children: <Widget>[
@@ -1156,6 +1144,22 @@ Widget _buildSendMessage({String? message, String? time}) {
         )    ],
     );
   }
+
+
+    Widget tabsCard() {
+    return Column(
+      children: [
+        Padding(
+           padding: FxSpacing.all(2.0),
+          child: Row(
+              children: [
+                MytabsCard( {'label': 'Tasks', 'value': 'Tasks'}),
+                MytabsCard( {'label': 'Activity', 'value': 'Activity'}),
+              ],
+            ),
+        )    ],
+    );
+  }
  Widget timeFilter() {
     final controller = Get.put<DashboardController>(DashboardController());
 
@@ -1267,6 +1271,53 @@ Widget _buildSendMessage({String? message, String? time}) {
       ),
     );
   }
+    Widget MytabsCard( nutrition) {
+
+      //   backgroundColor: widget.leadDetails['Status'] == item['value']
+                // ? Get.theme.primaryContainer
+                // : Colors.transparent,
+
+                  //   color: widget.leadDetails['Status'] == item['value']
+                  // ? Get.theme.onPrimaryContainer
+                  // : Get.theme.onBackground,
+    return InkWell(
+        onTap: () async => {
+   controller.tabSelected.value = nutrition['value'],
+   print('sele value is ${ controller.tabSelected.value} ${nutrition['value']}')
+   },
+      child: Obx(() =>FxContainer(
+          padding: FxSpacing.fromLTRB(8, 8, 12, 8),
+          // color: appBlueMode.medicarePrimary.withAlpha(40),
+          color: Colors.transparent,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              FxSpacing.width(8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FxText.bodySmall('${nutrition['label']}', fontWeight: 600),
+                   FxContainer(height: 4, color:controller.tabSelected.value == nutrition['value'] ? Get.theme.primaryContainer : Colors.white,  border: Border(
+                  bottom: BorderSide(
+                    
+                  color: Get.theme.primaryContainer,
+                 // Set your desired border color here
+                    width: 2.0,
+                  // Set the border width
+                  ),
+                ),),
+
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+ 
 Widget StatusCard( nutrition) {
     return Expanded(
       child: FxContainer(

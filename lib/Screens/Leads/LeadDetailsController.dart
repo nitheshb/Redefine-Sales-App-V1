@@ -143,6 +143,8 @@ var selLeadId = ''.obs;
   var assignedUserFcmToken = ''.obs;
   var taskPriority = 'Basic'.obs;
 
+    var tabSelected = 'Tasks'.obs;
+
   var personalData = [].obs;
   var businessData = [].obs;
   var businessMode = true.obs;

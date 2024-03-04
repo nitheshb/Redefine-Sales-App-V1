@@ -40,6 +40,7 @@ class _DashboardPageState extends State<DashboardPage> {
   num day6 = 0;
   num day7 = 0;
   late String time = "All time";
+    Color? color1, color2, color3;
 
   var currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -55,6 +56,9 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     // time = filterTime.first;
     initChartData();
+        color1 = Colors.lightBlueAccent;
+    color2 = Colors.purpleAccent;
+    color3 = Colors.deepPurpleAccent;
   }
 
   initChartData() {
@@ -105,11 +109,39 @@ class _DashboardPageState extends State<DashboardPage> {
       body: SingleChildScrollView(
         child: Container(
           padding: FxSpacing.fromLTRB(
-              20, FxSpacing.safeAreaTop(context) + 16, 20, 20),
+              10, FxSpacing.safeAreaTop(context) + 16, 10, 20),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              titleRow(),
+                 FxContainer(
+                child: Column(
+                  children: [
+                        Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    FxContainer(
+                      width: 10,
+                      height: 20,
+                      color: Get.theme.primaryContainer,
+                      borderRadiusAll: 2,
+                    ),
+                    FxSpacing.width(8),
+                    FxText.titleSmall(
+                      "My Activity",
+                      fontWeight: 600,
+                    ),
+                  ],
+                ),
+                timeFilter()
+              ],
+            ),
+                    activityGraph(),
+                     merticsCard(),
+                  ],
+                ),
+              ),
               FxSpacing.height(16),
               alert(),
               FxSpacing.height(16),
@@ -161,6 +193,137 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
+   Widget activityGraph() {
+    return Container(
+          margin: FxSpacing.top(36),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 140,
+                height: 140,
+                child: CircularProgressIndicator(
+                    backgroundColor: color1!.withAlpha(20),
+                    value: 0.3,
+                    valueColor: AlwaysStoppedAnimation<Color?>(color1),
+                    strokeWidth: 9),
+              ),
+              SizedBox(
+                width: 165,
+                height: 165,
+                child: CircularProgressIndicator(
+                    backgroundColor: color2!.withAlpha(20),
+                    value: 0.5,
+                    valueColor: AlwaysStoppedAnimation<Color?>(color2),
+                    strokeWidth: 9),
+              ),
+              Container(
+                width: 190,
+                height: 190,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(40))),
+                child: CircularProgressIndicator(
+                    backgroundColor: color3!.withAlpha(20),
+                    value: 0.7,
+                    valueColor: AlwaysStoppedAnimation<Color?>(color3),
+                    strokeWidth: 9),
+              ),
+              SizedBox(
+                width: 120,
+                height: 60,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FxText.headlineSmall("50%",
+                        fontWeight: 700),
+                    FxText.bodySmall("of daily goals",
+                        letterSpacing: -0.2,
+                   
+                        xMuted: true,
+                        fontWeight: 600)
+                  ],
+                ),
+              )
+            ],
+          ),
+        );
+       
+    }
+
+    Widget merticsCard() {
+      return     Container(
+          margin: FxSpacing.fromLTRB(0, 48, 0, 0),
+          child: Column(
+            children: [
+              singleElement(
+                  color: color1,
+                  type: "Calls",
+                  inGram: "150",
+                  inPercentage: "40"),
+              Container(
+                margin: FxSpacing.top(16),
+                child: singleElement(
+                    color: color2,
+                    type: "Tasks",
+                    inGram: "120",
+                    inPercentage: "34"),
+              ),
+              Container(
+                margin: FxSpacing.top(16),
+                child: singleElement(
+                    color: color3,
+                    type: "Booked",
+                    inGram: "1",
+                    inPercentage: "36"),
+              ),
+            ],
+          ),
+        );
+    }
+    Widget singleElement(
+      {Color? color,
+      required String type,
+      required String inGram,
+      required String inPercentage}) {
+    return Row(
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+              color: color, borderRadius: BorderRadius.all(Radius.circular(4))),
+        ),
+        Expanded(
+          child: Container(
+            margin: FxSpacing.left(8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: FxText.bodyLarge(type,
+                 ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: FxText.bodyLarge("$inGram",
+                        ),
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: FxText.titleSmall("$inPercentage%",
+                        fontWeight: 600,),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
 
   Widget timeFilter() {
     final controller = Get.put<DashboardController>(DashboardController());
