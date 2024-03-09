@@ -92,8 +92,46 @@ class DbSupa {
   
   
   }
+   Future<List<Map<String, dynamic>>?>  streamLeadCallActivityLog(uid) async {
+    final client = GetIt.instance<SupabaseClient>();
+   
 
-
+      final response = await client
+      .from('${'spark'}_lead_call_logs')
+      .select('type, subtype, T, dailedBy, duration, payload')
+      .eq('Luid', uid)
+      .order('T', ascending: false)
+      .execute();
+  print('calls retrieved ${response}');
+    
+        List<Map<String, dynamic>>? leadLogs = (response.data as List).cast<Map<String, dynamic>>();
+   
+   print('calls retrieved  successfully ${leadLogs}');
+    return leadLogs;
+  }
+addCallLog(orgId,leadDocId, data)async {
+    final client = GetIt.instance<SupabaseClient>();
+      final response = await client
+      .from('${orgId}_lead_call_logs')
+      .upsert([
+        {
+          'type': 'incoming',
+          'subtype': data['Status'],
+          'T': DateTime.now().millisecondsSinceEpoch,
+          'Luid': leadDocId,
+          'dailedBy': FirebaseAuth.instance.currentUser!.email,
+          'payload': {},
+          'customerNo' : '',
+          'offPhNo': '',
+          'duration': 0,
+        },
+      ])
+      .execute();
+  print('Call log  inserted successfully ${response}');
+  var callLog = (response.data as List).cast<Map<String, dynamic>>();
+   print('call inserted successfully ${callLog}');
+    return callLog;
+}
 
  leadStatusLog(orgId,leadDocId, data) async {
     final client = GetIt.instance<SupabaseClient>();
@@ -120,10 +158,5 @@ class DbSupa {
    
    print('Task inserted successfully ${leadLogs}');
     return leadLogs;
-    if (response   != null) {
-      print(response);
-    } else {
-      print('Task inserted successfully');
-    }
   }
 }
