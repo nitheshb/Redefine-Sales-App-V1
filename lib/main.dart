@@ -1,5 +1,6 @@
 // ignore_for_file: unrelated_type_equality_checks
 
+import 'package:call_log/call_log.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +18,39 @@ import 'package:redefineerp/themes/themes_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:supabase/supabase.dart';
+import 'package:workmanager/workmanager.dart';
 import 'Screens/Profile/profile_controller.dart';
 import 'firebase_options.dart';
+
+void callbackDispatcher() {
+  Workmanager().executeTask((dynamic task, dynamic inputData) async {
+    print('Background Services are Working!');
+    try {
+      final Iterable<CallLogEntry> cLog = await CallLog.get();
+      print('Queried call log entries');
+      for (CallLogEntry entry in cLog) {
+        print('-------------------------------------');
+        print('F. NUMBER  : ${entry.formattedNumber}');
+        print('C.M. NUMBER: ${entry.cachedMatchedNumber}');
+        print('NUMBER     : ${entry.number}');
+        print('NAME       : ${entry.name}');
+        print('TYPE       : ${entry.callType}');
+        print(
+            'DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp!.toInt())}');
+        print('DURATION   : ${entry.duration}');
+        print('ACCOUNT ID : ${entry.phoneAccountId}');
+        print('ACCOUNT ID : ${entry.phoneAccountId}');
+        print('SIM NAME   : ${entry.simDisplayName}');
+        print('-------------------------------------');
+      }
+      return true;
+    } on PlatformException catch (e, s) {
+      print(e);
+      print(s);
+      return true;
+    }
+  });
+}
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -57,25 +89,28 @@ void main() async {
 
   GetIt getIt = GetIt.instance;
 
-  getIt.registerSingleton<SupabaseClient>(SupabaseClient('https://cezgydfbprzqgxkfcepq.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlemd5ZGZicHJ6cWd4a2ZjZXBxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDU0NTA4NTQsImV4cCI6MTk2MTAyNjg1NH0.UDAQvbY_GqEdLLrZG6MFnhDWXonAbcYnrHGHDD6-hYU'));
+  getIt.registerSingleton<SupabaseClient>(SupabaseClient(
+      'https://cezgydfbprzqgxkfcepq.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlemd5ZGZicHJ6cWd4a2ZjZXBxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDU0NTA4NTQsImV4cCI6MTk2MTAyNjg1NH0.UDAQvbY_GqEdLLrZG6MFnhDWXonAbcYnrHGHDD6-hYU'));
   // final supabaseClient = SupabaseClient(
   //   'https://cezgydfbprzqgxkfcepq.supabase.co',
   //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlemd5ZGZicHJ6cWd4a2ZjZXBxIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDU0NTA4NTQsImV4cCI6MTk2MTAyNjg1NH0.UDAQvbY_GqEdLLrZG6MFnhDWXonAbcYnrHGHDD6-hYU',
   // );
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp])
-      .then((_) => runApp( MyApp()));
+      .then((_) => runApp(MyApp()));
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
 }
 
 class MyApp extends StatelessWidget {
   //  final SupabaseClient supabaseClient;
   // const MyApp({Key? key, this.supabaseClient}) : super(key: key);
-   const MyApp({super.key});
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final  currentUser = FirebaseAuth.instance.currentUser;
+    final currentUser = FirebaseAuth.instance.currentUser;
     final controller = Get.put<ProfileController>(ProfileController());
     return GetMaterialApp(
       defaultTransition: Transition.circularReveal,
