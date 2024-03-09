@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase/supabase.dart';
 
@@ -80,6 +81,42 @@ class DbSupa {
   print('Task inserted successfully ${response}');
     
         List<Map<String, dynamic>>? leadLogs = (response.data as List).cast<Map<String, dynamic>>();
+   
+   print('Task inserted successfully ${leadLogs}');
+    return leadLogs;
+    if (response   != null) {
+      print(response);
+    } else {
+      print('Task inserted successfully');
+    }
+  
+  
+  }
+
+
+
+ leadStatusLog(orgId,leadDocId, data) async {
+    final client = GetIt.instance<SupabaseClient>();
+   
+
+      final response = await client
+      .from('${orgId}_lead_logs')
+      .upsert([
+        {
+          'type': 'sts_change',
+          'subtype': data['Status'],
+          'T': DateTime.now().millisecondsSinceEpoch,
+          'Luid': leadDocId,
+          'by': FirebaseAuth.instance.currentUser!.email,
+          'payload': {'reason': data['VisitDoneReason'], 'notes': data['VisitDoneNotes']},
+          'from': data['from'],
+          'to': data['Status'],
+        },
+      ])
+      .execute();
+  print('Task inserted successfully ${response}');
+    
+        var leadLogs = (response.data as List).cast<Map<String, dynamic>>();
    
    print('Task inserted successfully ${leadLogs}');
     return leadLogs;

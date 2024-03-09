@@ -100,7 +100,7 @@ class HomePageController extends GetxController {
 
   var totalTasksStreamData = [].obs;
 
-  var myTaskTypeCategory = 'myLeads'.obs;
+  var myLeadStatusCategory = 'followup'.obs;
 
 
   var currentUser;
@@ -165,9 +165,9 @@ class HomePageController extends GetxController {
 
   flipMode(title) {
     print('am here ${title}');
-    if (title == 'Business') {
+    if (title == 'Leads') {
       businessMode.value = true;
-      setTaskTypeFun('allBusinessTasks');
+      setTaskTypeFun('followup');
     } else {
       businessMode.value = false;
 
@@ -176,7 +176,7 @@ class HomePageController extends GetxController {
   }
 
   void setTaskTypeFun(value) {
-    myTaskTypeCategory.value = value;
+    myLeadStatusCategory.value = value;
     filterTaskPerCat(value);
     print('iam insied it ${value}');
   }
@@ -215,7 +215,7 @@ class HomePageController extends GetxController {
     // participants.value = businessData.where((element) => (element["by_uid"] != FirebaseAuth.instance.currentUser!.uid && element["to_uid"] != FirebaseAuth.instance.currentUser!.uid)).toList();
     // personalTasks.value=   personalData;
 
-    var value = myTaskTypeCategory.value;
+    var value = myLeadStatusCategory.value;
     if (value == 'creatdByMe') {
       showingLists.value = totalTasksStreamData
           .where((element) =>
@@ -413,7 +413,7 @@ class HomePageController extends GetxController {
 
   Widget taskListsIs(context, TotalTasks) {
     totalTasksStreamData.value = TotalTasks;
-    filterTaskPerCat("Business");
+    filterTaskPerCat("Leads");
     // return FxText.titleSmall(
     //                     //  personalTasks.length.toString(),
     //                     showingLists.length.toString(),

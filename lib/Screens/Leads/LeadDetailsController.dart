@@ -78,6 +78,9 @@ var selLeadId = ''.obs;
   var bottomBarIndex = 0.obs;
   var dummy = true.obs;
 
+ 
+
+
   var donecount = 0.obs;
   var index = 0.obs;
   var notdone = 0.obs;
@@ -131,6 +134,12 @@ var selLeadId = ''.obs;
   TextEditingController dateinput = TextEditingController();
   TextEditingController commentLine = TextEditingController();
 
+  // 
+  var siteVisitFeedback = 'happy'.obs; 
+  TextEditingController siteVisitNotes = TextEditingController();
+  TextEditingController taskComment = TextEditingController();
+  
+
   GlobalKey<FormState> taskKey = GlobalKey<FormState>();
   var taskType = 'mark'.obs;
   DateTime dateSelected = DateTime.now();
@@ -163,7 +172,9 @@ var selLeadId = ''.obs;
       validationSuccess.value = true;
       return null;
     }
-  }
+  }  
+  
+
 
   void updateSelectedDate() {
     // selectedDateTime.value =
@@ -171,6 +182,103 @@ var selLeadId = ''.obs;
     //
     selectedDateTime.value =dateSelected.millisecondsSinceEpoch;
       
+  } 
+  
+addTaskCommentFun( data) async {
+
+  var addCommentTitle = taskComment.text;
+  print('seleted lead is ${selScheduleObj.value['staDA']}');
+var schStsMA = selScheduleObj.value['staDA'];
+final inx = schStsMA.indexOf(data['ct']);
+  return;
+  // final inx = schStsMA.indexOf(data['ct']);
+  // data['comments'] = [
+  //   {
+  //     'c': addCommentTitle,
+  //     't': Timestamp.now().millisecondsSinceEpoch,
+  //   },
+  //   ...(data['comments'] ?? []),
+  // ];
+  // final x = List.from(schStsA);
+  // x[inx] = 'pending';
+  // setschStsA(x);
+
+  // if (addCommentPlusTask) {
+  //   await setTakTitle(addCommentTitle);
+  //   await fAddSchedule();
+  //   await editAddTaskCommentDB(orgId, id, data['ct'], 'pending', schStsA, data);
+  //   if (data['stsType'] != 'visitfixed') {
+  //     await doneFun(data);
+  //   }
+  //   await cancelResetStatusFun();
+  // } else {
+  //   if (closeTask) {
+  //     doneFun(data);
+  //   }
+  //   if (selType == 'reschedule') {
+  //     // rescheduleTaskDB(orgId, id, data['ct'], 'pending', schStsA, addCommentTime);
+  //     data['schTime'] = addCommentTime;
+  //   }
+  //   await editAddTaskCommentDB(orgId, id, data['ct'], 'pending', schStsA, data);
+  //   await updateLeadLastUpdateTime(
+  //     orgId,
+  //     id,
+  //     Timestamp.now().millisecondsSinceEpoch,
+  //     addCommentTime,
+  //   );
+  //   if (postPoneToFuture == 'present2Future') {
+  //     await decreCountOnResheduleOtherDay(
+  //       orgId,
+  //       user?.uid,
+  //       ddMy,
+  //       '${leadDetailsObj?['Status']}',
+  //       1,
+  //       'Lead Posted',
+  //     );
+  //     setPostPoneToFuture('present');
+  //   } else if (postPoneToFuture == 'Future2Present') {
+  //     IncrementTastTotalCount(
+  //       orgId,
+  //       user?.uid,
+  //       ddMy,
+  //       '${leadDetailsObj?['Status']}',
+  //       1,
+  //       'Lead Posted',
+  //     );
+  //     setPostPoneToFuture('present');
+  //   }
+  //   await cancelResetStatusFun();
+  // }
+}
+  void updateSiteVisitDone() {
+      print('sel schedule log ${selScheduleObj.value['staA']}');
+    addTaskCommentFun(selScheduleObj.value);
+    return;
+   closeAllPerviousTasks();
+
+    selectedDateTime.value =dateSelected.millisecondsSinceEpoch;
+    var orgId = controller2.currentUserObj['orgId'];
+        String leadString = selLeadId.value;
+//  DbQuery.instanace.editTaskDb(orgId, leadString, kId, newStat, schStsA, oldSch)
+
+       var covA = [
+        ...selLead['coveredA'],
+        ...['visitfixed', 'visitdone'],
+      ];
+
+      var dat = {
+        'coveredA': covA,
+        'from': selLead['Status'],
+        'Status': 'visitdone',
+        'VisitDoneReason': siteVisitFeedback.value,
+        'VisitDoneNotes': siteVisitNotes.text,
+        'stsUpT': DateTime.now().millisecondsSinceEpoch,
+        'Remarks': '${siteVisitFeedback}-${siteVisitNotes.text}'
+      };
+      print('checik this ${selLeadId.value}');
+   
+      DbQuery.instanace.updateVisitFixedStatus(orgId, leadString, dat);
+      print('status value is  ${dat} ${siteVisitNotes.text} ${siteVisitFeedback}');
   }
   
    void selNewStaus(item, leadDetails) {
@@ -179,6 +287,80 @@ var selLeadId = ''.obs;
     }
     selectedDateTime.value =dateSelected.millisecondsSinceEpoch;
 print('seleted lead is ${selScheduleObj.value['staDA']}');
+  }
+
+  closeAllPerviousTasks(){
+  print('status value is ${selScheduleObj}  ${selScheduleObj['staDA']} ');
+var usersListA = [];
+  selScheduleObj.forEach((key, value) {
+    if (['staA', 'staDA'].contains(key)) {
+      if (key == 'staA') {
+        // setschStsA(value)
+      } else if (key == 'staDA') {
+        // sMapStsA = value
+      }
+    } else {
+      usersListA.add(value);
+      // print('my total fetched list is 3: $key: $value');
+    }
+  });
+// usersListA.sort((a, b) => b['schTime'].compareTo(a['schTime']));
+print('status value is ==> ${usersListA} xx   ');
+// usersListA
+//       .where((d) =>  d?['sts'] == 'pending')
+//       .toList();
+ var pendingTasks = usersListA.where((d) => d['sts'] == 'pending');
+
+  // Sort pending tasks by schTime in descending order
+  // pendingTasks.sort((a, b) =>
+  //     DateTime.parse(b['schTime'].toString())
+  //         .compareTo(DateTime.parse(a['schTime'].toString())));
+  // Iterate over the pendingTaskAObj list
+  usersListA.forEach((pendObj) async {
+    // 1) add comment on task
+
+    // print('values are ${pendObj.containsKey('comments')} ');
+    if(pendObj is Map  ){
+
+      
+        try {
+            if(pendObj.containsKey('comments')){
+                print('my value  ==>  ${pendObj} ');
+       pendObj['comments'] = [
+      {
+        'c': 'closed by visit fixed',
+        't': DateTime.now().millisecondsSinceEpoch + 21600000,
+      },
+      ...(pendObj['comments'] ?? []),
+    ];
+    }
+        } catch (e) {
+          print('error is  => ${pendObj} ${e}]}');
+        }
+  
+    }else {
+      print('value are  error ${pendObj}');
+    }
+  });
+
+
+   print('status value is ${usersListA} xx  ${selScheduleObj['staDA']} ');
+//     Object.entries(usersList).forEach((entry) => {
+//           const [key, value] = entry
+//           if (['staA', 'staDA'].includes(key)) {
+//             if (key === 'staA') {
+//               // setschStsA(value)
+//             } else if (key === 'staDA') {
+//               // sMapStsA = value
+//             }
+//           } else {
+//             usersListA.push(value)
+//             // console.log(
+//             //   'my total fetched list is 3',
+//             //   `${key}: ${JSON.stringify(value)}`
+//             // )
+//           }
+//         });
   }
 
   flipMode(title) {

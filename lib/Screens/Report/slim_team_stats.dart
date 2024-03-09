@@ -7,6 +7,7 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:redefineerp/Screens/Auth/auth_controller.dart';
 import 'package:redefineerp/Screens/Home/homepage_controller.dart';
 import 'package:redefineerp/Screens/Notification/notification_pages.dart';
 import 'package:redefineerp/Screens/Profile/profile_page.dart';
@@ -38,6 +39,7 @@ class _SlimTeamStatsState extends State<SlimTeamStats> {
   var isWeek = false;
   var isMonth = false;
         final controller = Get.put<HomePageController>(HomePageController());
+            final UserController = Get.put<AuthController>(AuthController());
    
   @override
   Widget build(BuildContext context) {
@@ -80,7 +82,7 @@ Widget statusBarItems(title) {
               child: InkWell(
                           onTap: () =>{controller.flipMode(title)},
                 child: FxContainer.bordered(
-                  color: (title== "Personal" && !controller.businessMode.value) ?  Get.theme.primaryContainer: (title== "Business" && controller.businessMode.value) ?  Get.theme.primaryContainer: Colors.transparent,
+                  color: (title== "Tasks" && !controller.businessMode.value) ?  Get.theme.primaryContainer: (title== "Leads" && controller.businessMode.value) ?  Get.theme.primaryContainer: Colors.transparent,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -90,13 +92,25 @@ Widget statusBarItems(title) {
                       ),
                       FxSpacing.height(8),
                           StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
+        stream: title== "Tasks" ? FirebaseFirestore.instance
             .collection('spark_assignedTasks')
             .where("due_date",
                 isLessThanOrEqualTo: DateTime.now().microsecondsSinceEpoch)
             .where("status", isEqualTo: "InProgress")
             .where("to_uid", isEqualTo: auth.currentUser!.uid)
-            .snapshots(),
+            .snapshots() :
+
+            FirebaseFirestore.instance
+            .collection("${UserController.currentUserObj['orgId']}_leads")
+            // .where("assignedTo", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where("Status", whereIn: [
+          'new',
+          'followup',
+          'visitfixed',
+          'visitdone','negotiation'
+        ]).snapshots(), 
+        //
+//  .where("Status", isEqualTo: controller.myLeadStatusCategory.value).snapshots(),
         builder: (context, snapshot) {
         //     if (!snapshot.hasData) {
         //   return CircularProgressIndicator();
@@ -112,10 +126,11 @@ Widget statusBarItems(title) {
       
             var TotalTasks = snapshot.data!.docs.toList();
             var personalTasks;
-            if(title== "Personal"){
+           
+            if(title== "Tasks"){
            personalTasks= TotalTasks.where((element) => element["by_uid"] == auth.currentUser!.uid);
             }else{
-             personalTasks= TotalTasks.where((element) => element["by_uid"] != auth.currentUser!.uid); 
+             personalTasks= TotalTasks; 
             }
             // if (doc['status'] == "Done") {
             //   donecount.value = donecount.value + 1;
@@ -190,9 +205,9 @@ Widget statusBarItems(title) {
         child: Row(
           children: [
            
-           statusBarItems('Personal'),
+           statusBarItems('Tasks'),
             FxSpacing.width(16),
-            statusBarItems('Business'),
+            statusBarItems('Leads'),
           //   Expanded(
           //     child: InkWell(
           //               onTap: () => widget.flipMode(),

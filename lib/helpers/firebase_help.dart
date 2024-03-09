@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:async/async.dart' show StreamGroup, StreamZip;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:redefineerp/helpers/supabae_help.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DbQuery {
@@ -152,5 +153,42 @@ class DbQuery {
       "particpantsIdA": FieldValue.arrayUnion(iDa),
       "particpantsA": FieldValue.arrayUnion([])
     });
+  }
+ 
+editTaskDb(orgId,
+  leadDocId,
+  kId,
+  newStat,
+  schStsA,
+  oldSch) async{
+
+
+        final schTime = oldSch['schTime'];
+  final comments = oldSch['comments'];
+ 
+  print('comments are ${comments}');
+ await FirebaseFirestore.instance.collection('${orgId}_leads_sch').doc(leadDocId).update({
+    '$kId.comments': comments,
+    '$kId.schTime': schTime,
+  });
+  // await updateDoc(doc(db, `${orgId}_leads_sch`, uid), {
+  //   [x]: comments,
+  //   [y]: schTime,
+  // })
+  if (comments.length > 0) {
+    final c = comments[0]['c'];
+    await FirebaseFirestore.instance.collection('${orgId}_leads').doc(leadDocId).update({
+      'Remarks': c,
+    });
+  }
+}
+    updateVisitFixedStatus(orgId,leadDocId, data) async {
+    // particpantsA
+    await  FirebaseFirestore.instance.collection('${orgId}_leads')
+    .doc(leadDocId).update({
+     ...data
+    });
+    await DbSupa.instance.leadStatusLog(orgId,leadDocId, data);
+    // 
   }
 }
