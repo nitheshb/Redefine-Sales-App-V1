@@ -154,15 +154,23 @@ class DbQuery {
       "particpantsA": FieldValue.arrayUnion([])
     });
   }
- 
-editTaskDb(orgId,
+
+  // stream lead logs schedule by leadID
+  strLeadSchedule(orgId,leadId)async{
+      await  FirebaseFirestore.instance
+          .collection("${orgId}_leads_sch")
+          // .where("assignedTo", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          // .where("staA", arrayContainsAny: ['pending', 'overdue'])
+          .doc(leadId)
+          .snapshots();
+  }
+ //closeAllPerviousTasks
+addTaskCommentDB(orgId,
   leadDocId,
   kId,
   newStat,
   schStsA,
   oldSch) async{
-
-
         final schTime = oldSch['schTime'];
   final comments = oldSch['comments'];
  
@@ -182,6 +190,85 @@ editTaskDb(orgId,
     });
   }
 }
+// 
+rescheduleTaskCommentDB(orgId,
+  leadDocId,
+  kId,
+  newStat,
+  schStsA,
+  oldSch) async{
+
+
+        final schTime = oldSch['schTime'];
+
+ await FirebaseFirestore.instance.collection('${orgId}_leads_sch').doc(leadDocId).update({
+ 
+    '$kId.schTime': schTime,
+  });
+
+}
+// updates Lead task  status array, specific task status & completedTime
+completeLeadTaskScheduleLog(orgId,
+  leadDocId,
+  kId,
+  newTaskStatus,
+  schStsA,
+  ) async{
+
+ await FirebaseFirestore.instance.collection('${orgId}_leads_sch').doc(leadDocId).update({
+    'staA': schStsA,
+     '$kId.sts': newTaskStatus,
+    '$kId.schTime':DateTime.now().millisecondsSinceEpoch,
+  });
+
+}
+
+//add new Lead task 
+    addLeadScheduler  (
+      orgId,
+      did,
+      data,
+      schStsA,
+      assignedTo
+    )async {
+
+      // make sure data contains below 
+    //    const data = {
+    //   stsType: tempLeadStatus || 'none',
+    //   assTo: user?.displayName || user?.email,
+    //   assToId: user.uid,
+    //   by: user?.displayName || user?.email,
+    //   cby: user.uid,
+    //   type: 'schedule',
+    //   pri: selected?.name,
+    //   notes: y === '' ? `Negotiate with customer` : y,
+    //   sts: 'pending',
+    //   schTime:
+    //     tempLeadStatus === 'booked'
+    //       ? Timestamp.now().toMillis() + 10800000
+    //       : startDate.getTime(),
+    //   ct: Timestamp.now().toMillis(),
+    // }
+         final xo = data['ct'];
+  final yo = {
+    'staA': schStsA,
+    'staDA': [xo],
+    xo: data,
+  };
+
+  try {
+    final washingtonRef = FirebaseFirestore.instance.collection('${orgId}_leads_sch').doc(did);
+    print('check add LeadLog ${washingtonRef.id}');
+
+    await washingtonRef.update({...yo});
+  } catch (error) {
+    final y1 = {...yo};
+    yo['assignedTo'] = assignedTo ?? '';
+    print('new log set $yo');
+    
+    await FirebaseFirestore.instance.collection('${orgId}_leads_sch').doc(did).set({...yo});
+  } 
+    }
     updateVisitFixedStatus(orgId,leadDocId, data) async {
     // particpantsA
     await  FirebaseFirestore.instance.collection('${orgId}_leads')
