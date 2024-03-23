@@ -38,61 +38,122 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
                titleRow(),
         FxSpacing.height(20),
-              
-             FxContainer(
-              paddingAll: 10,
-              child: Row(
-              children: [
-                Hero(
-                  tag: 'profile',
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child:   FxContainer(
-                        paddingAll: 10,
-              color: Constant.softColors.violet.color,
-              child: Icon(
-                Icons.person,
-                size: 18,
-                color: Constant.softColors.violet.onColor,
-              ),
-                      
+               FxContainer(
+          padding: FxSpacing.fromLTRB(10, 16, 20, 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  FxText.titleLarge(auth.currentUser!.displayName!.toUpperCase(), fontWeight: 600),
+                  Container(
+                    margin: FxSpacing.top(4),
+                    child: FxText.bodySmall(
+                      auth.currentUser!.email!.toUpperCase(),
                     ),
                   ),
-                ),
-            
-                FxSpacing.width(10),
-                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                         children: [
-                          FxText.bodySmall(
-                            '${auth.currentUser!.displayName!.toUpperCase()}',
-                            fontWeight: 600,
-                          ),
-                          FxText.bodySmall(
-                            '${auth.currentUser!.email!.toUpperCase()}',
-                            fontWeight: 600,
-                          ),
-                      
-                         ],
-                       ),
-                  
-                             
-                    ],
+                
+                  FxText.bodySmall(
+                    "Sales Executive",
                   ),
-            ),
+                  FxText.bodySmall("See more",
+                      decoration: TextDecoration.underline),
+                ],
+              ),
+            ],
+          ),
+        ),
+         
               
 
-               FxSpacing.height(14),
-                    statistics(),
-                    FxSpacing.height(24),
-
-                    ChangeThemeColor(),
-                    FxSpacing.height(24),
+            
+                    FxSpacing.height(32),
+ IntrinsicHeight(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        FxText.bodyMedium(
+                          '0',
+                          fontWeight: 700,
+                        ),
+                        FxSpacing.height(6),
+                        FxText.bodySmall(
+                          'Calls',
+                          fontWeight: 600,
+                          xMuted: true,
+                        ),
+                      ],
+                    ),
+                    VerticalDivider(),
+                    Column(
+                      children: [
+                        FxText.bodyMedium(
+                          '0',
+                          fontWeight: 700,
+                        ),
+                        FxSpacing.height(6),
+                        FxText.bodySmall(
+                          'Leads',
+                          fontWeight: 600,
+                          xMuted: true,
+                        ),
+                      ],
+                    ),
+                    VerticalDivider(),
+                    Column(
+                      children: [
+                        FxText.bodyMedium(
+                          '0',
+                          fontWeight: 700,
+                        ),
+                        FxSpacing.height(6),
+                        FxText.bodySmall(
+                          'Bookings',
+                          fontWeight: 600,
+                          xMuted: true,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+       
+                    FxSpacing.height(32),
 
                     other(),
-                    FxSpacing.height(24),
-                    account(),
+                    FxSpacing.height(40),
+                    // account(),
+
+                    Center(
+                      child:     Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                              Icon(
+                                          FeatherIcons.power,
+                                          size: 18,
+                                          color: Get.theme.primary,
+                                        ),
+                            FxButton.text(
+                                        padding: FxSpacing.zero,
+                                        onPressed: () {
+                                           FirebaseAuth.instance
+                            .signOut()
+                            .then((value) => Get.offAll(() => LoginPage()));
+                                        },
+                                        child: FxText.bodyMedium(
+                                          'Logout',
+                                          color: Get.theme.primary,
+                                          fontWeight: 600,
+                                        )),
+                          ],
+                        ),
+                      ),
+                    )
               
             ],
           ),
@@ -260,6 +321,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+
+
     Widget ChangeThemeColor() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,20 +406,31 @@ class _ProfilePageState extends State<ProfilePage> {
           fontWeight: 600,
           muted: true,
         ),
-        FxSpacing.height(20),
+   FxSpacing.height(16),
         Row(
           children: [
             FxContainer(
               paddingAll: 8,
-              color: Constant.softColors.blue.color,
+              color: Colors.transparent,
               child: Icon(
                 Icons.notifications,
                 size: 20,
-                color: Constant.softColors.blue.onColor,
               ),
             ),
             FxSpacing.width(16),
-            Expanded(child: FxText.bodyMedium('Notifications')),
+            Expanded(child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FxText.titleSmall('Notifications', fontWeight: 600, ),
+              FxSpacing.height(4),
+              FxText.bodySmall(
+                'Tasks,Calls,Reminders',
+                fontWeight: 600,
+                xMuted: true,
+                fontSize: 10,
+              ),
+            ],
+          ),),
             FxSpacing.width(16),
             Row(
               children: [
@@ -387,15 +461,27 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             FxContainer(
               paddingAll: 8,
-              color: Constant.softColors.green.color,
+              color: Colors.transparent,
               child: Icon(
                 Icons.delete_forever,
                 size: 20,
-                color: Constant.softColors.green.onColor,
+ 
               ),
             ),
             FxSpacing.width(16),
-            Expanded(child: FxText.bodyMedium('Delete Account')),
+            Expanded(child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FxText.titleSmall('Delete Account', fontWeight: 600, ),
+              FxSpacing.height(4),
+              FxText.bodySmall(
+                'Removes accounts from Redefine',
+                fontWeight: 600,
+                xMuted: true,
+                fontSize: 10,
+              ),
+            ],
+          )),
             FxSpacing.width(16),
             const Icon(
               FeatherIcons.chevronRight,
@@ -408,29 +494,39 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             FxContainer(
               paddingAll: 8,
-              color: Constant.softColors.orange.color,
+              color: Colors.transparent,
               child: Icon(
                 Icons.privacy_tip_outlined,
                 size: 20,
-                color: Constant.softColors.orange.onColor,
               ),
             ),
             FxSpacing.width(16),
-            Expanded(child: FxText.bodyMedium('Privacy Policy')),
+            Expanded(child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FxText.titleSmall('Privacy Policy', fontWeight: 600, ),
+              FxSpacing.height(4),
+              FxText.bodySmall(
+                'Data Policy',
+                fontWeight: 600,
+                xMuted: true,
+                fontSize: 10,
+              ),
+            ],
+          )),
             FxSpacing.width(16),
             Row(
               children: [
                 FxText.bodySmall(
-                  'Action Needed',
+                  '',
                   color: Get.theme.onErrorContainer,
                   fontWeight: 600,
                 ),
-                FxSpacing.width(4),
-                Icon(
-                  FeatherIcons.chevronRight,
-                  size: 18,
-                  color: Get.theme.onErrorContainer,
-                )
+               
+               const Icon(
+              FeatherIcons.chevronRight,
+              size: 20,
+            )
               ],
             )
           ],
@@ -441,7 +537,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget account() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FxText.bodySmall(
           'My Account',
@@ -449,31 +546,20 @@ class _ProfilePageState extends State<ProfilePage> {
           xMuted: true,
         ),
         FxSpacing.height(8),
+ 
         FxButton.text(
             padding: FxSpacing.zero,
-            onPressed: () {},
+            onPressed: () {
+               FirebaseAuth.instance
+                      .signOut()
+                      .then((value) => Get.offAll(() => LoginPage()));
+            },
             child: FxText.bodyMedium(
-              'Switch to another account',
+              'Logout',
               color: Get.theme.primary,
               fontWeight: 600,
             )),
-        FxSpacing.height(20),
-        Center(
-          child: FxButton(
-              backgroundColor: Get.theme.ErrorContainer,
-              elevation: 0,
-              borderRadiusAll: Constant.buttonRadius.small,
-              onPressed: () {
-                 FirebaseAuth.instance
-                      .signOut()
-                      .then((value) => Get.offAll(() => LoginPage()));
-              },
-              child: FxText(
-                'Logout',
-                color: Get.theme.onErrorContainer,
-                fontWeight: 600,
-              )),
-        )
+     
       ],
     );
   }

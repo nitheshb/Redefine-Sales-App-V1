@@ -1193,8 +1193,8 @@ StreamBuilder<QuerySnapshot>(
         ),
         FxSpacing.width(8),
         FxText.titleLarge(
-          "Sales💥",
-          fontWeight: 600,
+          "Leads Manager",
+          fontWeight: 700,
           // color: Get.theme.primary,
         ),
       ],
