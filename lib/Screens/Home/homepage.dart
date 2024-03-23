@@ -106,10 +106,92 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    call();
+  }
+
+  void call() async {
+    // Firestore to fetch recent record
+    final controller2 = Get.put<AuthController>(AuthController());
+
+    // FirebaseFirestore.instance
+    //         .collection("${controller2.currentUserObj['orgId']}_leads").
+    Future<List<Map<String, dynamic>>> getDataFromFirestore() async {
+      List<Map<String, dynamic>> dataList = [];
+
+      try {
+        QuerySnapshot<Map<String, dynamic>> querySnapshot =
+            await FirebaseFirestore.instance
+                .collection("${controller2.currentUserObj['orgId']}_leads")
+                .get();
+        print("data in");
+        dataList = querySnapshot.docs
+            .map((DocumentSnapshot<Map<String, dynamic>> doc) {
+          print("data ${doc.data()}");
+          return doc.data()!;
+        }).toList();
+      } catch (e) {
+        print("Error getting data: $e");
+      }
+
+      return dataList;
+    }
+
+    void fetchData() async {
+      String collectionName = 'your_collection_name';
+      List<Map<String, dynamic>> data = await getDataFromFirestore();
+
+      // Do something with the retrieved data
+      print(data);
+    }
+
+// to get call log and will prints the calls afte the recent
+    var recent = 1710002876688;
+    final Iterable<CallLogEntry> result = await CallLog.query();
+
+    setState(() {
+      _callLogEntries = result;
+
+      fetchData();
+      for (CallLogEntry entry in _callLogEntries) {
+        if (entry.timestamp! > recent) {
+          print("F.Number: ${entry.formattedNumber}");
+          print('-------------------------------------');
+          print('F. NUMBER  : ${entry.formattedNumber}');
+          print('C.M. NUMBER: ${entry.cachedMatchedNumber}');
+          print('NUMBER     : ${entry.number}');
+          print('NAME       : ${entry.name}');
+          print('TYPE       : ${entry.callType}');
+          print('DATE       : ${entry.timestamp}');
+          print('DURATION   : ${entry.duration}');
+          print('ACCOUNT ID : ${entry.phoneAccountId}');
+          print('ACCOUNT ID : ${entry.phoneAccountId}');
+          print('SIM NAME   : ${entry.simDisplayName}');
+          print('-------------------------------------');
+        } else {}
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Iterable<CallLogEntry> callLogEntries = <CallLogEntry>[];
+    // call();
+    // for (CallLogEntry entry in callLogEntries) {
+    //   print("F.Number: ${entry.formattedNumber}");
+    //   print('-------------------------------------');
+    //   print('F. NUMBER  : ${entry.formattedNumber}');
+    //   print('C.M. NUMBER: ${entry.cachedMatchedNumber}');
+    //   print('NUMBER     : ${entry.number}');
+    //   print('NAME       : ${entry.name}');
+    //   print('TYPE       : ${entry.callType}');
+    //   print(
+    //       'DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp!.toInt())}');
+    //   print('DURATION   : ${entry.duration}');
+    //   print('ACCOUNT ID : ${entry.phoneAccountId}');
+    //   print('ACCOUNT ID : ${entry.phoneAccountId}');
+    //   print('SIM NAME   : ${entry.simDisplayName}');
+    //   print('-------------------------------------');
+    // }
     final controller = Get.put<HomePageController>(HomePageController());
     final controller2 = Get.put<AuthController>(AuthController());
     final controller1 = Get.put<ContactController>(ContactController());
@@ -952,6 +1034,7 @@ StreamBuilder<QuerySnapshot>(
               onTap: () {
                 _callNumber();
                 print('res iss ');
+
                 // setState(() {
                 //   // _list[index] = !_list[index];
                 // });

@@ -141,6 +141,22 @@ class _LeadsDetailsScreenState extends State<LeadsDetailsScreen>
     const TextStyle mono = TextStyle(fontFamily: 'monospace');
     final List<Widget> children = <Widget>[];
     for (CallLogEntry entry in callLogEntries) {
+      print("F.Number: ${entry.formattedNumber}");
+      print('-------------------------------------');
+      print('F. NUMBER  : ${entry.formattedNumber}');
+      print('C.M. NUMBER: ${entry.cachedMatchedNumber}');
+      print('NUMBER     : ${entry.number}');
+      print('NAME       : ${entry.name}');
+      print('TYPE       : ${entry.callType}');
+      print(
+          'DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp!.toInt())}');
+      print('DURATION   : ${entry.duration}');
+      print('ACCOUNT ID : ${entry.phoneAccountId}');
+      print('ACCOUNT ID : ${entry.phoneAccountId}');
+      print('SIM NAME   : ${entry.simDisplayName}');
+      print('-------------------------------------');
+    }
+    for (CallLogEntry entry in callLogEntries) {
       children.add(
         Column(
           children: <Widget>[
