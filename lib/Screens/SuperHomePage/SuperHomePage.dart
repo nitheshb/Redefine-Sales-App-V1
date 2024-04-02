@@ -35,7 +35,9 @@ class _SuperHomePageState extends State<SuperHomePage>   with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     
-
+ SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Color(0xff0D0D0D), // Change to the desired color
+    ));
     final controller = Get.put<HomePageController>(HomePageController());
     final controller1 = Get.put<ContactController>(ContactController());
 
@@ -44,7 +46,7 @@ class _SuperHomePageState extends State<SuperHomePage>   with SingleTickerProvid
      // Set the system status bar color
    
     return Scaffold(
-      backgroundColor:Color(0xffffffff),
+      backgroundColor:Color(0xff0D0D0D),
      
         body: Column(
               children: [
@@ -58,11 +60,11 @@ class _SuperHomePageState extends State<SuperHomePage>   with SingleTickerProvid
                   enableBorderRadius: false,
                   border: Border(
                       top: BorderSide(
-                          color: Get.theme.dividerColor,
+                          color: Colors.transparent,
                           width: 1,
                           style: BorderStyle.solid)),
                   padding: FxSpacing.xy(12, 16),
-                  color: Get.theme.scaffoldBackgroundColor,
+                  color: Color(0xff0D0D0D),
                   child: TabBar(
                     controller: controller2.tabController,
                     indicator: FxTabIndicator(

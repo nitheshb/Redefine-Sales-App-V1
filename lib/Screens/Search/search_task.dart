@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:redefineerp/Screens/Filter/filter_screen.dart';
@@ -14,10 +15,13 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     MySearchController controller = Get.put<MySearchController>(MySearchController());
     return Scaffold(
+          backgroundColor: const Color(0xff0D0D0D),  
+
       appBar: AppBar(
+          backgroundColor: const Color(0xff0D0D0D),  
         elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
+
         title: Container(
           width: double.infinity,
           height: 40,

@@ -278,4 +278,17 @@ completeLeadTaskScheduleLog(orgId,
     await DbSupa.instance.leadStatusLog(orgId,leadDocId, data);
     // 
   }
+
+  // updates Lead task  status array, specific task status & completedTime
+updateCallDuration(orgId,
+  leadDocId,
+  duration,
+  ) async{
+
+ await FirebaseFirestore.instance.collection('${orgId}_leads').doc(leadDocId).update({
+   'callDuration': FieldValue.increment(duration),
+   'timesCalled': FieldValue.increment(1)
+  });
+
+}
 }

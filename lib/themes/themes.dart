@@ -9,6 +9,7 @@ import 'package:redefineerp/Screens/Profile/profile_controller.dart';
 ProfileController profileController = Get.put(ProfileController());
 
 final ThemeData appLightTheme = ThemeData(
+  fontFamily: 'SpaceGrotesk',
     brightness: Brightness.light,
     primaryColor: const Color(0xFF6B4EFF),
     primaryColorDark: const Color(0xFF5538EE),
@@ -18,7 +19,8 @@ extension ThemeExtension on ThemeData {
 
 
 //  Color get  primary => Color(0xff1c8c8c);
-   Color get  primary => Color(0xff6350A9);
+
+   Color get  primary => Color(0xffD9886A);
    Color get        onPrimary=> Color(0xffffffff);
     Color get       primaryContainer=> Color(0xffE7DDFF);
     Color get       onPrimaryContainer=> Color(0xff025e5e);
@@ -73,22 +75,47 @@ extension ThemeExtension on ThemeData {
       ? const Color(0x8D4A4A48)
       : const Color(0xB4F1F1F1);
   TextStyle get kTitleStyle =>
-      GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w600);
+      GoogleFonts.inter(fontSize: 20, color: Color(0xffD2D2D2), fontWeight: FontWeight.w600);
   TextStyle get kSubTitle =>
-      GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600);
+      GoogleFonts.poppins(fontSize: 12, color: Color(0xffD2D2D2), );
   TextStyle get kNormalStyle =>
       GoogleFonts.inter(fontSize: 14, fontWeight: FontWeight.w700);
   TextStyle get kPrimaryTxtStyle =>
       GoogleFonts.inter(fontSize: 15, fontWeight: FontWeight.w600);
   TextStyle get kTabTextLg =>
       GoogleFonts.inter(fontSize: 25, fontWeight: FontWeight.w700);
+    TextStyle get bodyMedium => TextStyle(
+  fontSize: 13,
+    fontFamily: 'SpaceGrotesk',
+  fontWeight: FontWeight.w700,
+ color: Color(0xffD2D2D2)
+  
+);
+  
+  TextStyle get bodyHigh => TextStyle(
+  fontSize: 20,
+    fontFamily: 'SpaceGrotesk',
+  fontWeight: FontWeight.w700,
+ color: Color(0xffD2D2D2)
+  
+);  
+  TextStyle get bodySmall => TextStyle(
+  fontSize: 12,
+         
+    fontFamily: 'SpaceGrotesk',
+  fontWeight: FontWeight.w600,
+ color: Color(0xffD2D2D2)
+  
+);  
 }
 
 class Themes {
   static final light = ThemeData.light().copyWith(
     // backgroundColor: Colors.white,
+
     appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
+          
             statusBarColor: Color(0xffffffff),
             statusBarIconBrightness: Brightness.dark)),
     scaffoldBackgroundColor: const Color(0xffffffff),
@@ -98,9 +125,16 @@ class Themes {
     // backgroundColor: Colors.black,
     appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Color(0xf2161616),
+            statusBarColor: Color(0xf20D0D0D),
             statusBarIconBrightness: Brightness.light)),
-    scaffoldBackgroundColor: const Color(0xff161616),
+    scaffoldBackgroundColor: const Color(0xff0D0D0D),
+     textTheme: ThemeData.dark().textTheme.copyWith(
+          // Define your font family here
+          bodyText1: TextStyle(fontFamily: 'SpaceGrotesk'),
+          bodyText2: TextStyle(fontFamily: 'SpaceGrotesk'),
+          // Add more text styles if needed
+        ),
+   
   );
 
   static final blueTheme = ThemeData.light().copyWith(
@@ -148,6 +182,7 @@ final TextTheme textTheme = TextTheme(
 );
 
 final ThemeData appBlueMode = ThemeData(
+  fontFamily: 'SpaceGrotesk',
   primaryColor: const Color(0xFF48A7F8),
   primaryColorDark: const Color(0xFF0065D0),
   primaryColorLight: const Color(0xFF6EC2FB),
@@ -169,6 +204,7 @@ const inkLight = Color(0xFF6C7072);
 const inkLighter = Color(0xFF72777A);
 
 ThemeData appGreenTheme = ThemeData(
+  fontFamily: 'SpaceGrotesk',
     primaryColor: const Color(0xFF23C16B),
     primaryColorDark: const Color(0xFF198155),
     primaryColorLight: const Color(0xFF4CD471));

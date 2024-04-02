@@ -115,15 +115,16 @@ addCallLog(orgId,leadDocId, data)async {
       .from('${orgId}_lead_call_logs')
       .upsert([
         {
-          'type': 'incoming',
-          'subtype': data['Status'],
+          'type': data.callType.toString().replaceAll('CallType.', ''),
+          'subtype': data.callType.toString().replaceAll('CallType.', ''),
           'T': DateTime.now().millisecondsSinceEpoch,
           'Luid': leadDocId,
           'dailedBy': FirebaseAuth.instance.currentUser!.email,
           'payload': {},
-          'customerNo' : '',
-          'offPhNo': '',
-          'duration': 0,
+          'customerNo' : data.number,
+          'fromPhNo': '',
+          'duration': data.duration,
+          'startTime': data.timestamp!.toInt(),
         },
       ])
       .execute();
@@ -159,4 +160,18 @@ addCallLog(orgId,leadDocId, data)async {
    print('Task inserted successfully ${leadLogs}');
     return leadLogs;
   }
+ getLeadCallLogs(orgId,leadDocId) async {
+    final client = GetIt.instance<SupabaseClient>();
+      final response = await client
+      .from('${orgId}_lead_call_logs')
+      .select()
+      .execute();
+
+  // Get existing call logs from Supabase
+  final existingCallLogs = response.data as List<dynamic>;
+    print('Task inserted successfully ==> ${existingCallLogs}');
+    return existingCallLogs;
+  }
+
+  
 }

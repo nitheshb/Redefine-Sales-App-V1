@@ -48,26 +48,12 @@ class _SlimTeamStatsState extends State<SlimTeamStats> {
         Padding(
           padding: const EdgeInsets.fromLTRB(8.0, 6,8,8),
           child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
-              ),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.topRight,
-                // colors: [
-                //   Color.fromRGBO(69, 115, 201, 1),
-                //   Color.fromRGBO(69, 115, 201, 1),
-                // ],
-        
-                colors: [Color(0xffffffff), Color(0xffffffff), Color(0xffffffff),]
-              ),
-            ),
+       
             child: Column(
               children: [
                 
                 status(),
+           
               ],
             ),
           ),
@@ -81,16 +67,13 @@ Widget statusBarItems(title) {
   return  Expanded(
               child: InkWell(
                           onTap: () =>{controller.flipMode(title)},
-                child: FxContainer.bordered(
-                  color: (title== "Tasks" && !controller.businessMode.value) ?  Get.theme.primaryContainer: (title== "Leads" && controller.businessMode.value) ?  Get.theme.primaryContainer: Colors.transparent,
+                child: FxContainer(
+                  borderRadius: BorderRadius.circular(0),
+                  color: (title== "Tasks" && !controller.businessMode.value) ?  Color(0xff1C1C1E) : (title== "Leads" && controller.businessMode.value) ?  Color(0xff58423B): Color(0xff1C1C1E),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      FxText.titleMedium(
-                        title,
-                        fontWeight: 700,
-                      ),
-                      FxSpacing.height(8),
+                
                           StreamBuilder<QuerySnapshot>(
         stream: title== "Tasks" ? FirebaseFirestore.instance
             .collection('spark_assignedTasks')
@@ -151,7 +134,9 @@ Widget statusBarItems(title) {
 //             );
               return FxText.titleSmall(
                          personalTasks.length.toString(),
+                         color: (title== "Tasks" && !controller.businessMode.value) ?  Get.theme.primaryContainer: (title== "Leads" && controller.businessMode.value) ?   Get.theme.onPrimary : Get.theme.primaryContainer,
                         fontWeight: 700,
+                        letterSpacing: 1,
                       );
          } else {
             return Center(
@@ -172,24 +157,33 @@ Widget statusBarItems(title) {
             );
           }
         }),
+                      FxSpacing.height(8),
+
+              FxText.titleMedium(
+                        title?.toUpperCase(),
+                       color:(title== "Tasks" && !controller.businessMode.value) ?  Get.theme.primaryContainer: (title== "Leads" && controller.businessMode.value) ?   Get.theme.onPrimary: Get.theme.primaryContainer,
+                        fontWeight: 700,
+                        letterSpacing: 1.25,
+
+                      ),
                       // Obx(()=> FxText.titleSmall(
                       //   widget.numOfTodayTasks.toString(),
                       //   fontWeight: 700,
                       // )),
-                      FxSpacing.height(12),
-                      FxText.bodySmall(
-                        'Progress',
-                        fontWeight: 600,
-                        muted: true,
-                      ),
-                      FxSpacing.height(6),
-                      FxProgressBar(
-                        width: 140,
-                        inactiveColor: Constant.softColors.green.color,
-                        activeColor: Constant.softColors.green.onColor,
-                        height: 4,
-                        progress: 0.4,
-                      ),
+                      // FxSpacing.height(12),
+                      // FxText.bodySmall(
+                      //   'Progress',
+                      //   fontWeight: 600,
+                      //   muted: true,
+                      // ),
+                      // FxSpacing.height(6),
+                      // FxProgressBar(
+                      //   width: 140,
+                      //   inactiveColor: Constant.softColors.green.color,
+                      //   activeColor: Constant.softColors.green.onColor,
+                      //   height: 4,
+                      //   progress: 0.4,
+                      // ),
                     ],
                   ),
                 ),

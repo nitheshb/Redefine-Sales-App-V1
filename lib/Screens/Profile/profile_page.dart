@@ -27,6 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
       final FirebaseAuth auth = FirebaseAuth.instance;
     return Scaffold(
+          backgroundColor: const Color(0xff0D0D0D),  
       
       body: SingleChildScrollView(
         child: Container(
@@ -71,54 +72,67 @@ class _ProfilePageState extends State<ProfilePage> {
             
                     FxSpacing.height(32),
  IntrinsicHeight(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
+                child: Container(
+                  color: Color(0xff1C1C1E),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        FxText.bodyMedium(
-                          '0',
-                          fontWeight: 700,
+                        Column(
+                          children: [
+                            FxText.bodyMedium(
+                              '0',
+                              fontWeight: 700,
+                              color: Color(0xffF7F7F7),
+                            ),
+                            FxSpacing.height(6),
+                            FxText.bodySmall(
+                              'Calls',
+                              fontWeight: 600,
+                              xMuted: true,
+                              color: Color(0xffF7F7F7),
+                            ),
+                          ],
                         ),
-                        FxSpacing.height(6),
-                        FxText.bodySmall(
-                          'Calls',
-                          fontWeight: 600,
-                          xMuted: true,
+                        VerticalDivider(),
+                        Column(
+                          children: [
+                            FxText.bodyMedium(
+                              '0',
+                              fontWeight: 700,
+                              color: Color(0xffF7F7F7),
+                            ),
+                            FxSpacing.height(6),
+                            FxText.bodySmall(
+                              'Leads',
+                              fontWeight: 600,
+                              xMuted: true,
+                              color: Color(0xffF7F7F7),
+
+                            ),
+                          ],
+                        ),
+                        VerticalDivider(),
+                        Column(
+                          children: [
+                            FxText.bodyMedium(
+                              '0',
+                              fontWeight: 700,
+                              color: Color(0xffF7F7F7),
+                            ),
+                            FxSpacing.height(6),
+                            FxText.bodySmall(
+                              'Bookings',
+                              fontWeight: 600,
+                              xMuted: true,
+                              color: Color(0xffF7F7F7),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    VerticalDivider(),
-                    Column(
-                      children: [
-                        FxText.bodyMedium(
-                          '0',
-                          fontWeight: 700,
-                        ),
-                        FxSpacing.height(6),
-                        FxText.bodySmall(
-                          'Leads',
-                          fontWeight: 600,
-                          xMuted: true,
-                        ),
-                      ],
-                    ),
-                    VerticalDivider(),
-                    Column(
-                      children: [
-                        FxText.bodyMedium(
-                          '0',
-                          fontWeight: 700,
-                        ),
-                        FxSpacing.height(6),
-                        FxText.bodySmall(
-                          'Bookings',
-                          fontWeight: 600,
-                          xMuted: true,
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
               ),
        
@@ -401,11 +415,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FxText.bodySmall(
-          'Settings',
-          fontWeight: 600,
-          muted: true,
-        ),
+        // FxText.bodySmall(
+        //   'Settings',
+        //   fontWeight: 600,
+        //   muted: true,
+        //    color:Color(0xff8C8E8F)
+        // ),
    FxSpacing.height(16),
         Row(
           children: [
@@ -415,19 +430,21 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Icon(
                 Icons.notifications,
                 size: 20,
+                color: Color(0xffD9886A),
               ),
             ),
             FxSpacing.width(16),
             Expanded(child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FxText.titleSmall('Notifications', fontWeight: 600, ),
+              FxText.titleSmall('Notification', fontWeight: 600, color:Color(0xff8C8E8F) ),
               FxSpacing.height(4),
               FxText.bodySmall(
                 'Tasks,Calls,Reminders',
                 fontWeight: 600,
                 xMuted: true,
                 fontSize: 10,
+                 color:Color(0xff8C8E8F)
               ),
             ],
           ),),
@@ -438,11 +455,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 24,
                   width: 24,
                   paddingAll: 0,
-                  color: Get.theme.primary,
+                  color: Color(0xff58423B),
                   child: Center(
                     child: FxText.bodySmall(
-                      '4',
+                      '0',
                       color: Get.theme.onPrimary,
+                    
                     ),
                   ),
                 ),
@@ -450,7 +468,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 Icon(
                   FeatherIcons.chevronRight,
                   size: 18,
-                  color: Get.theme.primary,
+                  color: Color(0xffD9886A),
+
                 )
               ],
             )
@@ -465,6 +484,8 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Icon(
                 Icons.delete_forever,
                 size: 20,
+                                color: Color(0xffD9886A),
+
  
               ),
             ),
@@ -472,13 +493,14 @@ class _ProfilePageState extends State<ProfilePage> {
             Expanded(child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FxText.titleSmall('Delete Account', fontWeight: 600, ),
+              FxText.titleSmall('Delete Account', fontWeight: 600, color:Color(0xff8C8E8F) ),
               FxSpacing.height(4),
               FxText.bodySmall(
                 'Removes accounts from Redefine',
                 fontWeight: 600,
                 xMuted: true,
                 fontSize: 10,
+                 color:Color(0xff8C8E8F)
               ),
             ],
           )),
@@ -498,19 +520,22 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Icon(
                 Icons.privacy_tip_outlined,
                 size: 20,
+                  color: Color(0xffD9886A),
+
               ),
             ),
             FxSpacing.width(16),
             Expanded(child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FxText.titleSmall('Privacy Policy', fontWeight: 600, ),
+              FxText.titleSmall('Privacy Policy', fontWeight: 600, color:Color(0xff8C8E8F) ),
               FxSpacing.height(4),
               FxText.bodySmall(
                 'Data Policy',
                 fontWeight: 600,
                 xMuted: true,
                 fontSize: 10,
+                 color:Color(0xff8C8E8F)
               ),
             ],
           )),

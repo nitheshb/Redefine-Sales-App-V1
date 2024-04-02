@@ -24,6 +24,8 @@ import 'package:redefineerp/Screens/Leads/NotInterestedQuestions.dart';
 import 'package:redefineerp/Screens/Leads/VisitDoneQuestions.dart';
 import 'package:redefineerp/Screens/projectDetails/unit_screen.dart';
 import 'package:redefineerp/Widgets/FxCard.dart';
+import 'package:redefineerp/helpers/firebase_help.dart';
+import 'package:redefineerp/helpers/supabae_help.dart';
 import 'package:redefineerp/themes/constant.dart';
 import 'package:redefineerp/themes/container.dart';
 import 'package:redefineerp/themes/progress_bar.dart';
@@ -56,7 +58,7 @@ class _LeadsDetailsScreenState extends State<LeadsDetailsScreen>
 
   @override
   void initState() {
-    print(callLogEntries);
+    print('call logs ${callLogEntries}');
     _tabController = TabController(length: 2, vsync: this);
 // _tabController1 = TabController(length: 2, vsync: this);
 
@@ -131,7 +133,7 @@ class _LeadsDetailsScreenState extends State<LeadsDetailsScreen>
 
   _callNumber() async {
     print('res issx ');
-    const number = '919489000525'; //set the number here
+    var number = '91${widget.leadDetails['Mobile']}'; //set the number here
     bool? res = await FlutterPhoneDirectCaller.callNumber(number);
     print('res is ${res}');
   }
@@ -139,58 +141,114 @@ class _LeadsDetailsScreenState extends State<LeadsDetailsScreen>
   Widget build(BuildContext context) {
     print('data1 ${widget.leadDetails.id}');
     const TextStyle mono = TextStyle(fontFamily: 'monospace');
-    final List<Widget> children = <Widget>[];
-    for (CallLogEntry entry in callLogEntries) {
-      print("F.Number: ${entry.formattedNumber}");
-      print('-------------------------------------');
-      print('F. NUMBER  : ${entry.formattedNumber}');
-      print('C.M. NUMBER: ${entry.cachedMatchedNumber}');
-      print('NUMBER     : ${entry.number}');
-      print('NAME       : ${entry.name}');
-      print('TYPE       : ${entry.callType}');
-      print(
-          'DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp!.toInt())}');
-      print('DURATION   : ${entry.duration}');
-      print('ACCOUNT ID : ${entry.phoneAccountId}');
-      print('ACCOUNT ID : ${entry.phoneAccountId}');
-      print('SIM NAME   : ${entry.simDisplayName}');
-      print('-------------------------------------');
+    final List<Widget> CallLogChildren = <Widget>[];
+    // for (CallLogEntry entry in callLogEntries) {
+    //   print("F.Number: ${entry.formattedNumber}");
+    //   print('-------------------------------------');
+    //   print('F. NUMBER  : ${entry.formattedNumber}');
+    //   print('C.M. NUMBER: ${entry.cachedMatchedNumber}');
+    //   print('NUMBER     : ${entry.number}');
+    //   print('NAME       : ${entry.name}');
+    //   print('TYPE       : ${entry.callType}');
+    //   print(
+    //       'DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp!.toInt())}');
+    //   print('DURATION   : ${entry.duration}');
+    //   print('ACCOUNT ID : ${entry.phoneAccountId}');
+    //   print('ACCOUNT ID : ${entry.phoneAccountId}');
+    //   print('SIM NAME   : ${entry.simDisplayName}');
+    //   print('-------------------------------------');
+    // }
+     var filteredCallLogs = callLogEntries.where((log) => log.number == '+91${widget.leadDetails['Mobile']}').toList();
+     // Query call logs from Supabase
+DbSupa.instance.getLeadCallLogs(controller2.currentUserObj['orgId'], widget.leadDetails.id).then((existingCallLogs){
+
+
+
+  // Get existing call logs from Supabase
+  // final existingCallLogs = response.data as List<dynamic>;
+
+  // Iterate over filtered call logs and check if they exist in Supabase
+ print('lead logs are ==> ${existingCallLogs}');
+  if(!existingCallLogs.isEmpty){
+  
+  for (var log in filteredCallLogs) {
+    var existsInSupabase = existingCallLogs!.any((supabaseLog) =>
+        supabaseLog['customerNo'] == log.number &&
+        supabaseLog['startTime'] == log.timestamp 
+        );
+
+    // If call log doesn't exist in Supabase, insert it
+    if (!existsInSupabase) {
+ DbSupa.instance.addCallLog(controller2.currentUserObj['orgId'], widget.leadDetails.id, log);
+DbQuery.instanace.updateCallDuration(controller2.currentUserObj['orgId'], widget.leadDetails.id,log.duration);
+
+      // await supabase.from('callLogs').insert([
+      //   {
+      //     'number': log.number,
+      //     'time': log.timestamp.toString(),
+      //     'duration': log.duration.toString(),
+      //   }
+      // ]).execute();
     }
-    for (CallLogEntry entry in callLogEntries) {
-      children.add(
+  }
+  }else {
+      for (var log in filteredCallLogs) {
+ DbSupa.instance.addCallLog(controller2.currentUserObj['orgId'], widget.leadDetails.id, log);
+DbQuery.instanace.updateCallDuration(controller2.currentUserObj['orgId'], widget.leadDetails.id,log.duration);
+      }
+  }
+  });
+   
+    for (CallLogEntry entry in filteredCallLogs) {
+      CallLogChildren.add(
         Column(
-          children: <Widget>[
-            const Divider(),
-            Text('F. NUMBER  : ${entry.formattedNumber}', style: mono),
-            Text('C.M. NUMBER: ${entry.cachedMatchedNumber}', style: mono),
-            Text('NUMBER     : ${entry.number}', style: mono),
-            Text('NAME       : ${entry.name}', style: mono),
-            Text('TYPE       : ${entry.callType}', style: mono),
-            Text(
-                'DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp!.toInt())}',
-                style: mono),
-            Text('DURATION   : ${entry.duration}', style: mono),
-            Text('ACCOUNT ID : ${entry.phoneAccountId}', style: mono),
-            Text('SIM NAME   : ${entry.simDisplayName}', style: mono),
+          children: [
+                  const Divider(),
+            Container(
+              color: Color(0xff464646),
+              width: double.infinity,
+       
+              child: Column(
+                children: <Widget>[
+            
+                  Text('F. NUMBER  : ${entry.formattedNumber}', style: mono),
+                  Text('C.M. NUMBER: ${entry.cachedMatchedNumber}', style: mono),
+                  Text('NUMBER     : ${entry.number}', style: mono),
+                  Text('NAME       : ${entry.name}', style: mono),
+                  Text('TYPE       : ${entry.callType}', style: mono),
+                  Text(
+                      'DATE       : ${DateTime.fromMillisecondsSinceEpoch(entry.timestamp!.toInt())}',
+                      style: mono),     
+                       Text(
+                      'DATE       : ${entry.timestamp!.toInt()}',
+                      style: mono),
+                  Text('DURATION   : ${entry.duration}', style: mono),
+                  Text('ACCOUNT ID : ${entry.phoneAccountId}', style: mono),
+                  Text('SIM NAME   : ${entry.simDisplayName}', style: mono),
+                ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+              ),
+            ),
           ],
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
         ),
       );
     }
     return Scaffold(
+         backgroundColor: const Color(0xff0D0D0D),  
       body: Padding(
         padding: FxSpacing.top(28),
         child: Column(
           children: [
             FxContainer(
-              color: appLightTheme.colorPrimary,
+              color: const Color(0xff0D0D0D),
               child: Row(
                 children: [
                   InkWell(
                     child: Icon(
                       Icons.arrow_back_ios,
                       size: 20,
+                      color: Colors.white,
                     ),
                     onTap: () {
                       Navigator.pop(context);
@@ -210,10 +268,8 @@ class _LeadsDetailsScreenState extends State<LeadsDetailsScreen>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        FxText.bodyMedium(
-                          widget.leadDetails['Name'],
-                          fontWeight: 600,
-                        ),
+                        Text( widget.leadDetails['Name'],style: appLightTheme.bodyMedium.copyWith(fontSize: 18)),
+                    
                         FxSpacing.height(2),
                         Row(
                           children: [
@@ -225,28 +281,28 @@ class _LeadsDetailsScreenState extends State<LeadsDetailsScreen>
                             FxSpacing.width(4),
                             FxText.bodySmall(
                               widget.leadDetails['Mobile'],
-                              color: appLightTheme.onBackground,
+                              color:  Get.theme.onPrimary,
                               xMuted: true,
                             ),
                           ],
                         ),
                         FxSpacing.height(2),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            FxProgressBar(
-                                width: 100,
-                                height: 5,
-                                activeColor: appLightTheme.medicarePrimary,
-                                inactiveColor: appLightTheme.medicarePrimary
-                                    .withAlpha(100),
-                                progress: 0.6),
-                            // FxSpacing.width(20),
-                            // FxText.bodySmall(" 4 Stars",
-                            //     fontWeight: 500, height: 1),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.start,
+                        //   crossAxisAlignment: CrossAxisAlignment.center,
+                        //   children: <Widget>[
+                        //     FxProgressBar(
+                        //         width: 100,
+                        //         height: 5,
+                        //         activeColor: appLightTheme.medicarePrimary,
+                        //         inactiveColor: appLightTheme.medicarePrimary
+                        //             .withAlpha(100),
+                        //         progress: 0.6),
+                        //     // FxSpacing.width(20),
+                        //     // FxText.bodySmall(" 4 Stars",
+                        //     //     fontWeight: 500, height: 1),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),
@@ -266,11 +322,11 @@ class _LeadsDetailsScreenState extends State<LeadsDetailsScreen>
                       _callNumber();
                     },
                     child: FxContainer.rounded(
-                      color: appLightTheme.medicarePrimary,
+                      color: Color(0xff58423B),
                       paddingAll: 8,
                       child: Icon(
                         Icons.call,
-                        color: appLightTheme.medicareOnPrimary,
+                        color: Get.theme.onPrimary,
                         size: 16,
                       ),
                     ),
@@ -307,8 +363,8 @@ class _LeadsDetailsScreenState extends State<LeadsDetailsScreen>
                               padding: const EdgeInsets.fromLTRB(6, 1, 6, 1),
                               backgroundColor:
                                   widget.leadDetails['Status'] == item['value']
-                                      ? Get.theme.primaryContainer
-                                      : Colors.transparent,
+                                      ? Color(0xff1C1C1E)
+                                      : Color(0xff1C1C1E),
                               label: FxText.bodySmall(
                                 item['label']!,
                                 fontSize: 11,
@@ -965,18 +1021,34 @@ Get.to(( )=> NotInterestedLeadQuestionsScreen())
                 ],
               ),
             ),
-
+   FxSpacing.height(15),
             overview(),
-            FxSpacing.height(4),
-            alert(),
+            FxSpacing.height(15),
+        
               // FxSpacing.height(16),
             
-                    
+             
               tabsCard(),      
                     
         
 
-  Obx(() =>controller.tabSelected.value == 'Tasks' ? ScheduleListData(context, controller2) :  LeadLogsScreen( leadDetails: widget.leadDetails,)),
+  Obx(() =>controller.tabSelected.value == 'Tasks' ? ScheduleListData(context, controller2) : 
+  
+  //  LeadLogsScreen( leadDetails: widget.leadDetails,)
+  Expanded(
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+               callDurationAlert(),
+         Expanded(
+            child: ListView(
+              physics: ClampingScrollPhysics(),
+              padding: EdgeInsets.all(8),
+              children: CallLogChildren)),
+       ],
+     ),
+   )
+   ),
         //   TabBarView(
         //   controller: _tabController,
         //   children: <Widget>[
@@ -1190,26 +1262,31 @@ Get.to(( )=> NotInterestedLeadQuestionsScreen())
             // Text('val ${item}');
             textWidgets.add(Row(
               children: [
-                 Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            6.0),
-                                                                        child:
-                                                                            Icon(
-                                                                          Icons
-                                                                              .chat,
-                                                                          size:
-                                                                              18,
-                                                                          color: Get
-                                                                              .theme
-                                                                              .kLightGrayColor.withAlpha(60),
-                                                                        ),
-                                                                      ),
+      
+                                                                       Padding(
+                                                                         padding: const EdgeInsets.only(left:0.0, right: 6, top: 3, bottom:3),
+                                                                         child: FxContainer.rounded(
+                                                                                           height: 24,
+                                                                                           width: 24,
+                                                                                           paddingAll: 0,
+                                                                                           color: Colors.transparent,
+                                                                                           child: Center(
+                                                                                             child: 
+                                                                                              Icon(
+                                                                            Icons
+                                                                                .chat,
+                                                                            size:
+                                                                                14,
+                                                                             color: Get.theme.onPrimary.withAlpha(90),
+                                                                          ),
+                                                                                           ),
+                                                                                         ),
+                                                                       ),
                 FxText.bodyMedium(
                           '${item['c']}',
                           color: schBody['sts'] == 'pending'
-                              ? appBlueMode.medicareOnPrimary
-                              : appLightTheme.medicarePrimary,
+                              ? Color(0XFF4B4E4F)
+                              : Color(0xffF7F7F7),
                           xMuted: true,
                         ),
               ],
@@ -1602,83 +1679,81 @@ showModalBottomSheet(
                                 );
                   
       },
-      child: Padding(
-        padding: FxSpacing.fromLTRB(12, 6, 12, 6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: FxContainer(
-                color: schBody['sts'] == 'pending'
-                    ? appBlueMode.medicarePrimary
-                    : appLightTheme.medicarePrimary.withAlpha(40),
-                // margin: FxSpacing.right(140),
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(12),
-                    bottomRight: Radius.circular(12),
-                    bottomLeft: Radius.circular(12)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    FxText.bodyMedium(
-                      schBody['notes']!,
-                      color: schBody['sts'] == 'pending'
-                          ? appBlueMode.medicareOnPrimary
-                          : Colors.black,
-                      xMuted: true,
-                    ),
-                
-
-     Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-            children: textWidgets,
-     ),
-                    FxSpacing.height(4),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.watch_later,
-                            color: appBlueMode.medicareOnPrimary.withAlpha(100),
-                            size: 20,
-                          ),
-                          FxSpacing.width(8),
-                          FxText.bodySmall(
-                            '${DateTime.fromMillisecondsSinceEpoch(schBody!['schTime'])} ${timeago.format(now.subtract(difference))} ',
-                            fontSize: 10,
-                            color: schBody['sts'] == 'pending'
-                                ? appBlueMode.medicareOnPrimary
-                                : appLightTheme.medicarePrimary,
-                            xMuted: true,
-                          ),
-                        ],
+      child: Container(
+    
+        child: Padding(
+          padding: FxSpacing.fromLTRB(10, 0, 10, 6),
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: FxContainer(
+                  color: schBody['sts'] == 'pending'
+                      ? Colors.white
+                      : Color(0XFF1e1e1e),
+                  // margin: FxSpacing.right(140),
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                      bottomLeft: Radius.circular(12)),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FxText.bodyMedium(
+                        schBody['notes']!,
+                        color: schBody['sts'] == 'pending'
+                          ? Color(0XFF4B4E4F)
+        
+                            : Colors.white,
+                        xMuted: true,
+                        fontWeight: 700,
+                        letterSpacing: 0.75,
                       ),
-                    ),
-                    FxText.bodySmall(
-                      ' ${difference1}',
-                      fontSize: 10,
-                      color: schBody['sts'] == 'pending'
-                          ? appBlueMode.medicareOnPrimary
-                          : appLightTheme.medicarePrimary,
-                      xMuted: true,
-                    ),
-                    FxText.bodySmall(
-                      ' ${hours}',
-                      fontSize: 10,
-                      color: schBody['sts'] == 'pending'
-                          ? appBlueMode.medicareOnPrimary
-                          : appLightTheme.medicarePrimary,
-                      xMuted: true,
-                    )
-                  ],
+                  
+        
+             Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+              children: textWidgets,
+             ),
+                      FxSpacing.height(4),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.watch_later,
+                              color: appBlueMode.medicareOnPrimary.withAlpha(100),
+                              size: 20,
+                            ),
+                            FxSpacing.width(8),
+                            FxText.bodySmall(
+                              '${DateFormat('dd-MM-yy HH:mm').format(DateTime.fromMillisecondsSinceEpoch(schBody!['schTime']))} ${timeago.format(now.subtract(difference))} ',
+                              fontSize: 10,
+                              color: schBody['sts'] == 'pending'
+                                  ? Color(0XFF4B4E4F)
+                                  : Color(0xffF7F7F7),
+                              xMuted: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // FxText.bodySmall(
+                      //   ' ${difference1}',
+                      //   fontSize: 10,
+                      //   color: schBody['sts'] == 'pending'
+                      //       ? Color(0XFF4B4E4F)
+                      //       : Color(0xffF7F7F7),
+                      //   xMuted: true,
+                      // ),
+                   
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -1737,6 +1812,7 @@ showModalBottomSheet(
                 ? '${widget.leadDetails['Project']}'
                 : 'Not available'
               }),
+              SizedBox(width: 10),
               AssignedToCard({
                 'label': 'New',
                 'value': widget.leadDetails.data().containsKey('assignedToObj') ? widget.leadDetails?['assignedToObj']?['name'] : 'Not available'
@@ -1758,7 +1834,11 @@ showModalBottomSheet(
            padding: FxSpacing.all(2.0),
           child: Row(
               children: [
+                SizedBox(width: 6,),
+
                 MytabsCard( {'label': 'Tasks', 'value': 'Tasks'}),
+                SizedBox(width: 12,),
+                MytabsCard( {'label': 'Call log', 'value': 'Activity'}),   SizedBox(width: 12,),
                 MytabsCard( {'label': 'Activity', 'value': 'Activity'}),
               ],
             ),
@@ -1803,34 +1883,34 @@ showModalBottomSheet(
   Widget ProjectCard(nutrition) {
     return Expanded(
       child: FxContainer(
-        borderRadiusAll: 50,
+        borderRadiusAll: 0,
         padding: FxSpacing.fromLTRB(8, 8, 12, 8),
-        color: appBlueMode.medicarePrimary.withAlpha(40),
+        color: Color(0xff1C1C1E),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            FxContainer.bordered(
+          FxContainer.bordered(
                 paddingAll: 4,
                 width: 32,
                 height: 32,
-                borderRadiusAll: 16,
-                color: appBlueMode.medicarePrimary.withAlpha(200),
+                borderRadiusAll: 0,
+                color: Color(0xff58423B),
                 border:
-                    Border.all(color: appBlueMode.medicarePrimary, width: 1),
+                    Border.all(color: Color(0xff58423B), width: 1),
                 child: Center(
                     child: FxText.bodySmall(
-                        FxTextUtils.doubleToString(
-                          0,
-                        ),
+                       'P',
+                       fontWeight: 900,
                         letterSpacing: 0,
-                        color: appBlueMode.medicarePrimary))),
+                        color: Get.theme.onPrimary))),
             FxSpacing.width(8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FxText.bodySmall(nutrition['value'], fontWeight: 600),
-                FxText.bodySmall('Project',
-                    fontSize: 10, xMuted: true, fontWeight: 600),
+         
+                Text(nutrition['value'], style: appLightTheme.bodySmall.copyWith(letterSpacing:  1, ),),
+                Text('Project',style: appLightTheme.bodySmall.copyWith(fontSize: 10,letterSpacing:  1,  color: Color(0xffD2D2D2).withAlpha(100)),),
+         
               ],
             )
           ],
@@ -1842,9 +1922,9 @@ showModalBottomSheet(
   Widget AssignedToCard(nutrition) {
     return Expanded(
       child: FxContainer(
-        borderRadiusAll: 50,
+        borderRadiusAll: 0,
         padding: FxSpacing.fromLTRB(8, 8, 12, 8),
-        color: appBlueMode.medicarePrimary.withAlpha(40),
+        color: Color(0xff1C1C1E),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1852,24 +1932,24 @@ showModalBottomSheet(
                 paddingAll: 4,
                 width: 32,
                 height: 32,
-                borderRadiusAll: 16,
-                color: appBlueMode.medicarePrimary.withAlpha(200),
+                borderRadiusAll: 0,
+                color: Color(0xff58423B),
                 border:
-                    Border.all(color: appBlueMode.medicarePrimary, width: 1),
+                    Border.all(color: Color(0xff58423B), width: 1),
                 child: Center(
                     child: FxText.bodySmall(
-                        FxTextUtils.doubleToString(
-                          0,
-                        ),
+                       'E',
+                       fontWeight: 900,
                         letterSpacing: 0,
-                        color: appBlueMode.medicarePrimary))),
+                        color: Get.theme.onPrimary))),
             FxSpacing.width(8),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FxText.bodySmall(nutrition['value'], fontWeight: 600),
-                FxText.bodySmall('Executive',
-                    fontSize: 10, xMuted: true, fontWeight: 600),
+                 Text(nutrition['value'],style: appLightTheme.bodySmall,),
+                Text('Executive',style: appLightTheme.bodySmall.copyWith(fontSize: 10, letterSpacing:  1, color: Color(0xffD2D2D2).withAlpha(100)),),
+         
+            
               ],
             )
           ],
@@ -1892,33 +1972,36 @@ showModalBottomSheet(
    controller.tabSelected.value = nutrition['value'],
    print('sele value is ${ controller.tabSelected.value} ${nutrition['value']}')
    },
-      child: Obx(() =>FxContainer(
-          padding: FxSpacing.fromLTRB(8, 8, 12, 8),
+      child: Obx(() =>Container(
+                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
           // color: appBlueMode.medicarePrimary.withAlpha(40),
-          color: Colors.transparent,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FxSpacing.width(8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FxText.bodySmall('${nutrition['label']}', fontWeight: 600),
-                   FxContainer(height: 4, color:controller.tabSelected.value == nutrition['value'] ? Get.theme.primaryContainer : Colors.white,  border: Border(
-                  bottom: BorderSide(
-                    
-                  color: Get.theme.primaryContainer,
-                 // Set your desired border color here
-                    width: 2.0,
-                  // Set the border width
-                  ),
-                ),),
-
-                ],
-              )
-            ],
-          ),
+            color:
+                        controller.tabSelected.value == nutrition['value']
+                            ? Color(0xff58423B)
+                            : Color(0xff1C1C1E),
+                               child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                           FxText.bodySmall(
+                          '0',
+                          fontSize: 11,
+                          fontWeight: 700,
+                          color: controller.tabSelected.value == nutrition['value']
+                              ? Get.theme.onPrimary
+                              : Get.theme.onBackground,
+                        ),
+                        FxText.bodySmall(
+                          '${nutrition['label']}',
+                          fontSize: 11,
+                          fontWeight: 700,
+                          color: controller.tabSelected.value == nutrition['value']
+                              ? Get.theme.onPrimary
+                              : Get.theme.onBackground,
+                        ),
+                      ],
+                    ),
+     
         ),
       ),
     );
@@ -2014,8 +2097,34 @@ Widget StatusCard(nutrition) {
       ),
     );
   }
+ Widget callDurationAlert() {
+       var call_duration =
+        widget.leadDetails?.data().containsKey('callDuration') == true ? widget.leadDetails!.callDuration : 'NA';
+    var timesCalled =
+        widget.leadDetails?.data().containsKey('timesCalled') == true ? widget.leadDetails!.timesCalled : 'NA';
+   
+    return        Row(
+                  children: [
+                    SizedBox(width: 5,),
+                    Text(call_duration,style: appLightTheme.bodyHigh.copyWith(color: Color(0xffE7A166)),),
+                     SizedBox(width: 5,),
+                      Text('calls with',style: appLightTheme.bodyHigh,),
 
+                      SizedBox(width: 5,),
+                    Text(timesCalled,style: appLightTheme.bodyHigh.copyWith(color: Color(0xffE7A166)),),
+                      Text('secs ',style: appLightTheme.bodyHigh,),  
+                                        
+                    
+                  ],
+                );}
   Widget alert() {
+    return        Row(
+                  children: [
+                    SizedBox(width: 5,),
+                    Text('you have ',style: appLightTheme.bodyHigh,),
+                    Text('0 due events',style: appLightTheme.bodyHigh.copyWith(color: Color(0xffE7A166)),),
+                  ],
+                );
     return FxContainer(
       color: Constant.softColors.green.color,
       child: Row(
@@ -2097,15 +2206,25 @@ Widget StatusCard(nutrition) {
           }
 
           return Expanded(
-            child: ListView.builder(
-                primary: false,
-                physics: const BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: unitList.length,
-                itemBuilder: (c, i) {
-                  var x = unitList[i];
-                  return _buildReceiveMessage(x);
-                }),
+            child: Column(
+              children: [
+                SizedBox(height: 10),
+                alert(),
+                Expanded(
+               
+                  child: ListView.builder(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      primary: false,
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: false,
+                      itemCount: unitList.length,
+                      itemBuilder: (c, i) {
+                        var x = unitList[i];
+                        return _buildReceiveMessage(x);
+                      }),
+                ),
+              ],
+            ),
           );
 // unitList.forEach((key, value) {
 //   // Build a Text widget for each key-value pair

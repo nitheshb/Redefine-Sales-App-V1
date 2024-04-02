@@ -220,12 +220,12 @@ class _HomePageState extends State<HomePage> {
 // final combinedStream = rxdart.CombineLatestStream( [stream1, stream2]);
 
     return Obx(() => Scaffold(
-          backgroundColor: const Color(0xffffffff),
+          backgroundColor: const Color(0xff0D0D0D),  
           appBar: AppBar(
-            backgroundColor: const Color(0xffffffff),
+            backgroundColor: const Color(0xff0D0D0D),
             systemOverlayStyle: const SystemUiOverlayStyle(
               // Status bar color
-              statusBarColor: Color(0xff000032),
+              statusBarColor: Color(0xff0D0D0D),
 
               // Status bar brightness (optional)
               statusBarIconBrightness:
@@ -285,17 +285,17 @@ class _HomePageState extends State<HomePage> {
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   SliverAppBar(
-                    backgroundColor: Color(0xffffffff),
+                    backgroundColor: Color(0xff0D0D0D),
                     snap: false,
                     pinned: true,
                     floating: true,
                     flexibleSpace: Obx(() => FlexibleSpaceBar(
-                        background: SlimTeamStats(
+                            background: SlimTeamStats(
                             controller.flipMode,
                             controller.businessMode.value,
                             controller.numOfTodayTasks,
                             controller.myBusinessTotal))),
-                    expandedHeight: 190,
+                    expandedHeight: 170,
                     bottom: PreferredSize(
                       preferredSize: Size.fromHeight(48.0),
                       child: SingleChildScrollView(
@@ -306,6 +306,7 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                               
                               if (!controller.businessMode.value) ...[
                                 Padding(
                                   padding: const EdgeInsets.only(
@@ -395,24 +396,41 @@ StreamBuilder<QuerySnapshot>(
             ])
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 4.0),
-                child: ActionChip(
-                  elevation: 0,
-                  padding: const EdgeInsets.fromLTRB(6, 1, 6, 1),
-                  backgroundColor:
-                      controller.myLeadStatusCategory.value == item['value']
-                          ? Get.theme.primaryContainer
-                          : Colors.transparent,
-                  label: FxText.bodySmall(
-                    '${item['label']}(${_getStatusCount(data, item['value']!)})',
-                    fontSize: 11,
-                    fontWeight: 700,
-                    color: controller.myLeadStatusCategory.value == item['value']
-                        ? Get.theme.onPrimaryContainer
-                        : Get.theme.onBackground,
+                child: InkWell(
+                  onTap: () =>                       controller.setTaskTypeFun(item['value']),
+
+                  child: Container(
+                           
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    color:
+                        controller.myLeadStatusCategory.value == item['value']
+                            ? Color(0xff58423B)
+                            : Color(0xff1C1C1E),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                           FxText.bodySmall(
+                          '${_getStatusCount(data, item['value']!)}',
+                          fontSize: 11,
+                          fontWeight: 700,
+                          color: controller.myLeadStatusCategory.value == item['value']
+                              ? Get.theme.onPrimary
+                              : Colors.white,
+                        ),
+                        FxText.bodySmall(
+                          '${item['label']}',
+                          fontSize: 11,
+                          fontWeight: 700,
+                          letterSpacing: 1.5,
+                          color: controller.myLeadStatusCategory.value == item['value']
+                              ? Get.theme.onPrimary
+                              : Get.theme.onBackground,
+                        ),
+                      ],
+                    ),
+                   
                   ),
-                  onPressed: () => {
-                    controller.setTaskTypeFun(item['value'])
-                  },
                 ),
               ),
           ],
@@ -939,7 +957,16 @@ StreamBuilder<QuerySnapshot>(
             );
           } else if (snapshot.hasData) {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 22),
+                Row(
+                  children: [
+                    SizedBox(width: 5,),
+                    Text('you have ',style: appLightTheme.bodyHigh,),
+                    Text('0 due events',style: appLightTheme.bodyHigh.copyWith(color: Color(0xffE7A166)),),
+                  ],
+                ),
                 Expanded(
                   child: MediaQuery.removePadding(
                     context: context,
@@ -976,93 +1003,117 @@ StreamBuilder<QuerySnapshot>(
 
     String lead_status =
         _list?.data()?.containsKey('Status') == true ? _list!['Status'] : 'NA';
+    String lead_Mobile =
+        _list?.data()?.containsKey('Mobile') == true ? _list!['Mobile'] : 'NA';
 
     return Container(
-      margin: FxSpacing.top(16),
-      child: InkWell(
-        onTap: () async {
-          //_showBottomSheet(context);
-          final Iterable<CallLogEntry> result = await CallLog.query();
-          setState(() {
-            _callLogEntries = result;
-          });
-          Get.to(() => LeadsDetailsScreen(
-                leadDetails: _list,
-                callLogEntries: _callLogEntries,
-              ));
-        },
-        child: Row(
-          children: <Widget>[
-            // ClipRRect(
-            //   borderRadius: BorderRadius.all(Radius.circular(24)),
-            //   child: Image(
-            //     image: AssetImage('./assets/images/profile/avatar_2.jpg'),
-            //     height: 48,
-            //     width: 48,
-            //     fit: BoxFit.cover,
-            //   ),
-            // ),
-            Expanded(
-              child: Container(
-                margin: FxSpacing.left(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    FxText.bodyMedium(lead_Name,
-                        letterSpacing: 0, fontWeight: 600),
-                    FxText.bodySmall(
-                      lead_Remarks,
-                      letterSpacing: 0,
-                      xMuted: true,
-                      fontWeight: 600,
-                      fontSize: 12,
-                    ),
-                    FxText.bodySmall(
-                      lead_status,
-                      fontSize: 12,
-                      muted: true,
-                      letterSpacing: 0,
-                      fontWeight: 500,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+      margin: FxSpacing.only(left:8, right: 8, bottom: 0, top: 8),
+      color: Color(0xff1E1E1E),
+      child: Padding(
+        padding: const EdgeInsets.only(top:8.0, bottom: 8.0),
+        child: InkWell(
+          onTap: () async {
+            //_showBottomSheet(context);
+            final Iterable<CallLogEntry> result = await CallLog.query();
+            setState(() {
+              _callLogEntries = result;
+            });
+            Get.to(() => LeadsDetailsScreen(
+                  leadDetails: _list,
+                  callLogEntries: _callLogEntries,
+                ));
+          },
+          child: Row(
+            children: <Widget>[
+              // ClipRRect(
+              //   borderRadius: BorderRadius.all(Radius.circular(24)),
+              //   child: Image(
+              //     image: AssetImage('./assets/images/profile/avatar_2.jpg'),
+              //     height: 48,
+              //     width: 48,
+              //     fit: BoxFit.cover,
+              //   ),
+              // ),
+              Expanded(
+                child: Container(
+                  margin: FxSpacing.left(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(lead_Name!, style:appLightTheme.bodyMedium.copyWith(fontSize: 14,  letterSpacing: 1.25,)),
+                      Text(lead_Remarks, style:appLightTheme.kSubTitle),
+                    
+                      
+                      FxText.bodySmall(
+                      color: Color(0xffD2D2D2),
+        
+                        lead_status,
+                        fontSize: 12,
+                        muted: true,
+                        letterSpacing: 1.25,
+                        fontWeight: 500,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            InkWell(
-              onTap: () {
-                _callNumber();
-                print('res iss ');
-
-                // setState(() {
-                //   // _list[index] = !_list[index];
-                // });
-              },
-              child: FxContainer(
-                margin: FxSpacing.right(16),
-                padding: FxSpacing.fromLTRB(16, 8, 16, 8),
-                bordered: false,
-                borderRadiusAll: 4,
-                border: Border.all(color: Colors.grey, width: 1),
-                color: false ? Colors.transparent : appLightTheme.primaryColor,
-                child: FxText.bodySmall("Call",
-                    color: false
-                        ? appLightTheme.colorScheme.onBackground
-                        : appLightTheme.colorScheme.onPrimary,
-                    fontWeight: 600,
-                    letterSpacing: 0.3),
+              InkWell(
+                onTap: () {
+                  _callNumber(lead_Mobile);
+                  print('res iss ');
+        
+                  // setState(() {
+                  //   // _list[index] = !_list[index];
+                  // });
+                },
+                child: Container(
+                  child: Column(
+                    children: [
+                       FxContainer(
+                        margin: FxSpacing.right(16),
+                        padding: FxSpacing.fromLTRB(16, 8, 16, 8),
+                        bordered: false,
+                        borderRadiusAll: 0,
+                        border: Border.all(color: Colors.grey, width: 1),
+                        color: false ? Colors.transparent : Colors.white,
+                        child: FxText.bodySmall("Call",
+                            color: false
+                                ? appLightTheme.colorScheme.onBackground
+                                : Color(0xff0D0D0D),
+                            fontWeight: 600,
+                            letterSpacing: 0.3),
+                      ),
+                  
+                      // FxContainer(
+                      //   margin: FxSpacing.right(16),
+                      //   padding: FxSpacing.fromLTRB(16, 8, 16, 8),
+                      //   bordered: false,
+                      //   borderRadiusAll: 0,
+                      //   border: Border.all(color: Colors.grey, width: 1),
+                      //   color: false ? Colors.transparent : Colors.white,
+                      //   child: FxText.bodySmall("OVERDUE",
+                      //       color: false
+                      //           ? appLightTheme.colorScheme.onBackground
+                      //           : Color(0xff0D0D0D),
+                      //       fontWeight: 600,
+                      //       letterSpacing: 0.3),
+                      // ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  _callNumber() async {
+  _callNumber(lead_Mobile) async {
     print('res issx ');
-    const number = '919489000525'; //set the number here
+    var number = '91$lead_Mobile'; //set the number here
     bool? res = await FlutterPhoneDirectCaller.callNumber(number);
     print('res is ${res}');
   }
@@ -1268,18 +1319,26 @@ StreamBuilder<QuerySnapshot>(
   Widget titleRow() {
     return Row(
       children: [
-        FxContainer(
-          width: 10,
-          height: 24,
-          color: Get.theme.primaryContainer,
-          borderRadiusAll: 2,
-        ),
-        FxSpacing.width(8),
-        FxText.titleLarge(
-          "Leads Manager",
-          fontWeight: 700,
-          // color: Get.theme.primary,
-        ),
+        // FxContainer(
+        //   width: 10,
+        //   height: 24,
+        //   color: Get.theme.primaryContainer,
+        //   borderRadiusAll: 2,
+        // ),
+        // FxSpacing.width(8),
+ 
+         Text(
+                                "Leads manager",
+                            
+                                 style: TextStyle(
+                            fontFamily: 'SpaceGrotesk', // Use the font family you declared
+                               fontSize: 20, // Set font size to 24
+                                  fontWeight: FontWeight.w700, // Set font weight to 700 (bold)
+                                  color: Color(0xffCFD0D0),
+                                  letterSpacing: 0.8,
+                          ),
+                                
+                              ),
       ],
     );
   }

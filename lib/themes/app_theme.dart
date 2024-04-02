@@ -162,12 +162,12 @@ class FxAppTheme {
     primaryColor: Color(0xff069DEF),
 
     /// Scaffold and Background color
-    scaffoldBackgroundColor: Color(0xff161616),
-    backgroundColor: Color(0xff161616),
+    scaffoldBackgroundColor: Color(0xff0D0D0D),
+    backgroundColor: Color(0xff0D0D0D),
     canvasColor: Colors.transparent,
 
     /// AppBar Theme
-    appBarTheme: AppBarTheme(backgroundColor: Color(0xff161616)),
+    appBarTheme: AppBarTheme(backgroundColor: Color(0xff0D0D0D)),
 
     /// Card Theme
     cardTheme: CardTheme(color: Color(0xff222327)),
