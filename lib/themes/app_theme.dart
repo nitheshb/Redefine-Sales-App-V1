@@ -40,9 +40,6 @@ class FxAppTheme {
 
     /// Primary Color
     primaryColor: Color(0xff3C4EC5),
-
-    /// Scaffold and Background color
-    backgroundColor: Color(0xffffffff),
     scaffoldBackgroundColor: Color(0xffffffff),
     canvasColor: Colors.transparent,
 
@@ -55,10 +52,6 @@ class FxAppTheme {
     /// Card Theme
     cardTheme: CardTheme(color: Color(0xfff0f0f0)),
     cardColor: Color(0xfff0f0f0),
-
-    /// Colorscheme
-    colorScheme: ColorScheme.fromSeed(
-        seedColor: Color(0xff3C4EC5), brightness: Brightness.light),
 
     /// Floating Action Theme
     floatingActionButtonTheme: FloatingActionButtonThemeData(
@@ -148,7 +141,8 @@ class FxAppTheme {
     splashColor: Colors.white.withAlpha(100),
     indicatorColor: Color(0xffeeeeee),
     highlightColor: Color(0xffeeeeee),
-    errorColor: Color(0xfff0323c),
+     colorScheme: ColorScheme.fromSeed(
+        seedColor: Color(0xff3C4EC5), brightness: Brightness.light).copyWith(background: Color(0xffffffff)),
   );
 
   /// -------------------------- Dark Theme  -------------------------------------------- ///
@@ -163,7 +157,6 @@ class FxAppTheme {
 
     /// Scaffold and Background color
     scaffoldBackgroundColor: Color(0xff0D0D0D),
-    backgroundColor: Color(0xff0D0D0D),
     canvasColor: Colors.transparent,
 
     /// AppBar Theme
@@ -172,10 +165,6 @@ class FxAppTheme {
     /// Card Theme
     cardTheme: CardTheme(color: Color(0xff222327)),
     cardColor: Color(0xff222327),
-
-    /// Colorscheme
-    colorScheme: ColorScheme.fromSeed(
-        seedColor: Color(0xff069DEF), brightness: Brightness.dark),
 
     /// Input (Text-Field) Theme
     inputDecorationTheme: InputDecorationTheme(
@@ -269,8 +258,9 @@ class FxAppTheme {
     indicatorColor: Colors.white,
     disabledColor: Color(0xffa3a3a3),
     highlightColor: Colors.white.withAlpha(28),
-    errorColor: Colors.orange,
-    splashColor: Colors.white.withAlpha(56),
+    //errorColor: Colors.orange,
+    splashColor: Colors.white.withAlpha(56), colorScheme: ColorScheme.fromSeed(
+        seedColor: Color(0xff069DEF), brightness: Brightness.dark).copyWith(background: Color(0xff0D0D0D)),
   );
 
   /// -------------------------- Black Theme  -------------------------------------------- ///
