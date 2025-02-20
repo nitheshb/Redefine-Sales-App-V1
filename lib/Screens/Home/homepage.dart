@@ -289,12 +289,17 @@ class _HomePageState extends State<HomePage> {
                     snap: false,
                     pinned: true,
                     floating: true,
-                    flexibleSpace: Obx(() => FlexibleSpaceBar(
+                    flexibleSpace:
+                   Obx(() =>
+                        FlexibleSpaceBar(
                             background: SlimTeamStats(
                             controller.flipMode,
                             controller.businessMode.value,
                             controller.numOfTodayTasks,
-                            controller.myBusinessTotal))),
+                            controller.myBusinessTotal)
+                    )
+                    )
+                    ,
                     expandedHeight: 170,
                     bottom: PreferredSize(
                       preferredSize: Size.fromHeight(48.0),

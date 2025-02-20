@@ -77,8 +77,10 @@ startTimer() {
     //   return;
     if (email.text.isNotEmpty && password.text.isNotEmpty) {
       isLoading = true;
+      /*
       logIn(email.text, password.text).then((user)async{
         if (user != null && localFcmToken != null) {
+
 
           isLoading = false;
           var currentUser = FirebaseAuth.instance.currentUser;
@@ -97,6 +99,8 @@ print('user details are ${user}');
             debugPrint("success!");
           });
 
+
+
           Get.offAll(() => SuperHomePage());
         } else {
           snackBarMsg('Error: Invalid credentials');
@@ -104,7 +108,20 @@ print('user details are ${user}');
           isLoading = false;
         }
       });
-    } else {
+    */
+      FirebaseAuth _auth = FirebaseAuth.instance;
+      FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+
+      _auth.signInWithEmailAndPassword(email: email.text.toString(),
+          password:password.text.toString());
+      Get.offAll(() => SuperHomePage());
+
+
+
+
+    }
+    else {
       debugPrint("Please fill form correctly");
     }
   }

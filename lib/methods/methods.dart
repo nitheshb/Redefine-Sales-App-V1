@@ -7,19 +7,20 @@ import 'package:redefineerp/Screens/Auth/login_page.dart';
 Future<User?> logIn(String email, String password) async {
   FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+ print("shar");
   try {
     UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email, password: password);
-
+            print("ssss");
     print("Login Sucessfull");
     _firestore
         .collection('users')
         .doc(_auth.currentUser!.uid)
         .get()
         .then((value) => userCredential.user!.updateDisplayName(value['name']));
-
+    print(userCredential.user);
     return userCredential.user;
+
   } catch (e) {
     print(e);
     return null;
