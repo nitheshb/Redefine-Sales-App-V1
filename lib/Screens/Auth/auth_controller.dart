@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/SuperHomePage/SuperHomePage.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
@@ -70,7 +71,7 @@ startTimer() {
     super.onInit();
   }
 
-  void loginUser() async {
+  void loginUser(BuildContext context) async {
 
     //   await  StateWidget.of(context).logInUser(email.text, password.text);
     // await  Get.offAll(() => SuperHomePage());
@@ -116,7 +117,6 @@ print('user details are ${user}');
       _auth.signInWithEmailAndPassword(email: email.text.toString(),
           password:password.text.toString());
       Get.offAll(() => SuperHomePage());
-
 
 
 

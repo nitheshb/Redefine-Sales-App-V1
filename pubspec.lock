@@ -45,10 +45,10 @@ packages:
     dependency: "direct main"
     description:
       name: call_log
-      sha256: "943fdc3cd1b2a395633817f4b66267c93accb38d359da4d95db1e389f8f898d6"
+      sha256: efc78ec2176b6d384c46a94e297093636fc87716e4ba1ec744d7b540281ebb62
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "3.2.3"
   change_app_package_name:
     dependency: "direct main"
     description:
