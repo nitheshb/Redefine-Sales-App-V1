@@ -118,7 +118,6 @@ class MyApp extends StatelessWidget {
       darkTheme: Themes.dark,
       initialBinding: ControllerBindings(),
       themeMode: ThemeService().theme,
-      
       debugShowCheckedModeBanner: false,
       home: currentUser == null ? OnboardScreen() : SuperHomePage(),
     );

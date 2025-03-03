@@ -14,7 +14,9 @@ final ThemeData appLightTheme = ThemeData(
     primaryColor: const Color(0xFF6B4EFF),
     primaryColorDark: const Color(0xFF5538EE),
     primaryColorLight: const Color(0xFF9990FF),
-    backgroundColor: Color.fromARGB(255, 242, 240, 240));
+    colorScheme: ColorScheme.light(background: Colors.white),
+   // backgroundColor: Color.fromARGB(255, 242, 240, 240)
+);
 extension ThemeExtension on ThemeData {
 
 
@@ -130,8 +132,8 @@ class Themes {
     scaffoldBackgroundColor: const Color(0xff0D0D0D),
      textTheme: ThemeData.dark().textTheme.copyWith(
           // Define your font family here
-          bodyText1: TextStyle(fontFamily: 'SpaceGrotesk'),
-          bodyText2: TextStyle(fontFamily: 'SpaceGrotesk'),
+        //  bodyText1: TextStyle(fontFamily: 'SpaceGrotesk'),
+          //bodyText2: TextStyle(fontFamily: 'SpaceGrotesk'),
           // Add more text styles if needed
         ),
    
@@ -149,7 +151,7 @@ class Themes {
   );
 
   static final greenTheme = ThemeData.light().copyWith(
-    backgroundColor: Colors.white,
+    //backgroundColor: Colors.white,
     primaryColor: const Color(0xff4CD471),
     appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -163,19 +165,19 @@ class Themes {
 final TextTheme textTheme = TextTheme(
   bodyLarge: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 14),
   bodyMedium: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 14),
-  bodyText1: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 14),
-  bodyText2: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 13),
-  caption: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 12),
-  headline4: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 12),
-  headline5: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 12),
+ // bodyText1: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 14),
+  //bodyText2: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 13),
+  //caption: GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 12),
+  //headline4: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 12),
+  //headline5: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 12),
   headlineLarge: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 11.7),
   headlineMedium: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 11),
   labelLarge: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 11.4),
   labelMedium: GoogleFonts.inter(fontWeight: FontWeight.w400, fontSize: 11.4),
   labelSmall: GoogleFonts.inter(fontWeight: FontWeight.w800, fontSize: 11.3),
-  overline: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 11.3),
-  subtitle1: GoogleFonts.inter(fontWeight: FontWeight.normal, fontSize: 11.3),
-  subtitle2: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 11.3),
+  //overline: GoogleFonts.inter(fontWeight: FontWeight.w500, fontSize: 11.3),
+  //subtitle1: GoogleFonts.inter(fontWeight: FontWeight.normal, fontSize: 11.3),
+  //subtitle2: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 11.3),
   titleLarge: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 11.3),
   titleMedium: GoogleFonts.inter(fontWeight: FontWeight.normal, fontSize: 11),
   titleSmall: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 11.3),
