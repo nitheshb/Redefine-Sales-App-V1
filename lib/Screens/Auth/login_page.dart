@@ -249,7 +249,7 @@ class LoginPage extends StatelessWidget {
                         text: "Agree & Continue",
                         icon: Icons.arrow_forward,
                         ontap: () {
-                           controller.loginUser();
+                           controller.loginUser(context);
                         },
                       ),
                     ],

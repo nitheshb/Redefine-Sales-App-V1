@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:redefineerp/Screens/Auth/login_page.dart';
 import 'package:redefineerp/Screens/SuperHomePage/SuperHomePage.dart';
 import 'package:redefineerp/Utilities/snackbar.dart';
 import 'package:redefineerp/helpers/firebase_help.dart';
@@ -70,16 +71,18 @@ startTimer() {
     super.onInit();
   }
 
-  void loginUser() async {
+  void loginUser(BuildContext context) async {
 
     //   await  StateWidget.of(context).logInUser(email.text, password.text);
     // await  Get.offAll(() => SuperHomePage());
     //   return;
     if (email.text.isNotEmpty && password.text.isNotEmpty) {
       isLoading = true;
-      /*
-      logIn(email.text, password.text).then((user)async{
-        if (user != null && localFcmToken != null) {
+      logIn(email.text, password.text);
+
+     /* logIn(email.text, password.text).then((user)async{
+
+          if (user != null && localFcmToken != null) {
 
 
           isLoading = false;
@@ -102,26 +105,42 @@ print('user details are ${user}');
 
 
           Get.offAll(() => SuperHomePage());
-        } else {
+        }
+        else {
           snackBarMsg('Error: Invalid credentials');
           debugPrint("Login Failed");
           isLoading = false;
         }
-      });
-    */
-      FirebaseAuth _auth = FirebaseAuth.instance;
+      }
+      );*/
+
+     /* FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
-      _auth.signInWithEmailAndPassword(email: email.text.toString(),
-          password:password.text.toString());
-      Get.offAll(() => SuperHomePage());
+      try {
+        await _auth.signInWithEmailAndPassword(email: email.text.toString(),
+            password: password.text.toString());
+
+        snackBarMsg("Logged in successfully!");
+
+        Get.offAll(() => SuperHomePage());
+
+      } catch (e) {
+        print(e.toString());
+        snackBarMsg("Login Failed: ${e.toString()}");
+      }
+  */
+
+     // _auth.signInWithEmailAndPassword(email: email.text.toString(),
+       //   password:password.text.toString());
 
 
 
 
     }
     else {
+
       debugPrint("Please fill form correctly");
     }
   }

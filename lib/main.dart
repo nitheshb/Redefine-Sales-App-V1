@@ -54,6 +54,7 @@ void callbackDispatcher() {
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
+
     options: DefaultFirebaseOptions.currentPlatform,
   );
   print('Handling a background message ${message.messageId}');
@@ -64,7 +65,7 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   channel = const AndroidNotificationChannel(
     'redefine_channel',
@@ -119,6 +120,7 @@ class MyApp extends StatelessWidget {
       initialBinding: ControllerBindings(),
       themeMode: ThemeService().theme,
       debugShowCheckedModeBanner: false,
+
       home: currentUser == null ? OnboardScreen() : SuperHomePage(),
     );
   }
