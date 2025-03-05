@@ -28,7 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   flutter_animation_progress_bar: ^2.3.1
-  call_log: ^3.0.0
+  call_log: ^5.0.1
   countup: ^0.1.4
   change_app_package_name: ^1.1.0
   cloud_firestore: ^4.4.4

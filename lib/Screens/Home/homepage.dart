@@ -1166,13 +1166,16 @@ StreamBuilder<QuerySnapshot>(
                           physics: const BouncingScrollPhysics(),
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
+                            print("I am here");
                             var docSnapshot = snapshot.data!.docs[index];
                             var docData =
                                 docSnapshot.data() as Map<String, dynamic>;
                             // var projData = processedDocs[i];
                             // Return a FutureBuilder for each item
                             return FutureBuilder(
+
                               future: DbQuery.instanace.getLeadbyId1(
+
                                   controller2.currentUserObj['orgId'],
                                   docData['uid']),
                               builder: (context, asyncSnapshot) {

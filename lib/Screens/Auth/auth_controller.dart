@@ -78,9 +78,11 @@ startTimer() {
     //   return;
     if (email.text.isNotEmpty && password.text.isNotEmpty) {
       isLoading = true;
-      /*
-      logIn(email.text, password.text).then((user)async{
-        if (user != null && localFcmToken != null) {
+      logIn(email.text, password.text);
+
+     /* logIn(email.text, password.text).then((user)async{
+
+          if (user != null && localFcmToken != null) {
 
 
           isLoading = false;
@@ -103,25 +105,42 @@ print('user details are ${user}');
 
 
           Get.offAll(() => SuperHomePage());
-        } else {
+        }
+        else {
           snackBarMsg('Error: Invalid credentials');
           debugPrint("Login Failed");
           isLoading = false;
         }
-      });
-    */
-      FirebaseAuth _auth = FirebaseAuth.instance;
+      }
+      );*/
+
+     /* FirebaseAuth _auth = FirebaseAuth.instance;
       FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 
-      _auth.signInWithEmailAndPassword(email: email.text.toString(),
-          password:password.text.toString());
-      Get.offAll(() => SuperHomePage());
+      try {
+        await _auth.signInWithEmailAndPassword(email: email.text.toString(),
+            password: password.text.toString());
+
+        snackBarMsg("Logged in successfully!");
+
+        Get.offAll(() => SuperHomePage());
+
+      } catch (e) {
+        print(e.toString());
+        snackBarMsg("Login Failed: ${e.toString()}");
+      }
+  */
+
+     // _auth.signInWithEmailAndPassword(email: email.text.toString(),
+       //   password:password.text.toString());
+
 
 
 
     }
     else {
+
       debugPrint("Please fill form correctly");
     }
   }
